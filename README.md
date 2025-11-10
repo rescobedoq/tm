@@ -5,7 +5,7 @@
 
 ## 🎮 Descripción General
 
-**Time Madness** es un videojuego de **estrategia en tiempo real en 3D**, desarrollado en **Unity (C#)**, inspirado en clásicos como *Warcraft III* y *Civilization*. El jugador asume el mando de una de tres civilizaciones que coexisten en un mundo utópico fracturado por el tiempo:
+**Time Madness** es un videojuego de **estrategia en tiempo real en 3D**, desarrollado en **Godot**, inspirado en clásicos como *Warcraft III* y *Civilization*. El jugador asume el mando de una de tres civilizaciones que coexisten en un mundo utópico fracturado por el tiempo:
 
 * **Los Medievales** – Maestros de la magia y el control del terreno.
 * **Los Contemporáneos (WWII)** – Dominan la industria y la masa.
@@ -90,8 +90,7 @@ Cada civilización busca dominar el nuevo orden temporal, reclamando los territo
 
 ### 6. Arquitectura Técnica
 
-* **Motor:** Unity 2023.x o superior
-* **Lenguaje:** C#
+* **Motor:** Godot 4.3 o superior
 * **Patrón de diseño:** MVC.
 * **Sistemas principales:**
 
@@ -109,7 +108,7 @@ Cada civilización busca dominar el nuevo orden temporal, reclamando los territo
 
 | Semana | Objetivos Principales                                                                      | Entregables                                                 |
 | ------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------- |
-| **1**  | Planificación y estructura del proyecto en Unity. <br> Diseño del mapa base y grid system. | Proyecto Unity configurado, escena inicial, mapa prototipo. |
+| **1**  | Planificación y estructura del proyecto en Godot. <br> Diseño del mapa base y grid system. | Proyecto Unity configurado, escena inicial, mapa prototipo. |
 | **2**  | Implementar sistema de recursos, edificios y entrenamiento de unidades.                    | Scripts funcionales, UI de recursos.                        |
 | **3**  | Implementar movimiento y combate por turnos. <br> Sistema de validación de acciones.       | Turnos funcionales, unidades interactivas.                  |
 | **4**  | Desarrollo de IA básica (ataque, defensa, movimiento). <br> Modo multijugador local.       | IA inicial y modo 2 jugadores local.                        |
