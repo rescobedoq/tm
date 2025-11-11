@@ -1,7 +1,20 @@
-[gd_scene load_steps=3 format=3 uid="uid://bnq0is7hlp1tm"]
+[gd_scene load_steps=9 format=3 uid="uid://bnq0is7hlp1tm"]
 
 [ext_resource type="Texture2D" uid="uid://blfuuktnfhgvp" path="res://Assets/Images/profileMenu.jpg" id="1_glmnp"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="2_6q3p3"]
 [ext_resource type="Texture2D" uid="uid://cdofdknd6yls4" path="res://Assets/Images/GUI/Labels/profileLabel.png" id="2_7wxih"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="3_wnvrs"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="4_kbfpx"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="5_jwkjo"]
+[ext_resource type="Texture2D" uid="uid://biq054ba86d0" path="res://Assets/Images/GUI/Box/Box1.png" id="7_wnvrs"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_rqqtr"]
+font = ExtResource("5_jwkjo")
+font_size = 26
+font_color = Color(0.011764706, 0.011764706, 0, 1)
+outline_size = 5
+shadow_size = 12
+shadow_color = Color(0, 0, 0, 1)
 
 [node name="ProfileMenu" type="Control"]
 layout_mode = 3
@@ -19,3 +32,85 @@ texture = ExtResource("1_glmnp")
 [node name="ProfileLabel" type="Sprite2D" parent="."]
 position = Vector2(222, 100)
 texture = ExtResource("2_7wxih")
+
+[node name="Container" type="Container" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 0
+offset_left = 35.0
+offset_top = 201.0
+offset_right = 243.0
+offset_bottom = 242.0
+placeholder_text = "....."
+alignment = 1
+
+[node name="ProfileName" type="Sprite2D" parent="."]
+position = Vector2(787.00006, 95)
+scale = Vector2(0.7239885, 0.2972973)
+texture = ExtResource("7_wnvrs")
+
+[node name="quitProfileButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 950.0
+offset_top = 71.0
+offset_right = 1082.3269
+offset_bottom = 113.19057
+texture_normal = ExtResource("2_6q3p3")
+texture_pressed = ExtResource("3_wnvrs")
+texture_hover = ExtResource("4_kbfpx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="quitProfileButton"]
+layout_mode = 0
+offset_left = 46.999992
+offset_top = 10.999997
+offset_right = 98.0
+offset_bottom = 36.999996
+text = "Quit"
+label_settings = SubResource("LabelSettings_rqqtr")
+
+[node name="backButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 789.0
+offset_top = 520.0
+offset_right = 1037.0035
+offset_bottom = 604.3811
+texture_normal = ExtResource("2_6q3p3")
+texture_pressed = ExtResource("3_wnvrs")
+texture_hover = ExtResource("4_kbfpx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="backButton"]
+layout_mode = 0
+offset_left = 59.590927
+offset_top = 30.763947
+offset_right = 184.59093
+offset_bottom = 57.763947
+text = "Back to menu"
+label_settings = SubResource("LabelSettings_rqqtr")
+
+[node name="createButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 246.0
+offset_top = 197.0
+offset_right = 378.3269
+offset_bottom = 239.19057
+texture_normal = ExtResource("2_6q3p3")
+texture_pressed = ExtResource("3_wnvrs")
+texture_hover = ExtResource("4_kbfpx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="createButton"]
+layout_mode = 0
+offset_left = 39.435173
+offset_top = 8.7897005
+offset_right = 98.14977
+offset_bottom = 35.158794
+text = "Create"
+label_settings = SubResource("LabelSettings_rqqtr")
