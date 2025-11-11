@@ -1,18 +1,18 @@
 [gd_scene load_steps=17 format=3 uid="uid://bdf8tguiht1e1"]
 
-[ext_resource type="Texture2D" uid="uid://vq8whlhwxgrm" path="res://Assets/Images/optionsMenu.jpg" id="1_6dctd"]
-[ext_resource type="Texture2D" uid="uid://dr5tvgw5qu3y7" path="res://Assets/Images/GUI/Labels/optionsLabel.png" id="2_7dr67"]
-[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_sbm44"]
-[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_v78aw"]
-[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_kj70i"]
-[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_dddag"]
-[ext_resource type="Texture2D" uid="uid://dshkwv48tefsm" path="res://Assets/Images/GUI/Icons/eng (1).png" id="7_amxod"]
-[ext_resource type="Texture2D" uid="uid://5de5q6bem5my" path="res://Assets/Images/GUI/Icons/es (1).png" id="8_3bcp2"]
-[ext_resource type="Texture2D" uid="uid://b8lylpsrqr3rt" path="res://Assets/Images/GUI/Icons/por (1).png" id="9_lyspy"]
-[ext_resource type="Texture2D" uid="uid://uswt0uakdmgj" path="res://Assets/Images/GUI/Icons/fre (1).png" id="10_8l4su"]
+[ext_resource type="Texture2D" uid="uid://vq8whlhwxgrm" path="res://Assets/Images/optionsMenu.jpg" id="1_q7d6m"]
+[ext_resource type="Texture2D" uid="uid://dr5tvgw5qu3y7" path="res://Assets/Images/GUI/Labels/optionsLabel.png" id="2_6s3l0"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_aapos"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_ace60"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_tl3bd"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_qgrql"]
+[ext_resource type="Texture2D" uid="uid://dshkwv48tefsm" path="res://Assets/Images/GUI/Icons/eng (1).png" id="7_gtnfh"]
+[ext_resource type="Texture2D" uid="uid://5de5q6bem5my" path="res://Assets/Images/GUI/Icons/es (1).png" id="8_mrorb"]
+[ext_resource type="Texture2D" uid="uid://b8lylpsrqr3rt" path="res://Assets/Images/GUI/Icons/por (1).png" id="9_26qv5"]
+[ext_resource type="Texture2D" uid="uid://uswt0uakdmgj" path="res://Assets/Images/GUI/Icons/fre (1).png" id="10_wb82j"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_amxod"]
-font = ExtResource("6_dddag")
+font = ExtResource("6_qgrql")
 font_size = 26
 font_color = Color(0.011764706, 0.011764706, 0, 1)
 outline_size = 5
@@ -20,7 +20,7 @@ shadow_size = 12
 shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_3bcp2"]
-font = ExtResource("6_dddag")
+font = ExtResource("6_qgrql")
 font_size = 40
 font_color = Color(0, 0, 0, 1)
 outline_size = 10
@@ -68,11 +68,11 @@ grow_vertical = 2
 [node name="OptionsMenu" type="Sprite2D" parent="."]
 position = Vector2(570, 392)
 scale = Vector2(1.1508789, 1.0288086)
-texture = ExtResource("1_6dctd")
+texture = ExtResource("1_q7d6m")
 
 [node name="OptionsLabel" type="Sprite2D" parent="."]
 position = Vector2(250, 100)
-texture = ExtResource("2_7dr67")
+texture = ExtResource("2_6s3l0")
 
 [node name="backButton" type="TextureButton" parent="."]
 layout_mode = 0
@@ -80,9 +80,9 @@ offset_left = 789.0
 offset_top = 520.0
 offset_right = 1037.0035
 offset_bottom = 604.3811
-texture_normal = ExtResource("3_sbm44")
-texture_pressed = ExtResource("4_v78aw")
-texture_hover = ExtResource("5_kj70i")
+texture_normal = ExtResource("3_aapos")
+texture_pressed = ExtResource("4_ace60")
+texture_hover = ExtResource("5_tl3bd")
 ignore_texture_size = true
 stretch_mode = 0
 
@@ -141,26 +141,26 @@ theme = SubResource("Theme_3bcp2")
 selected = 0
 item_count = 4
 popup/item_0/text = "English"
-popup/item_0/icon = ExtResource("7_amxod")
+popup/item_0/icon = ExtResource("7_gtnfh")
 popup/item_0/id = 0
 popup/item_1/text = "Spanish"
-popup/item_1/icon = ExtResource("8_3bcp2")
+popup/item_1/icon = ExtResource("8_mrorb")
 popup/item_1/id = 1
 popup/item_2/text = "Portuguese"
-popup/item_2/icon = ExtResource("9_lyspy")
+popup/item_2/icon = ExtResource("9_26qv5")
 popup/item_2/id = 2
 popup/item_3/text = "French"
-popup/item_3/icon = ExtResource("10_8l4su")
+popup/item_3/icon = ExtResource("10_wb82j")
 popup/item_3/id = 3
 
-[node name="brightness" type="HSlider" parent="."]
+[node name="brightnessSlider" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 613.0
 offset_top = 330.0
 offset_right = 867.0
 offset_bottom = 346.0
 
-[node name="Label" type="Label" parent="brightness"]
+[node name="Label" type="Label" parent="brightnessSlider"]
 layout_mode = 0
 offset_left = 112.0
 offset_top = 12.0
@@ -170,48 +170,14 @@ theme = SubResource("Theme_lyspy")
 text = "0"
 horizontal_alignment = 1
 
-[node name="CheckBox3" type="CheckBox" parent="."]
-layout_mode = 0
-offset_left = 812.0
-offset_top = 387.0
-offset_right = 836.0
-offset_bottom = 411.0
-
-[node name="Label" type="Label" parent="CheckBox3"]
-layout_mode = 0
-offset_left = -21.0
-offset_top = 24.0
-offset_right = 47.0
-offset_bottom = 49.0
-theme = SubResource("Theme_lyspy")
-text = "Large"
-horizontal_alignment = 1
-
-[node name="CheckBox2" type="CheckBox" parent="."]
-layout_mode = 0
-offset_left = 725.0
-offset_top = 386.0
-offset_right = 749.0
-offset_bottom = 410.0
-
-[node name="Label" type="Label" parent="CheckBox2"]
-layout_mode = 0
-offset_left = -21.0
-offset_top = 24.0
-offset_right = 47.0
-offset_bottom = 49.0
-theme = SubResource("Theme_lyspy")
-text = "Medium"
-horizontal_alignment = 1
-
-[node name="mouseSensibility" type="HSlider" parent="."]
+[node name="mouseSensibilitySlider" type="HSlider" parent="."]
 layout_mode = 0
 offset_left = 611.0
 offset_top = 261.0
 offset_right = 869.0
 offset_bottom = 277.0
 
-[node name="Label" type="Label" parent="mouseSensibility"]
+[node name="Label" type="Label" parent="mouseSensibilitySlider"]
 layout_mode = 0
 offset_left = 114.0
 offset_top = 12.0
@@ -221,14 +187,48 @@ theme = SubResource("Theme_lyspy")
 text = "0"
 horizontal_alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="."]
+[node name="largeFontCheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 812.0
+offset_top = 387.0
+offset_right = 836.0
+offset_bottom = 411.0
+
+[node name="Label" type="Label" parent="largeFontCheckBox"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 24.0
+offset_right = 47.0
+offset_bottom = 49.0
+theme = SubResource("Theme_lyspy")
+text = "Large"
+horizontal_alignment = 1
+
+[node name="mediumFontCheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 725.0
+offset_top = 386.0
+offset_right = 749.0
+offset_bottom = 410.0
+
+[node name="Label" type="Label" parent="mediumFontCheckBox"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 24.0
+offset_right = 47.0
+offset_bottom = 49.0
+theme = SubResource("Theme_lyspy")
+text = "Medium"
+horizontal_alignment = 1
+
+[node name="smallFontCheckBox" type="CheckBox" parent="."]
 layout_mode = 0
 offset_left = 636.0
 offset_top = 386.0
 offset_right = 660.0
 offset_bottom = 410.0
 
-[node name="Label" type="Label" parent="CheckBox"]
+[node name="Label" type="Label" parent="smallFontCheckBox"]
 layout_mode = 0
 offset_left = -21.0
 offset_top = 24.0
