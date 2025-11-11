@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://br4qgjeka0lht"
-path="res://.godot/imported/Dragon2.fbx-24c2463b77ec8b2e973a362fcd601c9b.scn"
+uid="uid://nj2lhwgifuju"
+path="res://.godot/imported/Animation_Walking_frame_rate_24.fbx-fdacbb8d40f11c34feb7d6a024391aa5.scn"
 
 [deps]
 
-source_file="res://Assets/Models/Units/asd/Dragon2.fbx"
-dest_files=["res://.godot/imported/Dragon2.fbx-24c2463b77ec8b2e973a362fcd601c9b.scn"]
+source_file="res://Assets/Models/Units/medievalCavalry/Animation_Walking_frame_rate_24.fbx"
+dest_files=["res://.godot/imported/Animation_Walking_frame_rate_24.fbx-fdacbb8d40f11c34feb7d6a024391aa5.scn"]
 
 [params]
 

@@ -2,21 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dy74xk6vq6j1w"
-path.s3tc="res://.godot/imported/palette_alt_3.png-d443da656d7e0a1cf9987ca21a7ff749.s3tc.ctex"
+uid="uid://cmiq4winxvw1g"
+path="res://.godot/imported/palette.png-946f877300c0de46c3b38ee03bd6d48c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Models/Units/asd/palette_alt_3.png"
-dest_files=["res://.godot/imported/palette_alt_3.png-d443da656d7e0a1cf9987ca21a7ff749.s3tc.ctex"]
+source_file="res://Assets/Models/Units/medievalDragon/palette.png"
+dest_files=["res://.godot/imported/palette.png-946f877300c0de46c3b38ee03bd6d48c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -24,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -38,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bljjmsnjqbwba"
-path.s3tc="res://.godot/imported/Dragon2_palette_alt_3.png-1d3911605eda98d68f9ec31808f7ca50.s3tc.ctex"
+uid="uid://c4c4l0s75kjng"
+path.s3tc="res://.godot/imported/Animation_Walking_frame_rate_24_0.png-bed96086d30610907e3b12fcc789717b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "9a981d4bbe8efa1573998a9b70a0c526"
+"md5": "4ccedb8bdcdff5b09a2b7d2f2573a3f7"
 }
 
 [deps]
 
-source_file="res://Assets/Models/Units/asd/Dragon2_palette_alt_3.png"
-dest_files=["res://.godot/imported/Dragon2_palette_alt_3.png-1d3911605eda98d68f9ec31808f7ca50.s3tc.ctex"]
+source_file="res://Assets/Models/Units/medievalCavalry/Animation_Walking_frame_rate_24_0.png"
+dest_files=["res://.godot/imported/Animation_Walking_frame_rate_24_0.png-bed96086d30610907e3b12fcc789717b.s3tc.ctex"]
 
 [params]
 

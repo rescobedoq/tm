@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cmiq4winxvw1g"
-path="res://.godot/imported/palette.png-101f356d92a9434c9f4b7aac8f96bc7d.ctex"
+uid="uid://bh0fm8j50qlp"
+path="res://.godot/imported/palette_alt_1.png-e4ec69b8c95167315eb47e3f103e2070.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Models/Units/asd/palette.png"
-dest_files=["res://.godot/imported/palette.png-101f356d92a9434c9f4b7aac8f96bc7d.ctex"]
+source_file="res://Assets/Models/Units/medievalDragon/palette_alt_1.png"
+dest_files=["res://.godot/imported/palette_alt_1.png-e4ec69b8c95167315eb47e3f103e2070.ctex"]
 
 [params]
 
