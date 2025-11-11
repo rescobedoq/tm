@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://piytkruyrchy"
-path="res://.godot/imported/pressedButton.png-d305efc0b75331eb6780d4cdd1498069.ctex"
+uid="uid://br7lqqh6sk8fk"
+path="res://.godot/imported/hoverButton.png-1e985fc1661a62f52038eef4755b7c95.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/GUI/pressedButton.png"
-dest_files=["res://.godot/imported/pressedButton.png-d305efc0b75331eb6780d4cdd1498069.ctex"]
+source_file="res://Assets/Images/GUI/Button2/hoverButton.png"
+dest_files=["res://.godot/imported/hoverButton.png-1e985fc1661a62f52038eef4755b7c95.ctex"]
 
 [params]
 
