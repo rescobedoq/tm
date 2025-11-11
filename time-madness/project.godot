@@ -13,3 +13,7 @@ config_version=5
 config/name="Time Madness"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[filesystem]
+
+import/blender/enabled=false
