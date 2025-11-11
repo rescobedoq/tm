@@ -1,4 +1,8 @@
-[gd_scene format=3 uid="uid://c3b6rcw3scaac"]
+[gd_scene load_steps=4 format=3 uid="uid://c3b6rcw3scaac"]
+
+[ext_resource type="Texture2D" uid="uid://qe5tbbg0geud" path="res://Assets/Images/GUI/normalButton.png" id="1_7n4ur"]
+[ext_resource type="Texture2D" uid="uid://piytkruyrchy" path="res://Assets/Images/GUI/pressedButton.png" id="2_aj456"]
+[ext_resource type="Texture2D" uid="uid://cl1nvjag0qm75" path="res://Assets/Images/GUI/hoverButton.png" id="3_r1wyl"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -7,3 +11,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 336.0
+offset_top = 180.0
+offset_right = 730.0
+offset_bottom = 393.0
+keep_pressed_outside = true
+texture_normal = ExtResource("1_7n4ur")
+texture_pressed = ExtResource("2_aj456")
+texture_hover = ExtResource("3_r1wyl")
+stretch_mode = 0
