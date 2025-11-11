@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnq0is7hlp1tm"]
+
+[ext_resource type="Texture2D" uid="uid://blfuuktnfhgvp" path="res://Assets/Images/profileMenu.jpg" id="1_glmnp"]
+[ext_resource type="Texture2D" uid="uid://cdofdknd6yls4" path="res://Assets/Images/GUI/Labels/profileLabel.png" id="2_7wxih"]
+
+[node name="ProfileMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ProfileMenu" type="Sprite2D" parent="."]
+position = Vector2(578.00006, 414)
+scale = Vector2(1.1411132, 1.1376953)
+texture = ExtResource("1_glmnp")
+
+[node name="ProfileLabel" type="Sprite2D" parent="."]
+position = Vector2(222, 100)
+texture = ExtResource("2_7wxih")

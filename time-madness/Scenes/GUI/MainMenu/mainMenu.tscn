@@ -2,10 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://qe5tbbg0geud" path="res://Assets/Images/GUI/Button1/normalButton.png" id="1_7n4ur"]
 [ext_resource type="Texture2D" uid="uid://dvv32kmp2ka0l" path="res://Assets/Images/heroMenu.png" id="1_aj456"]
-[ext_resource type="Script" uid="uid://dr48t0e680lh6" path="res://Scenes/GUI/movil_image.gd" id="1_selaf"]
+[ext_resource type="Script" uid="uid://dr48t0e680lh6" path="res://Scenes/GUI/MainMenu/movil_image.gd" id="1_selaf"]
 [ext_resource type="Texture2D" uid="uid://piytkruyrchy" path="res://Assets/Images/GUI/Button1/pressedButton.png" id="2_aj456"]
 [ext_resource type="Texture2D" uid="uid://cl1nvjag0qm75" path="res://Assets/Images/GUI/Button1/hoverButton.png" id="3_r1wyl"]
-[ext_resource type="LabelSettings" uid="uid://bqoqf758q8olu" path="res://Scenes/GUI/MenuFontConfig.tres" id="6_rmdig"]
+[ext_resource type="LabelSettings" uid="uid://bqoqf758q8olu" path="res://Scenes/GUI/MainMenu/MenuFontConfig.tres" id="6_rmdig"]
 [ext_resource type="Texture2D" uid="uid://b0sg3nu35gwv3" path="res://Assets/Images/logo.png" id="7_uy5l2"]
 [ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="8_2av7m"]
 [ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="9_jotms"]
