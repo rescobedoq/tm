@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://cdexdsd8ykdls"]
+
+[ext_resource type="Texture2D" uid="uid://bw6s1fii8n8gv" path="res://Assets/Images/creditsMenu.jpg" id="1_t606f"]
+[ext_resource type="Texture2D" uid="uid://d2r7tbbiat484" path="res://Assets/Images/GUI/Labels/creditsLabel.png" id="2_hiq85"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_e8x57"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_u7grx"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_57cm7"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_73unm"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m23lq"]
+font = ExtResource("6_73unm")
+font_size = 26
+font_color = Color(0.011764706, 0.011764706, 0, 1)
+outline_size = 5
+shadow_size = 12
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xlkhi"]
+line_spacing = 7.295
+paragraph_spacing = -0.655
+font = ExtResource("6_73unm")
+font_size = 36
+font_color = Color(0.1005227, 0.1005227, 0.10052268, 1)
+outline_size = 3
+shadow_size = 15
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="CreditsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsMenu" type="Sprite2D" parent="."]
+position = Vector2(574.00006, 321.99997)
+scale = Vector2(1.1259766, 1.0732422)
+texture = ExtResource("1_t606f")
+
+[node name="CreditsLabel" type="Sprite2D" parent="."]
+position = Vector2(569, 68)
+texture = ExtResource("2_hiq85")
+
+[node name="backButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 459.0
+offset_top = 544.0
+offset_right = 707.00354
+offset_bottom = 628.3811
+texture_normal = ExtResource("3_e8x57")
+texture_pressed = ExtResource("4_u7grx")
+texture_hover = ExtResource("5_57cm7")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="backButton"]
+layout_mode = 0
+offset_left = 59.590927
+offset_top = 30.763947
+offset_right = 184.59093
+offset_bottom = 57.763947
+text = "Back to menu"
+label_settings = SubResource("LabelSettings_m23lq")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 190.0
+offset_top = 130.0
+offset_right = 979.0
+offset_bottom = 529.0
+text = "\"Time Madness\" was created by a passionate team of developers, artists, and storytellers dedicated to merging worlds and eras into a unique experience. Our goal is to transport players to a universe where magical medieval realms, modern warfare, and a post-apocalyptic future collide in epic battles, delivering an unforgettable visual and narrative adventure. Every decision and detail in the game reflects our commitment to quality, creativity, and a true passion for video games."
+label_settings = SubResource("LabelSettings_xlkhi")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

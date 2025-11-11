@@ -1,0 +1,185 @@
+[gd_scene load_steps=11 format=3 uid="uid://c3b6rcw3scaac"]
+
+[ext_resource type="Texture2D" uid="uid://qe5tbbg0geud" path="res://Assets/Images/GUI/Button1/normalButton.png" id="1_7n4ur"]
+[ext_resource type="Texture2D" uid="uid://dvv32kmp2ka0l" path="res://Assets/Images/heroMenu.png" id="1_aj456"]
+[ext_resource type="Script" uid="uid://dr48t0e680lh6" path="res://Scenes/GUI/MainMenu/movil_image.gd" id="1_selaf"]
+[ext_resource type="Texture2D" uid="uid://piytkruyrchy" path="res://Assets/Images/GUI/Button1/pressedButton.png" id="2_aj456"]
+[ext_resource type="Texture2D" uid="uid://cl1nvjag0qm75" path="res://Assets/Images/GUI/Button1/hoverButton.png" id="3_r1wyl"]
+[ext_resource type="LabelSettings" uid="uid://bqoqf758q8olu" path="res://Scenes/GUI/MainMenu/MenuFontConfig.tres" id="6_rmdig"]
+[ext_resource type="Texture2D" uid="uid://b0sg3nu35gwv3" path="res://Assets/Images/logo.png" id="7_uy5l2"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="8_2av7m"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="9_jotms"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="10_pend7"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -101.0
+offset_top = 96.0
+offset_right = -101.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MovilImage" type="Node2D" parent="."]
+position = Vector2(518, 144)
+scale = Vector2(1.0000001, 1.0000001)
+script = ExtResource("1_selaf")
+
+[node name="HeroMenu" type="Sprite2D" parent="MovilImage"]
+position = Vector2(162.99998, 49)
+scale = Vector2(0.5249999, 0.5249999)
+texture = ExtResource("1_aj456")
+
+[node name="Logo" type="Sprite2D" parent="."]
+position = Vector2(311, 68)
+texture = ExtResource("7_uy5l2")
+
+[node name="historyModeButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 948.0
+offset_top = -20.0
+offset_right = 1228.0
+offset_bottom = 105.0
+texture_normal = ExtResource("1_7n4ur")
+texture_pressed = ExtResource("2_aj456")
+texture_hover = ExtResource("3_r1wyl")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="historyModeButton"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 42.0
+offset_right = 251.0
+offset_bottom = 89.0
+text = "History Mode"
+label_settings = ExtResource("6_rmdig")
+
+[node name="singlePlayerButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 949.0
+offset_top = 115.0
+offset_right = 1229.0
+offset_bottom = 240.0
+texture_normal = ExtResource("1_7n4ur")
+texture_pressed = ExtResource("2_aj456")
+texture_hover = ExtResource("3_r1wyl")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="singlePlayerButton"]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 42.0
+offset_right = 251.0
+offset_bottom = 89.0
+text = "Single Player"
+label_settings = ExtResource("6_rmdig")
+
+[node name="lanButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 952.0
+offset_top = 254.0
+offset_right = 1232.0
+offset_bottom = 379.0
+texture_normal = ExtResource("1_7n4ur")
+texture_pressed = ExtResource("2_aj456")
+texture_hover = ExtResource("3_r1wyl")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="lanButton"]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 46.0
+offset_right = 183.0
+offset_bottom = 93.0
+text = "LAN"
+label_settings = ExtResource("6_rmdig")
+
+[node name="quitButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 953.0
+offset_top = 389.0
+offset_right = 1233.0
+offset_bottom = 514.0
+texture_normal = ExtResource("1_7n4ur")
+texture_pressed = ExtResource("2_aj456")
+texture_hover = ExtResource("3_r1wyl")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="quitButton"]
+layout_mode = 0
+offset_left = 104.0
+offset_top = 46.0
+offset_right = 177.0
+offset_bottom = 93.0
+text = "Exit"
+label_settings = ExtResource("6_rmdig")
+
+[node name="profileButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 429.0
+offset_right = 391.0
+offset_bottom = 506.0
+texture_normal = ExtResource("10_pend7")
+texture_pressed = ExtResource("9_jotms")
+texture_hover = ExtResource("8_2av7m")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="profileButton"]
+layout_mode = 0
+offset_left = 55.0
+offset_top = 18.0
+offset_right = 154.0
+offset_bottom = 65.0
+text = "Profile"
+label_settings = ExtResource("6_rmdig")
+
+[node name="optionsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 414.0
+offset_top = 428.0
+offset_right = 633.0
+offset_bottom = 505.0
+texture_normal = ExtResource("10_pend7")
+texture_pressed = ExtResource("9_jotms")
+texture_hover = ExtResource("8_2av7m")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="optionsButton"]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 18.0
+offset_right = 167.0
+offset_bottom = 65.0
+text = "Options"
+label_settings = ExtResource("6_rmdig")
+
+[node name="aboutUsButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 651.0
+offset_top = 428.0
+offset_right = 870.0
+offset_bottom = 505.0
+texture_normal = ExtResource("10_pend7")
+texture_pressed = ExtResource("9_jotms")
+texture_hover = ExtResource("8_2av7m")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="aboutUsButton"]
+layout_mode = 0
+offset_left = 38.0
+offset_top = 19.0
+offset_right = 173.0
+offset_bottom = 66.0
+text = "About us"
+label_settings = ExtResource("6_rmdig")

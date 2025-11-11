@@ -1,0 +1,239 @@
+[gd_scene load_steps=17 format=3 uid="uid://bdf8tguiht1e1"]
+
+[ext_resource type="Texture2D" uid="uid://vq8whlhwxgrm" path="res://Assets/Images/optionsMenu.jpg" id="1_q7d6m"]
+[ext_resource type="Texture2D" uid="uid://dr5tvgw5qu3y7" path="res://Assets/Images/GUI/Labels/optionsLabel.png" id="2_6s3l0"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_aapos"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_ace60"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_tl3bd"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_qgrql"]
+[ext_resource type="Texture2D" uid="uid://dshkwv48tefsm" path="res://Assets/Images/GUI/Icons/eng (1).png" id="7_gtnfh"]
+[ext_resource type="Texture2D" uid="uid://5de5q6bem5my" path="res://Assets/Images/GUI/Icons/es (1).png" id="8_mrorb"]
+[ext_resource type="Texture2D" uid="uid://b8lylpsrqr3rt" path="res://Assets/Images/GUI/Icons/por (1).png" id="9_26qv5"]
+[ext_resource type="Texture2D" uid="uid://uswt0uakdmgj" path="res://Assets/Images/GUI/Icons/fre (1).png" id="10_wb82j"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_amxod"]
+font = ExtResource("6_qgrql")
+font_size = 26
+font_color = Color(0.011764706, 0.011764706, 0, 1)
+outline_size = 5
+shadow_size = 12
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3bcp2"]
+font = ExtResource("6_qgrql")
+font_size = 40
+font_color = Color(0, 0, 0, 1)
+outline_size = 10
+shadow_size = 32
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_amxod"]
+bg_color = Color(0.04916793, 0.08455034, 0.16463329, 1)
+border_width_left = 7
+border_width_top = 7
+border_width_right = 7
+border_width_bottom = 7
+border_color = Color(0.3077162, 0.3077162, 0.3077162, 1)
+border_blend = true
+corner_radius_top_left = 10
+corner_radius_bottom_right = 10
+
+[sub_resource type="Theme" id="Theme_3bcp2"]
+Button/styles/disabled = SubResource("StyleBoxFlat_amxod")
+Button/styles/focus = SubResource("StyleBoxFlat_amxod")
+Button/styles/hover = SubResource("StyleBoxFlat_amxod")
+Button/styles/normal = SubResource("StyleBoxFlat_amxod")
+PopupMenu/styles/hover = SubResource("StyleBoxFlat_amxod")
+PopupMenu/styles/labeled_separator_left = SubResource("StyleBoxFlat_amxod")
+PopupMenu/styles/labeled_separator_right = SubResource("StyleBoxFlat_amxod")
+PopupMenu/styles/panel = SubResource("StyleBoxFlat_amxod")
+PopupMenu/styles/separator = SubResource("StyleBoxFlat_amxod")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3bcp2"]
+bg_color = Color(0.003921569, 0.003921569, 0.003921569, 0.65882355)
+corner_detail = 1
+
+[sub_resource type="Theme" id="Theme_lyspy"]
+Label/styles/normal = SubResource("StyleBoxFlat_3bcp2")
+
+[node name="OptionsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.06994629
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OptionsMenu" type="Sprite2D" parent="."]
+position = Vector2(570, 392)
+scale = Vector2(1.1508789, 1.0288086)
+texture = ExtResource("1_q7d6m")
+
+[node name="OptionsLabel" type="Sprite2D" parent="."]
+position = Vector2(250, 100)
+texture = ExtResource("2_6s3l0")
+
+[node name="backButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 789.0
+offset_top = 520.0
+offset_right = 1037.0035
+offset_bottom = 604.3811
+texture_normal = ExtResource("3_aapos")
+texture_pressed = ExtResource("4_ace60")
+texture_hover = ExtResource("5_tl3bd")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="backButton"]
+layout_mode = 0
+offset_left = 59.590927
+offset_top = 30.763947
+offset_right = 184.59093
+offset_bottom = 57.763947
+text = "Back to menu"
+label_settings = SubResource("LabelSettings_amxod")
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 0
+offset_left = 277.0
+offset_top = 395.0
+offset_right = 454.0
+offset_bottom = 446.0
+text = "Font size"
+label_settings = SubResource("LabelSettings_3bcp2")
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 278.0
+offset_top = 327.0
+offset_right = 455.0
+offset_bottom = 378.0
+text = "Brightness"
+label_settings = SubResource("LabelSettings_3bcp2")
+
+[node name="Label4" type="Label" parent="."]
+layout_mode = 0
+offset_left = 279.0
+offset_top = 259.0
+offset_right = 521.0
+offset_bottom = 310.0
+text = "Mouse sensibility"
+label_settings = SubResource("LabelSettings_3bcp2")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 191.0
+offset_right = 457.0
+offset_bottom = 242.0
+text = "Language"
+label_settings = SubResource("LabelSettings_3bcp2")
+
+[node name="OptionButton" type="OptionButton" parent="."]
+layout_mode = 0
+offset_left = 608.0
+offset_top = 183.0
+offset_right = 871.0
+offset_bottom = 236.0
+theme = SubResource("Theme_3bcp2")
+selected = 0
+item_count = 4
+popup/item_0/text = "English"
+popup/item_0/icon = ExtResource("7_gtnfh")
+popup/item_0/id = 0
+popup/item_1/text = "Spanish"
+popup/item_1/icon = ExtResource("8_mrorb")
+popup/item_1/id = 1
+popup/item_2/text = "Portuguese"
+popup/item_2/icon = ExtResource("9_26qv5")
+popup/item_2/id = 2
+popup/item_3/text = "French"
+popup/item_3/icon = ExtResource("10_wb82j")
+popup/item_3/id = 3
+
+[node name="brightnessSlider" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 613.0
+offset_top = 330.0
+offset_right = 867.0
+offset_bottom = 346.0
+
+[node name="Label" type="Label" parent="brightnessSlider"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 12.0
+offset_right = 152.0
+offset_bottom = 35.0
+theme = SubResource("Theme_lyspy")
+text = "0"
+horizontal_alignment = 1
+
+[node name="mouseSensibilitySlider" type="HSlider" parent="."]
+layout_mode = 0
+offset_left = 611.0
+offset_top = 261.0
+offset_right = 869.0
+offset_bottom = 277.0
+
+[node name="Label" type="Label" parent="mouseSensibilitySlider"]
+layout_mode = 0
+offset_left = 114.0
+offset_top = 12.0
+offset_right = 154.0
+offset_bottom = 35.0
+theme = SubResource("Theme_lyspy")
+text = "0"
+horizontal_alignment = 1
+
+[node name="largeFontCheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 812.0
+offset_top = 387.0
+offset_right = 836.0
+offset_bottom = 411.0
+
+[node name="Label" type="Label" parent="largeFontCheckBox"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 24.0
+offset_right = 47.0
+offset_bottom = 49.0
+theme = SubResource("Theme_lyspy")
+text = "Large"
+horizontal_alignment = 1
+
+[node name="mediumFontCheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 725.0
+offset_top = 386.0
+offset_right = 749.0
+offset_bottom = 410.0
+
+[node name="Label" type="Label" parent="mediumFontCheckBox"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 24.0
+offset_right = 47.0
+offset_bottom = 49.0
+theme = SubResource("Theme_lyspy")
+text = "Medium"
+horizontal_alignment = 1
+
+[node name="smallFontCheckBox" type="CheckBox" parent="."]
+layout_mode = 0
+offset_left = 636.0
+offset_top = 386.0
+offset_right = 660.0
+offset_bottom = 410.0
+
+[node name="Label" type="Label" parent="smallFontCheckBox"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = 24.0
+offset_right = 47.0
+offset_bottom = 49.0
+theme = SubResource("Theme_lyspy")
+text = "Small"
+horizontal_alignment = 1
