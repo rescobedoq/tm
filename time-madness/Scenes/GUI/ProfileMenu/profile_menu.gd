@@ -8,7 +8,7 @@ extends Control
 @onready var delete_button: TextureButton = $deleteProfileButton
 @onready var profile_sprite: Sprite2D = $ProfileName
 @onready var selected_name_label: Label = $ProfileName/UserNameSelected
-@onready var quit_profile_button: TextureButton = $quitProfileButton  # 👈 nuevo botón
+@onready var quit_profile_button: TextureButton = $quitProfileButton 
 
 var profiles_folder: String = "user://profiles/"
 

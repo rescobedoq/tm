@@ -1,26 +1,14 @@
-extends HSlider
+extends OptionButton
 
-@onready var value_label: Label = $Label
-
-# Ruta a la carpeta de perfiles
 var profiles_folder: String = "user://profiles/"
 
 func _ready():
-	_load_value_from_user()
-	update_label()
-	self.value_changed.connect(Callable(self, "_on_value_changed"))
+	_load_language_from_user()
 
-func _on_value_changed(value: float) -> void:
-	update_label()
-
-func update_label() -> void:
-	value_label.text = str(round(value * 100) / 100.0)
-
-# ------------------------------
-func _load_value_from_user() -> void:
+func _load_language_from_user() -> void:
 	var username: String = GlobalUser.current_user
 	if username == "" or username == null:
-		print("⚠️ No hay usuario global, no se cargará el valor del slider")
+		print("⚠️ No hay usuario global, no se cargará el idioma")
 		return
 
 	var file_path: String = "%s%s.json" % [profiles_folder, username]
@@ -43,5 +31,17 @@ func _load_value_from_user() -> void:
 
 	var profile_dict: Dictionary = json_parser.get_data() as Dictionary
 	if profile_dict.has("options") and profile_dict["options"] is Dictionary:
-		if profile_dict["options"].has("brightness"):
-			value = float(profile_dict["options"]["brightness"])
+		var language: String = profile_dict["options"].get("language", "en")
+		
+		# Mapear el idioma a los IDs del OptionButton
+		match language.to_lower():
+			"en", "english":
+				selected = 0
+			"sp", "spanish":
+				selected = 1
+			"fr", "french":
+				selected = 2
+			"por", "portuguese":
+				selected = 3
+			_:
+				selected = 0  # valor por defecto
