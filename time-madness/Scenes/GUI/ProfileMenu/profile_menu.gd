@@ -18,10 +18,47 @@ func _ready():
 		print("Advertencia: FadeLayer no encontrado")
 
 	ensure_profiles_folder_exists()
+	list_profiles()
+
+func list_profiles():
+	var dir := DirAccess.open(profiles_folder)
+	if dir == null:
+		print("No se pudo abrir la carpeta de perfiles.")
+		return
+
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+
+	while file_name != "":
+		if file_name.ends_with(".json"):
+			var file_path := "%s%s" % [profiles_folder, file_name]
+
+			var file := FileAccess.open(file_path, FileAccess.READ)
+			if file:
+				var data := file.get_as_text()
+				file.close()
+
+				var json := JSON.new()
+				var err := json.parse(data)
+
+				if err == OK:
+					var profile_dict: Dictionary = json.get_data() 
+					if profile_dict.has("username"):
+						print("Perfil encontrado:", profile_dict["username"])
+					else:
+						print("Archivo sin campo 'username':", file_path)
+				else:
+					print("Error al parsear JSON en:", file_path)
+			else:
+				print("No se pudo abrir archivo:", file_path)
+
+		file_name = dir.get_next()
+
+	dir.list_dir_end()
+	print("--- Fin de la lista ---")
 
 func _on_back_button_pressed():
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
-
 
 func ensure_profiles_folder_exists():
 	var absolute_path = ProjectSettings.globalize_path(profiles_folder)
@@ -50,7 +87,6 @@ func _on_create_button_pressed():
 
 	ensure_profiles_folder_exists()
 
-	# Evitar nombres duplicados
 	var original_name = name
 	var counter = 1
 	var file_path = "%s%s.json" % [profiles_folder, name]
