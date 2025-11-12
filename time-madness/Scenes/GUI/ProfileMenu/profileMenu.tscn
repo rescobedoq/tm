@@ -35,11 +35,6 @@ texture = ExtResource("1_glmnp")
 position = Vector2(222, 100)
 texture = ExtResource("2_7wxih")
 
-[node name="Container" type="Container" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="NameLineEdit" type="LineEdit" parent="."]
 layout_mode = 0
 offset_left = 35.0
@@ -116,3 +111,10 @@ offset_right = 98.14977
 offset_bottom = 35.158794
 text = "Create"
 label_settings = SubResource("LabelSettings_rqqtr")
+
+[node name="ProfilesList" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 270.0
+offset_right = 367.0
+offset_bottom = 606.0

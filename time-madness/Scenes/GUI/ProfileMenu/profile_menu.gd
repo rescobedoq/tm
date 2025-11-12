@@ -3,6 +3,7 @@ extends Control
 @onready var back_button = $backButton
 @onready var name_line_edit = $NameLineEdit
 @onready var create_button = $createButton
+@onready var profiles_list: VBoxContainer = $ProfilesList
 
 var profiles_folder: String = "user://profiles/"
 
@@ -19,6 +20,13 @@ func _ready():
 
 	ensure_profiles_folder_exists()
 	list_profiles()
+
+func _add_profile_label(username: String):
+	var label := Label.new()
+	label.text = username
+	label.add_theme_font_size_override("font_size", 22)
+	label.add_theme_color_override("font_color", Color.WHITE)
+	profiles_list.add_child(label)
 
 func list_profiles():
 	var dir := DirAccess.open(profiles_folder)
@@ -44,7 +52,9 @@ func list_profiles():
 				if err == OK:
 					var profile_dict: Dictionary = json.get_data() 
 					if profile_dict.has("username"):
-						print("Perfil encontrado:", profile_dict["username"])
+						var username: String = profile_dict["username"]
+						print("Perfil encontrado:", username)
+						_add_profile_label(username)
 					else:
 						print("Archivo sin campo 'username':", file_path)
 				else:
@@ -56,6 +66,8 @@ func list_profiles():
 
 	dir.list_dir_end()
 	print("--- Fin de la lista ---")
+
+
 
 func _on_back_button_pressed():
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
