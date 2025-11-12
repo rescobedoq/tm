@@ -20,16 +20,16 @@ func _on_boton_presionado(nombre_boton):
 			print("TextureButton SALIR presionado")
 
 		"aboutUsButton":
-			get_tree().change_scene_to_file("res://Scenes/GUI/CreditsMenu/creditsMenu.tscn")
+			print("Botón About Us presionado, cambiando con fade...")
+			FadeLayer.fade_to_scene("res://Scenes/GUI/CreditsMenu/creditsMenu.tscn")
 
 		"optionsButton":
-			get_tree().change_scene_to_file("res://Scenes/GUI/OptionsMenu/optionsMenu.tscn")
+			print("Botón Options presionado, cambiando con fade...")
+			FadeLayer.fade_to_scene("res://Scenes/GUI/OptionsMenu/optionsMenu.tscn")
 
 		"profileButton":
-			get_tree().change_scene_to_file("res://Scenes/GUI/ProfileMenu/profileMenu.tscn")
+			print("Botón Profile presionado, cambiando con fade...")
+			FadeLayer.fade_to_scene("res://Scenes/GUI/ProfileMenu/profileMenu.tscn")
 
 		_:
 			print("TextureButton desconocido:", nombre_boton)
-			
-			
-			
