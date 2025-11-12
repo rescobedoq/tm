@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bnq0is7hlp1tm"]
+[gd_scene load_steps=12 format=3 uid="uid://bnq0is7hlp1tm"]
 
 [ext_resource type="Script" uid="uid://hwgj0esjbw30" path="res://Scenes/GUI/ProfileMenu/profile_menu.gd" id="1_6dnna"]
 [ext_resource type="Texture2D" uid="uid://blfuuktnfhgvp" path="res://Assets/Images/profileMenu.jpg" id="1_glmnp"]
@@ -8,6 +8,14 @@
 [ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="4_kbfpx"]
 [ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="5_jwkjo"]
 [ext_resource type="Texture2D" uid="uid://biq054ba86d0" path="res://Assets/Images/GUI/Box/Box1.png" id="7_wnvrs"]
+
+[sub_resource type="Theme" id="Theme_6dnna"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_v8cs8"]
+line_spacing = 8.995
+font = ExtResource("5_jwkjo")
+font_size = 40
+font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rqqtr"]
 font = ExtResource("5_jwkjo")
@@ -48,6 +56,18 @@ alignment = 1
 position = Vector2(787.00006, 95)
 scale = Vector2(0.7239885, 0.2972973)
 texture = ExtResource("7_wnvrs")
+
+[node name="UserNameSelected" type="Label" parent="ProfileName"]
+offset_left = -117.405266
+offset_top = -97.54545
+offset_right = 117.40504
+offset_bottom = 97.54543
+theme = SubResource("Theme_6dnna")
+text = "asdasd"
+label_settings = SubResource("LabelSettings_v8cs8")
+horizontal_alignment = 1
+autowrap_mode = 2
+justification_flags = 171
 
 [node name="quitProfileButton" type="TextureButton" parent="."]
 layout_mode = 0
@@ -118,3 +138,24 @@ offset_left = 40.0
 offset_top = 270.0
 offset_right = 367.0
 offset_bottom = 606.0
+
+[node name="deleteProfileButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 146.0
+offset_right = 852.3269
+offset_bottom = 188.19057
+texture_normal = ExtResource("2_6q3p3")
+texture_pressed = ExtResource("3_wnvrs")
+texture_hover = ExtResource("4_kbfpx")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="deleteProfileButton"]
+layout_mode = 0
+offset_left = 36.999992
+offset_top = 8.999997
+offset_right = 96.99999
+offset_bottom = 35.999996
+text = "Delete"
+label_settings = SubResource("LabelSettings_rqqtr")
