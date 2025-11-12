@@ -246,3 +246,12 @@ offset_bottom = 49.0
 theme = SubResource("Theme_lyspy")
 text = "Large"
 horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 255.0
+offset_top = 174.0
+offset_right = 912.0
+offset_bottom = 461.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.3647059)
