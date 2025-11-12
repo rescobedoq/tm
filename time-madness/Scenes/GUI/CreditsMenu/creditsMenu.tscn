@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://cdexdsd8ykdls"]
+[gd_scene load_steps=10 format=3 uid="uid://cdexdsd8ykdls"]
 
+[ext_resource type="Script" uid="uid://bkw8ubvthyw2o" path="res://Scenes/GUI/CreditsMenu/credits_menu.gd" id="1_e8x57"]
 [ext_resource type="Texture2D" uid="uid://bw6s1fii8n8gv" path="res://Assets/Images/creditsMenu.jpg" id="1_t606f"]
 [ext_resource type="Texture2D" uid="uid://d2r7tbbiat484" path="res://Assets/Images/GUI/Labels/creditsLabel.png" id="2_hiq85"]
 [ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_e8x57"]
@@ -32,6 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_e8x57")
 
 [node name="CreditsMenu" type="Sprite2D" parent="."]
 position = Vector2(574.00006, 321.99997)

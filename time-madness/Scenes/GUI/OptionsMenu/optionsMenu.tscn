@@ -1,5 +1,6 @@
-[gd_scene load_steps=17 format=3 uid="uid://bdf8tguiht1e1"]
+[gd_scene load_steps=18 format=3 uid="uid://bdf8tguiht1e1"]
 
+[ext_resource type="Script" uid="uid://cji1my425xuiw" path="res://Scenes/GUI/OptionsMenu/options_menu.gd" id="1_6s3l0"]
 [ext_resource type="Texture2D" uid="uid://vq8whlhwxgrm" path="res://Assets/Images/optionsMenu.jpg" id="1_q7d6m"]
 [ext_resource type="Texture2D" uid="uid://dr5tvgw5qu3y7" path="res://Assets/Images/GUI/Labels/optionsLabel.png" id="2_6s3l0"]
 [ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_aapos"]
@@ -64,6 +65,7 @@ anchor_bottom = 1.0
 offset_right = 0.06994629
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_6s3l0")
 
 [node name="OptionsMenu" type="Sprite2D" parent="."]
 position = Vector2(570, 392)

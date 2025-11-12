@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://c3b6rcw3scaac"]
+[gd_scene load_steps=12 format=3 uid="uid://c3b6rcw3scaac"]
 
 [ext_resource type="Texture2D" uid="uid://qe5tbbg0geud" path="res://Assets/Images/GUI/Button1/normalButton.png" id="1_7n4ur"]
 [ext_resource type="Texture2D" uid="uid://dvv32kmp2ka0l" path="res://Assets/Images/heroMenu.png" id="1_aj456"]
+[ext_resource type="Script" uid="uid://1fiul6bb2nl0" path="res://Scenes/GUI/MainMenu/main_menu.gd" id="1_nqssn"]
 [ext_resource type="Script" uid="uid://dr48t0e680lh6" path="res://Scenes/GUI/MainMenu/movil_image.gd" id="1_selaf"]
 [ext_resource type="Texture2D" uid="uid://piytkruyrchy" path="res://Assets/Images/GUI/Button1/pressedButton.png" id="2_aj456"]
 [ext_resource type="Texture2D" uid="uid://cl1nvjag0qm75" path="res://Assets/Images/GUI/Button1/hoverButton.png" id="3_r1wyl"]
@@ -22,6 +23,7 @@ offset_right = -101.0
 offset_bottom = 96.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_nqssn")
 
 [node name="MovilImage" type="Node2D" parent="."]
 position = Vector2(518, 144)
