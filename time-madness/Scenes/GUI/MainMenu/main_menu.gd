@@ -1,10 +1,18 @@
 extends Control
+@onready var selected_name_label: Label = $UserNameSelected
 
 func _ready():
 	for boton in get_children():
 		if boton is TextureButton:
 			boton.connect("pressed", Callable(self, "_on_boton_presionado").bind(boton.name))
+	_update_selected_user_ui()
 
+func _update_selected_user_ui():
+	if GlobalUser.current_user != "":
+		selected_name_label.text = GlobalUser.current_user
+	else:
+		selected_name_label.text = "-"
+		
 func _on_boton_presionado(nombre_boton):
 	match nombre_boton:
 		"historyModeButton":

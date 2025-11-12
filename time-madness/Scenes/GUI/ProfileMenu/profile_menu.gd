@@ -3,7 +3,7 @@ extends Control
 @onready var back_button = $backButton
 @onready var name_line_edit = $NameLineEdit
 @onready var create_button = $createButton
-@onready var profiles_list: VBoxContainer = $ProfilesList
+@onready var profiles_list: VBoxContainer = $ScrollContainer/ProfilesList
 
 @onready var delete_button: TextureButton = $deleteProfileButton
 @onready var profile_sprite: Sprite2D = $ProfileName
@@ -30,6 +30,7 @@ func _ready():
 	ensure_profiles_folder_exists()
 	list_profiles()
 	_update_selected_user_ui()
+
 
 func _add_profile_button(username: String):
 	var button := Button.new()
