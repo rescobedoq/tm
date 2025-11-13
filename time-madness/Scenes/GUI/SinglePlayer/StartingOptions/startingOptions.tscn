@@ -1,0 +1,85 @@
+[gd_scene load_steps=8 format=3 uid="uid://d0su41w5bwnr8"]
+
+[ext_resource type="Texture2D" uid="uid://d2bqsg4505f7n" path="res://Assets/Images/GUI/Labels/startingOptions.png" id="2_3mdws"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_yaek1"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_s0olb"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_ilu23"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_lnkrm"]
+[ext_resource type="VideoStream" uid="uid://bd83n8on2g1eh" path="res://Assets/Videos/startingOptions.ogv" id="7_s0olb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jbqt5"]
+font = ExtResource("6_lnkrm")
+font_size = 26
+font_color = Color(0.011764706, 0.011764706, 0, 1)
+outline_size = 5
+shadow_size = 12
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="StartingOptions" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StartingOptionsLabel" type="Sprite2D" parent="."]
+position = Vector2(250, 77)
+texture = ExtResource("2_3mdws")
+
+[node name="startButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 283.0
+offset_top = 550.0
+offset_right = 531.00354
+offset_bottom = 634.3811
+texture_normal = ExtResource("3_yaek1")
+texture_pressed = ExtResource("4_s0olb")
+texture_hover = ExtResource("5_ilu23")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="startButton"]
+layout_mode = 0
+offset_left = 70.999985
+offset_top = 30.00003
+offset_right = 195.99998
+offset_bottom = 57.00003
+text = "Start Game"
+label_settings = SubResource("LabelSettings_jbqt5")
+
+[node name="backButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 552.0
+offset_right = 269.00354
+offset_bottom = 636.3811
+texture_normal = ExtResource("3_yaek1")
+texture_pressed = ExtResource("4_s0olb")
+texture_hover = ExtResource("5_ilu23")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="backButton"]
+layout_mode = 0
+offset_left = 59.590927
+offset_top = 30.763947
+offset_right = 184.59093
+offset_bottom = 57.763947
+text = "Back to menu"
+label_settings = SubResource("LabelSettings_jbqt5")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+z_index = -6
+layout_mode = 0
+offset_left = -15.0
+offset_top = -33.0
+offset_right = 1174.0
+offset_bottom = 661.0
+mouse_filter = 2
+stream = ExtResource("7_s0olb")
+volume_db = -80.0
+speed_scale = 0.69
+autoplay = true
+expand = true
+loop = true
