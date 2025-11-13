@@ -26,16 +26,31 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ilu23")
 
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+z_index = -6
+layout_mode = 0
+offset_left = -15.0
+offset_top = -33.0
+offset_right = 1174.0
+offset_bottom = 661.0
+mouse_filter = 2
+stream = ExtResource("7_s0olb")
+volume_db = -80.0
+speed_scale = 0.69
+autoplay = true
+expand = true
+loop = true
+
 [node name="StartingOptionsLabel" type="Sprite2D" parent="."]
 position = Vector2(250, 77)
 texture = ExtResource("2_3mdws")
 
 [node name="startButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 283.0
-offset_top = 550.0
-offset_right = 531.00354
-offset_bottom = 634.3811
+offset_left = 359.0
+offset_top = 546.0
+offset_right = 607.00354
+offset_bottom = 630.3811
 texture_normal = ExtResource("3_yaek1")
 texture_pressed = ExtResource("4_s0olb")
 texture_hover = ExtResource("5_ilu23")
@@ -53,10 +68,10 @@ label_settings = SubResource("LabelSettings_jbqt5")
 
 [node name="backButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 21.0
-offset_top = 552.0
-offset_right = 269.00354
-offset_bottom = 636.3811
+offset_left = 97.0
+offset_top = 546.0
+offset_right = 345.00354
+offset_bottom = 630.3811
 texture_normal = ExtResource("3_yaek1")
 texture_pressed = ExtResource("4_s0olb")
 texture_hover = ExtResource("5_ilu23")
@@ -72,26 +87,11 @@ offset_bottom = 57.763947
 text = "Back to menu"
 label_settings = SubResource("LabelSettings_jbqt5")
 
-[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
-z_index = -6
-layout_mode = 0
-offset_left = -15.0
-offset_top = -33.0
-offset_right = 1174.0
-offset_bottom = 661.0
-mouse_filter = 2
-stream = ExtResource("7_s0olb")
-volume_db = -80.0
-speed_scale = 0.69
-autoplay = true
-expand = true
-loop = true
-
 [node name="UserPlayerBox" parent="." instance=ExtResource("7_ilu23")]
 position = Vector2(183, 205)
 
 [node name="PlayerBox3" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(187, 440)
+position = Vector2(180, 444)
 
 [node name="PlayerBox2" parent="." instance=ExtResource("7_ilu23")]
 position = Vector2(179, 320)
@@ -100,7 +100,7 @@ position = Vector2(179, 320)
 position = Vector2(527, 208)
 
 [node name="PlayerBox6" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(531, 443)
+position = Vector2(524, 446)
 
 [node name="PlayerBox5" parent="." instance=ExtResource("7_ilu23")]
 position = Vector2(523, 323)

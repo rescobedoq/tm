@@ -62,30 +62,36 @@ popup/item_2/text = "Hard"
 popup/item_2/id = 2
 
 [node name="teamButton" type="OptionButton" parent="."]
-offset_left = -131.0
+offset_left = -127.0
 offset_top = -18.0
-offset_right = -69.0
+offset_right = -51.0
 offset_bottom = 20.0
 theme = SubResource("Theme_4x48k")
 item_count = 6
+popup/item_0/text = "1"
 popup/item_0/icon = ExtResource("3_4x48k")
 popup/item_0/id = 0
+popup/item_1/text = "2"
 popup/item_1/icon = ExtResource("4_uei72")
 popup/item_1/id = 1
+popup/item_2/text = "3"
 popup/item_2/icon = ExtResource("5_v4fch")
 popup/item_2/id = 2
+popup/item_3/text = "4"
 popup/item_3/icon = ExtResource("6_y2i4s")
 popup/item_3/id = 3
+popup/item_4/text = "5"
 popup/item_4/icon = ExtResource("7_jd453")
 popup/item_4/id = 4
+popup/item_5/text = "6"
 popup/item_5/icon = ExtResource("8_xotco")
 popup/item_5/id = 5
 
 [node name="Label" type="Label" parent="."]
-offset_left = -70.0
-offset_top = -12.0
-offset_right = 36.0
-offset_bottom = 16.0
+offset_left = -51.0
+offset_top = -21.0
+offset_right = 34.0
+offset_bottom = 27.0
 mouse_filter = 0
 text = "Inactive"
 label_settings = SubResource("LabelSettings_wmwhw")
