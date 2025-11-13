@@ -1,0 +1,62 @@
+[gd_scene load_steps=9 format=3 uid="uid://bu47br7qasr8v"]
+
+[ext_resource type="Script" uid="uid://f1v0cyi8uay" path="res://Scenes/GUI/AlertStarting/alert_starting.gd" id="1_0musg"]
+[ext_resource type="Texture2D" uid="uid://cqkjb6o43ynpb" path="res://Assets/Images/alertStarting.png" id="1_j5di0"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="2_0musg"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="3_ynww1"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="4_1b054"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="5_5j5n6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_j5di0"]
+font = ExtResource("5_5j5n6")
+font_size = 40
+
+[sub_resource type="LabelSettings" id="LabelSettings_0musg"]
+font = ExtResource("5_5j5n6")
+font_size = 40
+font_color = Color(1, 0, 0.15686275, 1)
+outline_size = 20
+
+[node name="AlertStarting" type="Window"]
+oversampling_override = 1.0
+size = Vector2i(300, 300)
+exclusive = true
+unresizable = true
+borderless = true
+script = ExtResource("1_0musg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(148.99998, 152.99998)
+scale = Vector2(1.185, 1.185)
+texture = ExtResource("1_j5di0")
+
+[node name="quitButton" type="TextureButton" parent="."]
+offset_left = 82.0
+offset_top = 234.0
+offset_right = 219.0
+offset_bottom = 297.0
+texture_normal = ExtResource("2_0musg")
+texture_pressed = ExtResource("3_ynww1")
+texture_hover = ExtResource("4_1b054")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="quitButton"]
+layout_mode = 0
+offset_left = 42.0
+offset_top = 15.0
+offset_right = 92.0
+offset_bottom = 56.0
+text = "OK"
+label_settings = SubResource("LabelSettings_j5di0")
+
+[node name="Label" type="Label" parent="."]
+offset_left = 56.0
+offset_top = -20.0
+offset_right = 256.0
+offset_bottom = 301.0
+text = "You must complete the information for all players"
+label_settings = SubResource("LabelSettings_0musg")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

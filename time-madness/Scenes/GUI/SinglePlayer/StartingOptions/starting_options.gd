@@ -10,6 +10,9 @@ extends Control
 
 @onready var back_button: TextureButton = $backButton
 @onready var start_button: TextureButton = $startButton
+var alert_starting_scene: PackedScene = preload("res://Scenes/GUI/AlertStarting/alertStarting.tscn")
+var alert_starting_instance: Window  
+
 
 # Guardaremos los playerBoxes en una lista para manejarlos fácilmente
 var bot_boxes: Array[playerBox] = []
@@ -121,6 +124,7 @@ func _on_start_button_pressed() -> void:
 			all_valid = false
 
 	if not all_valid:
+		_show_alert_starting()
 		print("❌ Algunos jugadores no tienen todos los campos completados.")
 		return
 
@@ -143,3 +147,9 @@ func _process(delta: float) -> void:
 
 func _on_back_button_pressed() -> void:
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
+	
+func _show_alert_starting():
+	if alert_starting_instance == null:
+		alert_starting_instance = alert_starting_scene.instantiate()
+		add_child(alert_starting_instance)
+	alert_starting_instance.popup_centered()
