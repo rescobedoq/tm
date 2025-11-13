@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://d0su41w5bwnr8"]
+[gd_scene load_steps=10 format=3 uid="uid://d0su41w5bwnr8"]
 
+[ext_resource type="Script" uid="uid://c8lotx0i6ubkf" path="res://Scenes/GUI/SinglePlayer/StartingOptions/starting_options.gd" id="1_ilu23"]
 [ext_resource type="Texture2D" uid="uid://d2bqsg4505f7n" path="res://Assets/Images/GUI/Labels/startingOptions.png" id="2_3mdws"]
 [ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_yaek1"]
 [ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_s0olb"]
@@ -23,6 +24,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ilu23")
 
 [node name="StartingOptionsLabel" type="Sprite2D" parent="."]
 position = Vector2(250, 77)
@@ -85,20 +87,20 @@ autoplay = true
 expand = true
 loop = true
 
-[node name="PlayerBox" parent="." instance=ExtResource("7_ilu23")]
+[node name="UserPlayerBox" parent="." instance=ExtResource("7_ilu23")]
 position = Vector2(183, 205)
 
-[node name="PlayerBox" parent="PlayerBox" instance=ExtResource("7_ilu23")]
-position = Vector2(-4, 115)
+[node name="PlayerBox3" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(187, 440)
 
-[node name="PlayerBox" parent="PlayerBox/PlayerBox" instance=ExtResource("7_ilu23")]
-position = Vector2(8, 120)
+[node name="PlayerBox2" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(179, 320)
 
-[node name="PlayerBox2" parent="PlayerBox" instance=ExtResource("7_ilu23")]
-position = Vector2(344, 3)
+[node name="PlayerBox4" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(527, 208)
 
-[node name="PlayerBox" parent="PlayerBox/PlayerBox2" instance=ExtResource("7_ilu23")]
-position = Vector2(-4, 115)
+[node name="PlayerBox6" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(531, 443)
 
-[node name="PlayerBox" parent="PlayerBox/PlayerBox2/PlayerBox" instance=ExtResource("7_ilu23")]
-position = Vector2(8, 120)
+[node name="PlayerBox5" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(523, 323)
