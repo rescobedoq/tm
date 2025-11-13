@@ -1,9 +1,91 @@
-[gd_scene format=3 uid="uid://diiboocsqj2qg"]
+[gd_scene load_steps=11 format=3 uid="uid://diiboocsqj2qg"]
 
-[node name="PlayerBox" type="Control"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[ext_resource type="Texture2D" uid="uid://bnw60tflempku" path="res://Assets/Images/GUI/Box2/Box2.png" id="1_3nmla"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="2_sx58d"]
+[ext_resource type="Texture2D" uid="uid://2dg7n4kjqovx" path="res://Assets/Images/GUI/Icons/colors/red (1).png" id="3_4x48k"]
+[ext_resource type="Texture2D" uid="uid://btx61mjljpefi" path="res://Assets/Images/GUI/Icons/colors/blue (1).png" id="4_uei72"]
+[ext_resource type="Texture2D" uid="uid://but3sc8v5griq" path="res://Assets/Images/GUI/Icons/colors/green (1).png" id="5_v4fch"]
+[ext_resource type="Texture2D" uid="uid://dee22cnxkw6gy" path="res://Assets/Images/GUI/Icons/colors/pink (1).png" id="6_y2i4s"]
+[ext_resource type="Texture2D" uid="uid://bvucoqif6rryt" path="res://Assets/Images/GUI/Icons/colors/yellow (1).png" id="7_jd453"]
+[ext_resource type="Texture2D" uid="uid://bkbieseu7v63e" path="res://Assets/Images/GUI/Icons/colors/Solid_purple (1).png" id="8_xotco"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wmwhw"]
+line_spacing = -0.1
+font = ExtResource("2_sx58d")
+font_size = 21
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 16
+shadow_color = Color(1, 1, 1, 1)
+
+[sub_resource type="Theme" id="Theme_4x48k"]
+OptionButton/colors/font_disabled_color = Color(0.24313726, 0.24313726, 0.24313726, 0.52156866)
+OptionButton/icons/arrow = null
+
+[node name="PlayerBox" type="Node2D"]
+
+[node name="Box2" type="Sprite2D" parent="."]
+position = Vector2(0, 9.536743e-07)
+scale = Vector2(0.6108696, 0.68835616)
+texture = ExtResource("1_3nmla")
+
+[node name="OptionButton" type="OptionButton" parent="."]
+offset_left = 38.0
+offset_top = -17.0
+offset_right = 116.0
+offset_bottom = 5.0
+theme_override_font_sizes/font_size = 10
+alignment = 1
+autowrap_mode = 2
+item_count = 3
+popup/item_0/text = "Medieval"
+popup/item_0/id = 0
+popup/item_1/text = "Contemporary"
+popup/item_1/id = 1
+popup/item_2/text = "Future"
+popup/item_2/id = 2
+
+[node name="OptionButton2" type="OptionButton" parent="."]
+offset_left = 41.0
+offset_top = 6.0
+offset_right = 113.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 10
+item_count = 3
+popup/item_0/text = "Easy"
+popup/item_0/id = 0
+popup/item_1/text = "Medium"
+popup/item_1/id = 1
+popup/item_2/text = "Hard"
+popup/item_2/id = 2
+
+[node name="Label" type="Label" parent="."]
+offset_left = -70.0
+offset_top = -12.0
+offset_right = 36.0
+offset_bottom = 16.0
+text = "Inactivo"
+label_settings = SubResource("LabelSettings_wmwhw")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="OptionButton3" type="OptionButton" parent="."]
+offset_left = -131.0
+offset_top = -18.0
+offset_right = -69.0
+offset_bottom = 20.0
+theme = SubResource("Theme_4x48k")
+selected = 0
+item_count = 6
+popup/item_0/icon = ExtResource("3_4x48k")
+popup/item_0/id = 0
+popup/item_1/icon = ExtResource("4_uei72")
+popup/item_1/id = 1
+popup/item_2/icon = ExtResource("5_v4fch")
+popup/item_2/id = 2
+popup/item_3/icon = ExtResource("6_y2i4s")
+popup/item_3/id = 3
+popup/item_4/icon = ExtResource("7_jd453")
+popup/item_4/id = 4
+popup/item_5/icon = ExtResource("8_xotco")
+popup/item_5/id = 5
