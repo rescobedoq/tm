@@ -40,11 +40,8 @@ func _on_boton_presionado(nombre_boton):
 			print("TextureButton CREDITOS presionado")
 
 		"quitButton":
-			if not user_selected:
-				_show_alert_profile()
-				return
 			print("TextureButton SALIR presionado")
-
+			get_tree().quit()
 		"aboutUsButton":
 			print("Botón About Us presionado, cambiando con fade...")
 			FadeLayer.fade_to_scene("res://Scenes/GUI/CreditsMenu/creditsMenu.tscn")
