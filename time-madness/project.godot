@@ -11,8 +11,14 @@ config_version=5
 [application]
 
 config/name="Time Madness"
+run/main_scene="uid://c3b6rcw3scaac"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
+GlobalUser="*res://GlobalUser.gd"
 
 [filesystem]
 
