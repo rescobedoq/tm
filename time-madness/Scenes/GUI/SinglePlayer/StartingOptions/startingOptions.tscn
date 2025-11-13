@@ -1,0 +1,155 @@
+[gd_scene load_steps=12 format=3 uid="uid://d0su41w5bwnr8"]
+
+[ext_resource type="Script" uid="uid://c8lotx0i6ubkf" path="res://Scenes/GUI/SinglePlayer/StartingOptions/starting_options.gd" id="1_ilu23"]
+[ext_resource type="Texture2D" uid="uid://d2bqsg4505f7n" path="res://Assets/Images/GUI/Labels/startingOptions.png" id="2_3mdws"]
+[ext_resource type="Texture2D" uid="uid://hndc4tbo561" path="res://Assets/Images/mapPlaceholder.jpg" id="3_lnkrm"]
+[ext_resource type="Texture2D" uid="uid://cxjdc8gwmic2v" path="res://Assets/Images/GUI/Button2/normalButton.png" id="3_yaek1"]
+[ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_s0olb"]
+[ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_ilu23"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_lnkrm"]
+[ext_resource type="PackedScene" uid="uid://diiboocsqj2qg" path="res://Scenes/GUI/CreditsMenu/playerBox/playerBox.tscn" id="7_ilu23"]
+[ext_resource type="VideoStream" uid="uid://bd83n8on2g1eh" path="res://Assets/Videos/startingOptions.ogv" id="7_s0olb"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jbqt5"]
+font = ExtResource("6_lnkrm")
+font_size = 26
+font_color = Color(0.011764706, 0.011764706, 0, 1)
+outline_size = 5
+shadow_size = 12
+shadow_color = Color(0, 0, 0, 1)
+
+[sub_resource type="Theme" id="Theme_jbqt5"]
+default_font = ExtResource("6_lnkrm")
+default_font_size = 30
+
+[node name="StartingOptions" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ilu23")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+z_index = -6
+layout_mode = 0
+offset_left = -15.0
+offset_top = -33.0
+offset_right = 1174.0
+offset_bottom = 661.0
+mouse_filter = 2
+stream = ExtResource("7_s0olb")
+volume_db = -80.0
+speed_scale = 0.69
+autoplay = true
+expand = true
+loop = true
+
+[node name="OptionButton" type="OptionButton" parent="VideoStreamPlayer"]
+layout_mode = 0
+offset_left = 770.0
+offset_top = 231.0
+offset_right = 1052.0
+offset_bottom = 489.0
+selected = 0
+item_count = 1
+popup/item_0/icon = ExtResource("3_lnkrm")
+popup/item_0/id = 0
+
+[node name="StartingOptionsLabel" type="Sprite2D" parent="."]
+position = Vector2(250, 77)
+texture = ExtResource("2_3mdws")
+
+[node name="startButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 359.0
+offset_top = 546.0
+offset_right = 607.00354
+offset_bottom = 630.3811
+texture_normal = ExtResource("3_yaek1")
+texture_pressed = ExtResource("4_s0olb")
+texture_hover = ExtResource("5_ilu23")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="startButton"]
+layout_mode = 0
+offset_left = 70.999985
+offset_top = 30.00003
+offset_right = 195.99998
+offset_bottom = 57.00003
+text = "Start Game"
+label_settings = SubResource("LabelSettings_jbqt5")
+
+[node name="backButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 97.0
+offset_top = 546.0
+offset_right = 345.00354
+offset_bottom = 630.3811
+texture_normal = ExtResource("3_yaek1")
+texture_pressed = ExtResource("4_s0olb")
+texture_hover = ExtResource("5_ilu23")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="backButton"]
+layout_mode = 0
+offset_left = 59.590927
+offset_top = 30.763947
+offset_right = 184.59093
+offset_bottom = 57.763947
+text = "Back to menu"
+label_settings = SubResource("LabelSettings_jbqt5")
+
+[node name="UserPlayerBox" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(180, 235)
+
+[node name="PlayerBox3" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(177, 474)
+
+[node name="PlayerBox2" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(176, 350)
+
+[node name="PlayerBox4" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(524, 238)
+
+[node name="PlayerBox6" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(521, 476)
+
+[node name="PlayerBox5" parent="." instance=ExtResource("7_ilu23")]
+position = Vector2(520, 353)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 152.0
+offset_right = 153.0
+offset_bottom = 175.0
+theme = SubResource("Theme_jbqt5")
+theme_override_colors/font_color = Color(0.5882353, 0, 0.05490196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "Configure players"
+
+[node name="Label" type="Label" parent="Label"]
+layout_mode = 0
+offset_left = 666.0
+offset_top = -1.0
+offset_right = 847.0
+offset_bottom = 29.0
+theme = SubResource("Theme_jbqt5")
+theme_override_colors/font_color = Color(0.5882353, 0, 0.05490196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "Select a map"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Label" type="Label" parent="Sprite2D"]
+offset_left = 819.0
+offset_top = 480.0
+offset_right = 952.0
+offset_bottom = 503.0
+text = "Map size: 300 Km"
