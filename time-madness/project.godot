@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
 GlobalUser="*res://GlobalUser.gd"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg")
+
 [filesystem]
 
 import/blender/enabled=false
