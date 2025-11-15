@@ -126,6 +126,7 @@ name = "Ground071"
 id = 5
 albedo_texture = ExtResource("11_b0elb")
 normal_texture = ExtResource("12_p4f3n")
+uv_scale = 0.376
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_01fuw"]
 name = "Ground085"
@@ -138,6 +139,9 @@ name = "Ground093"
 id = 7
 albedo_texture = ExtResource("15_2nokh")
 normal_texture = ExtResource("16_x1eh4")
+uv_scale = 0.258
+detiling_rotation = 0.145
+detiling_shift = 0.115
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_3a0ni"]
 name = "PavingStones139"
@@ -156,12 +160,22 @@ name = "Rock061"
 id = 10
 albedo_texture = ExtResource("21_x0i4f")
 normal_texture = ExtResource("22_05elj")
+normal_depth = 1.825
+ao_strength = 1.325
+roughness = 0.345
+uv_scale = 0.065
+detiling_rotation = 0.239
+detiling_shift = 0.165
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_vg6yw"]
 name = "Rocks011"
 id = 11
+albedo_color = Color(0.7162962, 0.7162962, 0.7162962, 1)
 albedo_texture = ExtResource("23_bbahs")
 normal_texture = ExtResource("24_oepc0")
+normal_depth = 1.53
+uv_scale = 0.055
+detiling_rotation = 0.16
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_dhv76"]
 name = "Rocks021"
