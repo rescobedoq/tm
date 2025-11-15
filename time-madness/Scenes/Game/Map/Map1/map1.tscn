@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=54 format=3 uid="uid://7x3dhs70f2fg"]
 
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="Texture2D" uid="uid://jo04y7b56tm7" path="res://Assets/Textures/Grass001/Grass001_1K_normal.dds" id="2_31ip1"]
@@ -94,6 +94,8 @@ lod0_range = 128.0
 name = "Grass001_1K"
 albedo_texture = ExtResource("1_ss6el")
 normal_texture = ExtResource("2_31ip1")
+normal_depth = 2.0
+ao_strength = 2.0
 detiling_rotation = 0.046
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_r7xf6"]
@@ -106,14 +108,24 @@ detiling_rotation = 0.03
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ktqth"]
 name = "Grass005"
 id = 2
+albedo_color = Color(0.77594984, 0.7073771, 0.78403306, 1)
 albedo_texture = ExtResource("5_ws2in")
 normal_texture = ExtResource("6_ltkr0")
+roughness = 0.202
+uv_scale = 0.095
+detiling_rotation = 0.215
+detiling_shift = 0.205
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_0xyjj"]
 name = "Grass005_normal"
 id = 3
+albedo_color = Color(0.641934, 0.641934, 0.641934, 1)
 albedo_texture = ExtResource("7_8cs45")
 normal_texture = ExtResource("8_2vshx")
+normal_depth = 1.695
+ao_strength = 0.035
+roughness = 1.0
+uv_scale = 0.21
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_ex84q"]
 name = "Ground068"
@@ -133,6 +145,10 @@ name = "Ground085"
 id = 6
 albedo_texture = ExtResource("13_4fp00")
 normal_texture = ExtResource("14_7nrd8")
+roughness = -0.05
+uv_scale = 0.44
+detiling_rotation = 0.13
+detiling_shift = 0.65
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_axm4j"]
 name = "Ground093"
@@ -146,8 +162,15 @@ detiling_shift = 0.115
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_3a0ni"]
 name = "PavingStones139"
 id = 8
+albedo_color = Color(0.6392157, 0.6509804, 0.6392157, 1)
 albedo_texture = ExtResource("17_5yeg1")
 normal_texture = ExtResource("18_ccshx")
+normal_depth = 2.0
+ao_strength = 0.99
+roughness = 0.145
+uv_scale = 0.16
+detiling_rotation = 0.22
+detiling_shift = 0.245
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_tnyvg"]
 name = "PavingStones141"
@@ -182,22 +205,36 @@ name = "Rocks021"
 id = 12
 albedo_texture = ExtResource("25_xjyug")
 normal_texture = ExtResource("26_3qd2f")
+uv_scale = 0.184
+detiling_rotation = 0.128
+detiling_shift = 0.349
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_jjcsv"]
 name = "Rocks022"
 id = 13
+albedo_color = Color(0.43134022, 0.43134025, 0.43134025, 1)
 albedo_texture = ExtResource("27_ftktd")
 normal_texture = ExtResource("28_pxqre")
+uv_scale = 0.39
+detiling_rotation = 0.3
+detiling_shift = 0.19
 
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_imi40"]
 name = "Rocks023"
 id = 14
 albedo_texture = ExtResource("29_ktje0")
 normal_texture = ExtResource("30_kotuw")
+normal_depth = 0.702
+roughness = 1.0
+uv_scale = 0.19
+detiling_rotation = 0.404
+detiling_shift = 0.125
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_n3bur"]
 mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_vsjim")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_l8pic"), SubResource("Terrain3DTextureAsset_r7xf6"), SubResource("Terrain3DTextureAsset_ktqth"), SubResource("Terrain3DTextureAsset_0xyjj"), SubResource("Terrain3DTextureAsset_ex84q"), SubResource("Terrain3DTextureAsset_ii5xe"), SubResource("Terrain3DTextureAsset_01fuw"), SubResource("Terrain3DTextureAsset_axm4j"), SubResource("Terrain3DTextureAsset_3a0ni"), SubResource("Terrain3DTextureAsset_tnyvg"), SubResource("Terrain3DTextureAsset_1v4wc"), SubResource("Terrain3DTextureAsset_vg6yw"), SubResource("Terrain3DTextureAsset_dhv76"), SubResource("Terrain3DTextureAsset_jjcsv"), SubResource("Terrain3DTextureAsset_imi40")])
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ws2in"]
 
 [node name="Map1" type="Node3D"]
 
@@ -206,4 +243,7 @@ data_directory = "res://Scenes/Game/Map/Map1/data"
 material = SubResource("Terrain3DMaterial_3q8cq")
 assets = SubResource("Terrain3DAssets_n3bur")
 top_level = true
-metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.185753, 83.82227, 61.336983)
+mesh = SubResource("CapsuleMesh_ws2in")
