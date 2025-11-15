@@ -1,5 +1,6 @@
-[gd_scene load_steps=54 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=55 format=3 uid="uid://7x3dhs70f2fg"]
 
+[ext_resource type="PackedScene" uid="uid://domhm87hbhbg1" path="res://demo/components/Player.tscn" id="1_ltkr0"]
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="Texture2D" uid="uid://jo04y7b56tm7" path="res://Assets/Textures/Grass001/Grass001_1K_normal.dds" id="2_31ip1"]
 [ext_resource type="Texture2D" uid="uid://c6bwmqdyx3fiu" path="res://Assets/Textures/Grass004/Grass004.dds" id="3_806h8"]
@@ -238,11 +239,14 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 
 [node name="Map1" type="Node3D"]
 
+[node name="Player" parent="." instance=ExtResource("1_ltkr0")]
+
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://Scenes/Game/Map/Map1/data"
 material = SubResource("Terrain3DMaterial_3q8cq")
 assets = SubResource("Terrain3DAssets_n3bur")
 top_level = true
+metadata/_edit_lock_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.185753, 83.82227, 61.336983)
