@@ -1,6 +1,5 @@
 extends Node3D
 
-
 # ---------------------------------------------------
 # Parámetros exportados para tunear desde el Inspector
 # ---------------------------------------------------
@@ -15,6 +14,12 @@ extends Node3D
 @export var allow_rotation: bool = true
 @export var allow_zoom: bool = true
 @export var allow_pan: bool = true
+
+# Límites del terreno
+@export var min_x: float = 0
+@export var max_x: float = 250
+@export var min_z: float = -250
+@export var max_z: float = 0
 
 # ---------------------------------------------------
 # Nodos de la cámara
@@ -36,7 +41,6 @@ var zoom_level: float = 64
 func handle_keyboard_movement(delta: float) -> void:
 	var direction = Vector3.ZERO
 
-	# Lectura de acciones del teclado
 	if Input.is_action_pressed("ui_up"):
 		direction.z += 1
 	if Input.is_action_pressed("ui_down"):
@@ -48,13 +52,13 @@ func handle_keyboard_movement(delta: float) -> void:
 
 	if direction != Vector3.ZERO:
 		direction = direction.normalized()
-		# Transformar dirección relativa a la rotación horizontal de la cámara
 		var basis = global_transform.basis
 		var forward = -basis.z
 		var right = basis.x
 		var move = (direction.z * forward + direction.x * right).normalized()
-		move.y = 0 # No mover en vertical
+		move.y = 0
 		global_translate(move * movement_speed * delta)
+		clamp_position()
 
 # ---------------------------------------------------
 # MOVIMIENTO POR BORDE DE PANTALLA
@@ -77,13 +81,13 @@ func handle_edge_movement(delta: float) -> void:
 
 	if direction != Vector3.ZERO:
 		direction = direction.normalized()
-		# Aplicar rotación horizontal de la cámara
 		var basis = global_transform.basis
 		var forward = -basis.z
 		var right = basis.x
 		var move = (direction.z * forward + direction.x * right).normalized()
 		move.y = 0
 		global_translate(move * movement_speed * delta)
+		clamp_position()
 
 # ---------------------------------------------------
 # ROTACIÓN DE LA CÁMARA
@@ -93,10 +97,8 @@ func handle_rotation(delta: float) -> void:
 		var mouse_displacement = get_viewport().get_mouse_position() - last_mouse_position
 		last_mouse_position = get_viewport().get_mouse_position()
 
-		# Rotación horizontal del nodo raíz
 		rotation.y -= deg_to_rad(mouse_displacement.x * rotation_speed * delta)
 
-		# Inclinación vertical del nodo Elevation
 		var elevation_angle = rad_to_deg(elevation_node.rotation.x)
 		elevation_angle = clamp(
 			elevation_angle - mouse_displacement.y * rotation_speed * delta,
@@ -122,6 +124,16 @@ func handle_panning(delta: float) -> void:
 		last_mouse_position = current_mouse_pos
 
 		global_translate(Vector3(-displacement.x, 0, -displacement.y) * 0.1)
+		clamp_position()
+
+# ---------------------------------------------------
+# LIMITE DEL TERRENO
+# ---------------------------------------------------
+func clamp_position() -> void:
+	var pos = global_position
+	pos.x = clamp(pos.x, min_x, max_x)
+	pos.z = clamp(pos.z, min_z, max_z)
+	global_position = pos
 
 # ---------------------------------------------------
 # PROCESO PRINCIPAL
@@ -142,7 +154,6 @@ func _process(delta: float) -> void:
 # MANEJO DE INPUT
 # ---------------------------------------------------
 func _unhandled_input(event: InputEvent) -> void:
-	# ROTACIÓN
 	if event.is_action_pressed("camera_rotate"):
 		is_rotating = true
 		last_mouse_position = get_viewport().get_mouse_position()
@@ -151,7 +162,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		is_rotating = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	# PAN
 	if event.is_action_pressed("camera_pan"):
 		is_panning = true
 		last_mouse_position = get_viewport().get_mouse_position()
@@ -160,7 +170,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		is_panning = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	# ZOOM
 	if event.is_action_pressed("zoom_in"):
 		zoom_level -= zoom_speed
 	elif event.is_action_pressed("zoom_out"):
@@ -170,7 +179,5 @@ func _unhandled_input(event: InputEvent) -> void:
 # READY
 # ---------------------------------------------------
 func _ready() -> void:
-	# Cursor siempre visible
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	# Inicializa zoom con la altura actual de la cámara
 	zoom_level = camera.position.y
