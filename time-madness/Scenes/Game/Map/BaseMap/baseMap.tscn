@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=21 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://byd1rvnbstdph" path="res://Assets/Textures/PavingStones139/PavingStones139.dds" id="1_sklg3"]
 [ext_resource type="Texture2D" uid="uid://huwl67nj6mr0" path="res://Assets/Textures/PavingStones139/PavingStones139_normal.dds" id="2_654wj"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bhfymb7jaa3qq" path="res://Assets/Textures/Ground085/Ground085_normal.dds" id="6_qf57n"]
 [ext_resource type="Texture2D" uid="uid://bhl56h35up57t" path="res://Assets/Textures/Rocks022/Rocks022.dds" id="7_3ndsq"]
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="8_v03kk"]
+[ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="9_v03kk"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -119,3 +120,11 @@ material = SubResource("Terrain3DMaterial_ft4ud")
 assets = SubResource("Terrain3DAssets_moed6")
 top_level = true
 metadata/_edit_lock_ = true
+
+[node name="RtsController" parent="." instance=ExtResource("9_v03kk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)
+light_energy = 1.5
+sky_mode = 1
