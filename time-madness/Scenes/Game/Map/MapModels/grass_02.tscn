@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://dqp6ymdetv50x"]
+
+[ext_resource type="PackedScene" uid="uid://rog4cv1j3xb7" path="res://Assets/Models/MapElements/grass/models/grass02.fbx" id="1_x6kxv"]
+[ext_resource type="Texture2D" uid="uid://p2lnnjvd5w4m" path="res://Assets/Models/MapElements/grass/textures/grass_bush_summer.png" id="2_8wxdh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jd03n"]
+transparency = 1
+albedo_texture = ExtResource("2_8wxdh")
+
+[node name="grass02" instance=ExtResource("1_x6kxv")]
+
+[node name="grass2" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_jd03n")

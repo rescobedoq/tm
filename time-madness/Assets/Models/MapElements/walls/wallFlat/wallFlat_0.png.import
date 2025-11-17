@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c20pgxklcl0r1"
-path.s3tc="res://.godot/imported/grass_spring.png-cd7fd6ac37328bf57313b388834c3f2a.s3tc.ctex"
+uid="uid://7k7w4ptsmwsm"
+path.s3tc="res://.godot/imported/wallFlat_0.png-770f4ab59f2ba3dfcbac946a67976c23.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "f62ebbaf4c6bd965e17c9d75de4e3c9d"
+}
 
 [deps]
 
-source_file="res://Assets/Models/MapElements/grass/textures/grass_spring.png"
-dest_files=["res://.godot/imported/grass_spring.png-cd7fd6ac37328bf57313b388834c3f2a.s3tc.ctex"]
+source_file="res://Assets/Models/MapElements/walls/wallFlat/wallFlat_0.png"
+dest_files=["res://.godot/imported/wallFlat_0.png-770f4ab59f2ba3dfcbac946a67976c23.s3tc.ctex"]
 
 [params]
 

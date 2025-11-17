@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://djpdddan262xi"]
+
+[ext_resource type="PackedScene" uid="uid://bne2hasuci3p1" path="res://Assets/Models/MapElements/grass/models/grass03.fbx" id="1_ncchc"]
+[ext_resource type="Texture2D" uid="uid://ccf2peqe3lgmp" path="res://Assets/Models/MapElements/grass/textures/grass_patch_spring.png" id="2_7pd01"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nk413"]
+transparency = 1
+albedo_texture = ExtResource("2_7pd01")
+
+[node name="grass03" instance=ExtResource("1_ncchc")]
+
+[node name="grass3" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_nk413")

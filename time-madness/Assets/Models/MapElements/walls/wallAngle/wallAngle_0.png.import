@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c20pgxklcl0r1"
-path.s3tc="res://.godot/imported/grass_spring.png-cd7fd6ac37328bf57313b388834c3f2a.s3tc.ctex"
+uid="uid://jb5iencrtwy3"
+path.s3tc="res://.godot/imported/wallAngle_0.png-506d276397fac3bd8f662efcc939884b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "5d2d349f22956926772b394c56a4501f"
+}
 
 [deps]
 
-source_file="res://Assets/Models/MapElements/grass/textures/grass_spring.png"
-dest_files=["res://.godot/imported/grass_spring.png-cd7fd6ac37328bf57313b388834c3f2a.s3tc.ctex"]
+source_file="res://Assets/Models/MapElements/walls/wallAngle/wallAngle_0.png"
+dest_files=["res://.godot/imported/wallAngle_0.png-506d276397fac3bd8f662efcc939884b.s3tc.ctex"]
 
 [params]
 

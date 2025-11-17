@@ -1,0 +1,46 @@
+[gd_scene load_steps=5 format=4 uid="uid://u35uc2yw5l4b"]
+
+[ext_resource type="Texture2D" uid="uid://cksnwxlv6o17" path="res://Assets/Models/MapElements/rocks/Rokcs 2.png" id="1_nuevo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ipdpm"]
+resource_name = "stone 2"
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_nuevo")
+emission_enabled = true
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_anhke"]
+_surfaces = [{
+"aabb": AABB(-0.012859201, -0.012084909, -0.010594665, 0.02330202, 0.027345747, 0.018646844),
+"format": 34359742465,
+"index_count": 132,
+"index_data": PackedByteArray("AAABAAIAAgABAAMAAQAEAAMAAgADAAUABAAFAAMAAQAGAAQABgABAAAABAAHAAUAAAAIAAYABAAJAAcACgAAAAIACQAEAAsABgALAAQABwAJAAwADAAJAAsADQALAAYADAALAA0ADgANAAYADgAGAAgADwANAA4ADgAIABAADgAQAA8ACAAAABAAAAAKABAADwARAA0AEQAMAA0AEAARAA8AEgAMABEAEgAHAAwAEAATABEAEwASABEAFAAQAAoAFQATABAAFAAVABAAEgATABUACgAWABQAFQAUABYACgACABYAFgACAAUAFgAXABUAEgAVABcAFgAFABcABwASABcABwAXAAUA"),
+"name": "stone 2",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 24,
+"vertex_data": PackedByteArray("eMkXvPN/uLvNbRq8k3Q3O1dLO7whQWO7b/mIulz2JLs/lS282L7qO2UnA7zYaCQ7SRLbO+ivAbxXYGk7XBgrPEITDDxcywc7IGWtu8j/RbyDnW67g5AHPJQACTzcjtg7ih46vJicCbwxwcG7fO60O/KoP7tXKwM8RwUAvMwFyzvzBPy7wwJ7ul+aIbyEnjA7A6lBu9zLzrnc/AI87CeLu2nNPLtk/sM7Zq9SvJ8tirtIx4y6Lq5JvLRz2zsUYQc7pa41vAhrFDyPLtM5yDZnu33QKjtJ7QM8wbaeO/3PITzpVPs7w63NupcIejzN34Y6YRM3u+4/GjzWPxO8PaWMujuGeDzhXOo5vUHPOoHU2Ts1BR+8hOMZPEfzHTxmxpE5")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_kurwp"]
+resource_name = "Cube"
+_surfaces = [{
+"aabb": AABB(-0.012859201, -0.012084909, -0.010594665, 0.02330202, 0.027345747, 0.018646844),
+"attribute_data": PackedByteArray("2FNVPw58Yj/T8BQ/i+VfP9WETD/yE0c/usw4Pjo/3D6AtWk9oKkMP/gjdz1Klgk/pGyePip93D7yQjk+njEFP5gf3z5Fkho/pGyePip93D4bmeQ+1NX3PkGyaD6ocS0/8kI5Pp4xBT9UdOA+Bl9SP0GyaD6ocS0/mB/fPkWSGj8UWF0+undKPwjWRz4Ytjw/CNZHPhi2PD/yQjk+njEFP0GyaD6ocS0/2PNGPWDaLT+AtWk9oKkMP8pHFT/YENw91aNBP6SWkT4aihU/ECNpPu5CTD+gSmc9pENPP2hGhz2ouu09HGtmPwjWRz4Ytjw/FFhdPrp3Sj9Yj4c997ZbP9jzRj1g2i0/GooVPxAjaT4emeQ+iLM8PhA8Cj+gSmc9GKvmPpAStz7KRxU/2BDcPftoHT+CTt4+1aNBP6SWkT6YLkQ/MoWqPm0r+z502Nw+GKvmPpAStz4aihU/ECNpPqK/Vz/meFg/GckcP7p3Sj8+rVU/Bl9SP/KANT9ai3E/aSoDPxxrZj/i1DQ+Oj/cPgOCgz6KN6g+5rWEPtzuvz4UNNQ9aq/PPlRfgT2MPUo+2PNGPeCkTj7YU1U/2ncXPxZIFT9yRuA+/x8hP46X3j7VhEw/8hNHP5+I8z7M8kA/0/AUP4vlXz/itYQ+dCsLPgOCgz6KN6g+VF+BPYw9Sj644Cw+YJiyPere7T66EUA/HCoIP3xO3j4WSBU/ckbgPhuZ5D6HySU/n4jzPszyQD+KwSc/WotxP9PwFD+L5V8/2FNVPw58Yj8n1kY/fW5uPw=="),
+"format": 34359742487,
+"index_count": 132,
+"index_data": PackedByteArray("AAABAAIAAwAEAAUAAwAGAAQABgAHAAQACAAJAAoACAALAAkACwAMAAkADQAOAA8ADQAQAA4AEAARAA4AEgATABQAEgAVABMAFQAWABMAFwAYABkAFwAaABgAGgAbABgAHAAdAB4AHAAfAB0AHwAgAB0AIQAiACMAIQAkACIAIQAjACUAJgAnACgAJgApACcAKQAqACcAKgArACcALAAtAC4ALAAvAC0ALwAwAC0AMQAyADMAMQA0ADIANAA1ADIANAA2ADUANwA4ADkANwA6ADgAOgA7ADgAOgA8ADsAPQA+AD8APwBAAD0AQQBCAEMAQQBEAEIAQQBDAEUARgBHAEgASABJAEYA"),
+"material": SubResource("StandardMaterial3D_ipdpm"),
+"name": "stone 2",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 74,
+"vertex_data": PackedByteArray("eMkXvPN/uLvNbRq8k3Q3O1dLO7whQWO7b/mIulz2JLs/lS28k3Q3O1dLO7whQWO7SRLbO+ivAbxXYGk72L7qO2UnA7zYaCQ7IGWtu8j/RbyDnW67wwJ7ul+aIbyEnjA7Zq9SvJ8tirtIx4y6IGWtu8j/RbyDnW67ih46vJicCbwxwcG77CeLu2nNPLtk/sM7wwJ7ul+aIbyEnjA7Lq5JvLRz2zsUYQc77CeLu2nNPLtk/sM7Zq9SvJ8tirtIx4y6yDZnu33QKjtJ7QM8A6lBu9zLzrnc/AI8A6lBu9zLzrnc/AI8wwJ7ul+aIbyEnjA77CeLu2nNPLtk/sM7fO60O/KoP7tXKwM8SRLbO+ivAbxXYGk7YRM3u+4/GjzWPxO8pa41vAhrFDyPLtM5RwUAvMwFyzvzBPy7PaWMujuGeDzhXOo5w63NupcIejzN34Y6wbaeO/3PITzpVPs7A6lBu9zLzrnc/AI8yDZnu33QKjtJ7QM8g5AHPJQACTzcjtg7fO60O/KoP7tXKwM8RwUAvMwFyzvzBPy7b/mIulz2JLs/lS28vUHPOoHU2Ts1BR+8eMkXvPN/uLvNbRq8YRM3u+4/GjzWPxO8Zq9SvJ8tirtIx4y6pa41vAhrFDyPLtM5Lq5JvLRz2zsUYQc7ih46vJicCbwxwcG7eMkXvPN/uLvNbRq8RwUAvMwFyzvzBPy7pa41vAhrFDyPLtM5yDZnu33QKjtJ7QM8Lq5JvLRz2zsUYQc7w63NupcIejzN34Y6wbaeO/3PITzpVPs7g5AHPJQACTzcjtg7hOMZPEfzHTxmxpE5XBgrPEITDDxcywc7wbaeO/3PITzpVPs7PaWMujuGeDzhXOo5w63NupcIejzN34Y6vUHPOoHU2Ts1BR+8XBgrPEITDDxcywc7hOMZPEfzHTxmxpE5b/mIulz2JLs/lS282L7qO2UnA7zYaCQ7k3Q3O1dLO7whQWO7vUHPOoHU2Ts1BR+8hOMZPEfzHTxmxpE5PaWMujuGeDzhXOo5YRM3u+4/GjzWPxO8SRLbO+ivAbxXYGk7g5AHPJQACTzcjtg7XBgrPEITDDxcywc7fO60O/KoP7tXKwM82L7qO2UnA7zYaCQ7IGWtu8j/RbyDnW67k3Q3O1dLO7whQWO7eMkXvPN/uLvNbRq8ih46vJicCbwxwcG7kM1oCUQhMeGQzWgJRCEx4ZDNaAlEITHhx42NKsgSfLfHjY0qbhwbu8eNjSoFIjS9x42NKvEVq7jHjY0qAxuTukpai1EREFTdSlqLUZ8PVt1KWotR4Q1d3Upai1FOEFPdSlqLUdoOWd0dThdwLhI74B1OF3C0ElfgHU4XcBwSN+AdThdw8BJj4B1OF3AZFdXg63dOT88DmLbrd05PwwJjt+t3Tk+bBP6163dOT40CjLfrd05PSAGBuKk5udnEeWzUqTm52cR5bNSpObnZxHls1Kk5udnEeWzUqTm52cR5bNR7itmCIx0wtnuK2YKiFx+5e4rZgs8Wj7l7itmCIBtDt3uK2YKQFrG5twys6whbpuS3DKzrLlu65LcMrOv4Wp3ktwys6y9bu+S3DKzrh1ph5GsOiLLDbl7aaw6IsrluU9prDoiyw25e2msOiLKnbj7aaw6IsqFuONprDoiytm5P2utjkqesClna62OSp20PCd3rY5KnHgMU1utjkqfyEOXd62OSp+ARa95LpfnFaOuXn0ul+cVo65efS6X5xWjrl59LpfnFaOuXn0ul+cVo65efS6X5xWjrl5/T8jVDAh+p7dPyNUMCH6nt0/I1QwIfqe3T8jVDAh+p7dPyNUMCH6nt0/I1QwIfqe1dxjXiys7BkF3GNeLKzsGQXcY14srOwZBdxjXiys7BkErNpXEE+TPsSs2lcQT5M+xKzaVxBPkz7ErNpXEE+TPsSs2lcQT5M+xHPHcB/yG/30c8dwGWI0zhRzx3AcsentxHPHcBjxt12Q==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_anhke")
+
+[node name="mediun rock 6" type="MeshInstance3D"]
+transform = Transform3D(60.037334, -11.843689, 22.62663, -23.571157, -3.4473126, 60.739082, -9.830458, -64.06686, -7.4511075, 0, 0, 0)
+mesh = SubResource("ArrayMesh_kurwp")
+skeleton = NodePath("")

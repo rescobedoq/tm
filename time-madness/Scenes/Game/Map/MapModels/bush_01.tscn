@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3 uid="uid://dge57lgxq555p"]
+
+[ext_resource type="PackedScene" uid="uid://bsak5g1cyicjd" path="res://Assets/Models/MapElements/bushes/models/bush01.fbx" id="1_nwgfd"]
+[ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="2_cp33y"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mcngx"]
+transparency = 1
+albedo_texture = ExtResource("2_cp33y")
+
+[node name="bush01" instance=ExtResource("1_nwgfd")]
+
+[node name="bush1" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_mcngx")
