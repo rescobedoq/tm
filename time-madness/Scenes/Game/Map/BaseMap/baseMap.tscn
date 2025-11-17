@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=22 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://byd1rvnbstdph" path="res://Assets/Textures/PavingStones139/PavingStones139.dds" id="1_sklg3"]
 [ext_resource type="Texture2D" uid="uid://huwl67nj6mr0" path="res://Assets/Textures/PavingStones139/PavingStones139_normal.dds" id="2_654wj"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://bhl56h35up57t" path="res://Assets/Textures/Rocks022/Rocks022.dds" id="7_3ndsq"]
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="8_v03kk"]
 [ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="9_v03kk"]
+[ext_resource type="PackedScene" uid="uid://cfippt6fd2514" path="res://Scenes/Game/Map/MapModels/tree_02.tscn" id="10_76gom"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -52,7 +53,7 @@ _shader_parameters = {
 }
 world_background = 0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dlsav"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qf57n"]
 transparency = 4
 cull_mode = 2
 vertex_color_use_as_albedo = true
@@ -62,10 +63,10 @@ distance_fade_mode = 1
 distance_fade_min_distance = 128.0
 distance_fade_max_distance = 96.0
 
-[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_c8bs7"]
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_infvj"]
 generated_type = 1
 height_offset = 0.5
-material_override = SubResource("StandardMaterial3D_dlsav")
+material_override = SubResource("StandardMaterial3D_qf57n")
 last_lod = 0
 last_shadow_lod = 0
 lod0_range = 128.0
@@ -109,7 +110,7 @@ roughness = -0.005
 uv_scale = 0.166
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_moed6"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_c8bs7")])
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_infvj")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_poqdo"), SubResource("Terrain3DTextureAsset_emt48"), SubResource("Terrain3DTextureAsset_hjoq5"), SubResource("Terrain3DTextureAsset_76gom")])
 
 [node name="BaseMap" type="Node3D"]
@@ -128,3 +129,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -40, 0)
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)
 light_energy = 1.5
 sky_mode = 1
+
+[node name="tree02" parent="." instance=ExtResource("10_76gom")]
+transform = Transform3D(3.755, 0, 0, 0, 3.755, 0, 0, 0, 3.755, 86.607, 0, -82.055)
