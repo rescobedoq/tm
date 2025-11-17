@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://bkp78tmtfe67e"]
+
+[ext_resource type="PackedScene" uid="uid://c022feayelo0" path="res://Assets/Models/MapElements/trees/models/tree04.fbx" id="1_hpim3"]
+[ext_resource type="Texture2D" uid="uid://pt3uleqvy8v7" path="res://Assets/Models/MapElements/trees/textures/tree04_spring.png" id="2_yctbl"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d445r"]
+albedo_texture = ExtResource("2_yctbl")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_syqlr"]
+transparency = 1
+albedo_texture = ExtResource("2_yctbl")
+
+[node name="tree04" instance=ExtResource("1_hpim3")]
+
+[node name="tree04" parent="." index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_d445r")
+
+[node name="tree04_top" parent="tree04" index="0"]
+surface_material_override/0 = SubResource("StandardMaterial3D_syqlr")

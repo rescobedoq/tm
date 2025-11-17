@@ -1,0 +1,42 @@
+[gd_scene load_steps=11 format=3 uid="uid://c7og13mu8aam3"]
+
+[ext_resource type="PackedScene" uid="uid://dphx30lwjlopu" path="res://Assets/Models/MapElements/rocks/rocks.fbx" id="1_e7m47"]
+[ext_resource type="PackedScene" uid="uid://dcqbf41vlotr8" path="res://Scenes/Game/Map/MapModels/medium_rock_5.tscn" id="2_0lbgc"]
+[ext_resource type="PackedScene" uid="uid://u35uc2yw5l4b" path="res://Scenes/Game/Map/MapModels/medium_rock_6.tscn" id="2_ihar1"]
+[ext_resource type="Texture2D" uid="uid://4i8gjvgrre6x" path="res://Assets/Models/MapElements/rocks/Rocks.png" id="2_ij3vh"]
+[ext_resource type="Texture2D" uid="uid://cksnwxlv6o17" path="res://Assets/Models/MapElements/rocks/Rokcs 2.png" id="3_0lbgc"]
+[ext_resource type="PackedScene" uid="uid://ckubvwo1me2n0" path="res://Scenes/Game/Map/MapModels/medium_rock_4.tscn" id="4_4k653"]
+[ext_resource type="PackedScene" uid="uid://dr6tmteiqlavm" path="res://Scenes/Game/Map/MapModels/big_rock_2.tscn" id="7_8wq80"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4k653"]
+albedo_texture = ExtResource("2_ij3vh")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ihar1"]
+albedo_texture = ExtResource("3_0lbgc")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wq80"]
+albedo_texture = ExtResource("2_ij3vh")
+
+[node name="rocks" instance=ExtResource("1_e7m47")]
+
+[node name="mediun rock 6" parent="." index="1" instance=ExtResource("2_ihar1")]
+transform = Transform3D(60.037334, -11.843689, 22.626623, -23.57115, -3.4473116, 60.739082, -9.830454, -64.06686, -7.45111, 0.16178435, 0.44075847, 2.9514086)
+
+[node name="mediun rock 5" parent="." index="2" instance=ExtResource("2_0lbgc")]
+transform = Transform3D(60.037334, -11.843689, 22.626623, -23.57115, -3.4473116, 60.739082, -9.830454, -64.06686, -7.45111, 0.16178435, 0.44075847, 2.9514086)
+
+[node name="mediun rock 2" parent="." index="3"]
+surface_material_override/0 = SubResource("StandardMaterial3D_4k653")
+
+[node name="mediun rock 4" parent="." index="4" instance=ExtResource("4_4k653")]
+transform = Transform3D(117.66167, 0, 0, 0, -5.1431543e-06, 117.66166, 0, -117.66166, -5.1431543e-06, 0.28890058, 0.26593006, 0.2593695)
+surface_material_override/0 = null
+
+[node name="mediun rock" parent="." index="5"]
+surface_material_override/0 = SubResource("StandardMaterial3D_ihar1")
+
+[node name="big rock" parent="." index="6"]
+surface_material_override/0 = SubResource("StandardMaterial3D_8wq80")
+
+[node name="big rock2" parent="." index="7" instance=ExtResource("7_8wq80")]
+transform = Transform3D(104.41901, 0, 0, 0, -6.64683e-06, 179.11754, 0, -152.06175, -7.829476e-06, -0.10400421, 0.6485757, -5.076661)
