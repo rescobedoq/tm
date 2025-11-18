@@ -363,3 +363,11 @@ transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230
 
 [node name="MedievalSoldierControler" parent="." instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108.22387, 0, -58.9554)
+attack_damage = null
+attack_range = null
+entity_name = null
+health = null
+max_health = null
+move_speed = null
+is_alive = null
+selected = null
