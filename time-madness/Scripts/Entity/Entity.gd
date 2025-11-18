@@ -39,32 +39,14 @@ func _update_selection_visual():
 		print("[%s] No tiene nodo Selection." % name)
 
 
-# ---------------------------------------------------------
-#   CLICK PARA SELECCIONAR
-# ---------------------------------------------------------
-func _input(event):
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-
-		var camera := get_viewport().get_camera_3d()
-		if camera == null:
-			return
-
-		var from := camera.project_ray_origin(event.position)
-		var to := from + camera.project_ray_normal(event.position) * 1000
-
-		var result := get_world_3d().direct_space_state.intersect_ray(
-			PhysicsRayQueryParameters3D.create(from, to)
-		)
-
-		if result and result.collider == self:
-			select()
-
-
 func select():
-	selected = true
+	if $Selection:
+		$Selection.visible = true
 
 func deselect():
-	selected = false
+	if $Selection:
+		$Selection.visible = false
+
 
 
 # ---------------------------------------------------------

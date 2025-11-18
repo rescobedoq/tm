@@ -1,4 +1,4 @@
-extends Node
+extends Node3D
 class_name PlayerController
 
 # ------------------------------
@@ -42,8 +42,7 @@ var selected_unit: Entity = null  # Unidad actualmente seleccionada
 # ------------------------------
 # Cámara del jugador para raycasts
 # ------------------------------
-var camera: Camera3D = null
-
+@onready var camera: Camera3D = $RtsController/Elevation/Camera3D
 # ------------------------------
 # Gestión de unidades del jugador
 # ------------------------------
@@ -59,6 +58,72 @@ func add_unit(unit: Entity) -> void:
 		# Asigna automáticamente al jugador
 		unit.player_owner = self
 		print("Unidad agregada a ", player_name, ": ", unit.name)
+		
+		
+
+# En PlayerController.gd
+func _input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		print(">>> Click izquierdo detectado")
+		
+		if camera == null:
+			print("ERROR: No hay cámara asignada en PlayerController")
+			return
+
+		# Obtener ray
+		var from = camera.project_ray_origin(event.position)
+		var to = from + camera.project_ray_normal(event.position) * 1000
+		print("Ray desde cámara:", from, " -> ", to)
+
+		# Crear parámetros del raycast
+		var params = PhysicsRayQueryParameters3D.create(from, to)
+		
+		# Ejecutar raycast
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result:
+			print("Collider detectado:", result.collider)
+			
+			if result.collider is Entity:
+				var entity = result.collider as Entity
+				print("Collider es una Entity:", entity.name)
+				
+				if entity.player_owner == self:
+					print("Unidad pertenece a este jugador, seleccionando...")
+					select_unit(entity)
+				else:
+					print("Unidad NO pertenece a este jugador, deseleccionando actual")
+					deselect_current_unit()
+			else:
+				print("Collider NO es una Entity, deseleccionando actual")
+				deselect_current_unit()
+		else:
+			print("No se detectó ningún collider, deseleccionando actual")
+			deselect_current_unit()
+
+
+#Seleccion de unidades!
+func select_unit(unit: Entity) -> void:
+	if unit == null:
+		return
+
+	# Deselecciona la unidad anterior
+	if selected_unit != null and selected_unit != unit:
+		selected_unit.deselect()  # Asegúrate que tu Unit/Entity tenga esta función
+
+	# Marca la nueva unidad
+	selected_unit = unit
+	selected_unit.select()       # Asegúrate que tu Unit/Entity tenga esta función
+
+	print("Unidad seleccionada: ", selected_unit.name)
+	
+func deselect_current_unit() -> void:
+	if selected_unit != null:
+		selected_unit.deselect()
+		selected_unit = null
+
+
+
 func _ready() -> void:
 	var rts = $RtsController
 	rts.movement_speed = movement_speed
