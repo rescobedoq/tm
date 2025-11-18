@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdf557rqesylj"]
+
+[ext_resource type="Script" uid="uid://dvury3h1prli" path="res://Scripts/Player/PlayerController/player_controller.gd" id="1_ailik"]
+[ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="2_lpwxd"]
+
+[node name="PlayerController" type="Node"]
+script = ExtResource("1_ailik")
+
+[node name="RtsController" parent="." instance=ExtResource("2_lpwxd")]
