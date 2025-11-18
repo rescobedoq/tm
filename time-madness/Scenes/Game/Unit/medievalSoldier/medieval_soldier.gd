@@ -1,6 +1,7 @@
 extends Unit
 
-@onready var anim_player = $AnimationPlayer
+@onready var anim_player = $medievalSoldier/AnimationPlayer
+@onready var collision_shape = $CollisionShape3D
 
 func play_idle():
 	print(">>> play_idle CALLED <<<")

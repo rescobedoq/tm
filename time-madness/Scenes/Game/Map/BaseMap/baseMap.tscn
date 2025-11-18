@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=42 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Texture2D" uid="uid://byd1rvnbstdph" path="res://Assets/Textures/PavingStones139/PavingStones139.dds" id="1_sklg3"]
@@ -24,7 +24,6 @@
 [ext_resource type="PackedScene" uid="uid://dcqbf41vlotr8" path="res://Scenes/Game/Map/MapModels/medium_rock_5.tscn" id="22_mc5py"]
 [ext_resource type="PackedScene" uid="uid://u35uc2yw5l4b" path="res://Scenes/Game/Map/MapModels/medium_rock_6.tscn" id="23_5n536"]
 [ext_resource type="PackedScene" uid="uid://cypeag16cydn4" path="res://Assets/Models/MapElements/walls/wallDoor/wallDoor.fbx" id="24_5n536"]
-[ext_resource type="PackedScene" uid="uid://b741vl72unhhh" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier.tscn" id="26_5n536"]
 [ext_resource type="PackedScene" uid="uid://jklhuy1a7vkc" path="res://Assets/Models/MapElements/walls/wallFlat/wallFlat.fbx" id="26_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://prn7yngh7jse" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn" id="27_jwd7e"]
 
@@ -361,9 +360,6 @@ transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230
 
 [node name="wallFlat15" parent="Walls" instance=ExtResource("26_gwrvl")]
 transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230, 0, -80)
-
-[node name="medievalSoldier" parent="." instance=ExtResource("26_5n536")]
-transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 119.03624, 0, -56.30237)
 
 [node name="MedievalSoldierControler" parent="." instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108.22387, 0, -58.9554)

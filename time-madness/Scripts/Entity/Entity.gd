@@ -14,6 +14,30 @@ class_name Entity
 # Graphic node
 @onready var model: Node3D = $Model
 
+func _ready():
+	set_process_input(true)
+
+func _input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var viewport = get_viewport()
+		var camera = viewport.get_camera_3d()
+		
+		if camera == null:
+			return
+			
+		var from = camera.project_ray_origin(event.position)
+		var to = from + camera.project_ray_normal(event.position) * 1000
+		
+		var space_state = get_world_3d().direct_space_state
+		var query = PhysicsRayQueryParameters3D.create(from, to)
+		
+		var result = space_state.intersect_ray(query)
+		
+		if result and result.collider == self:
+			_on_click()
+
+func _on_click():
+	print("Click en: ", entity_name)
 # ---------------------------------------------------
 # Basic functions!
 # ---------------------------------------------------

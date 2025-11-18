@@ -162,13 +162,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		is_rotating = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	if event.is_action_pressed("camera_pan"):
-		is_panning = true
-		last_mouse_position = get_viewport().get_mouse_position()
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	elif event.is_action_released("camera_pan"):
-		is_panning = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	if event.is_action_pressed("zoom_in"):
 		zoom_level -= zoom_speed
