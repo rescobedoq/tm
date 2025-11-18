@@ -370,4 +370,3 @@ health = null
 max_health = null
 move_speed = null
 is_alive = null
-selected = null
