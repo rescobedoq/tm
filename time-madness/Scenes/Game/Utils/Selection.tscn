@@ -1,0 +1,21 @@
+[gd_scene load_steps=5 format=3 uid="uid://nhdcvbciokgs"]
+
+[ext_resource type="Texture2D" uid="uid://dea6nugieye3g" path="res://Assets/Images/UI/selection.png" id="1_g1k5n"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_71d33"]
+
+[sub_resource type="Skin" id="Skin_g1k5n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w5c6c"]
+transparency = 1
+cull_mode = 2
+albedo_color = Color(1, 1, 1, 0.73333335)
+albedo_texture = ExtResource("1_g1k5n")
+
+[node name="Selection" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, -2.1855695e-07, 5, 0, -5, -2.1855695e-07, 0, 1.5, 0)
+mesh = SubResource("QuadMesh_71d33")
+skin = SubResource("Skin_g1k5n")
+surface_material_override/0 = SubResource("StandardMaterial3D_w5c6c")

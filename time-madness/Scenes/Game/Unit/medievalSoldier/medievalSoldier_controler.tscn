@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://prn7yngh7jse"]
+
+[ext_resource type="PackedScene" uid="uid://b741vl72unhhh" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier.tscn" id="1_4ljfn"]
+[ext_resource type="Script" uid="uid://bdllktt5igx23" path="res://Scenes/Game/Unit/medievalSoldier/medieval_soldier.gd" id="1_onu1i"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="3_peahs"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onu1i"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalSoldierControler" type="CharacterBody3D"]
+script = ExtResource("1_onu1i")
+
+[node name="medievalSoldier" parent="." instance=ExtResource("1_4ljfn")]
+script = null
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.702942, 0)
+shape = SubResource("CapsuleShape3D_onu1i")
+
+[node name="Selection" parent="." instance=ExtResource("3_peahs")]
+visible = false

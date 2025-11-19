@@ -1,0 +1,240 @@
+[gd_scene load_steps=3 format=3 uid="uid://bd32dmikxffxd"]
+
+[ext_resource type="Texture2D" uid="uid://clwt1r4aqldqq" path="res://Assets/Images/HUD/unitInformation.png" id="1_bdrow"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_bdrow"]
+font_size = 8
+
+[node name="UnitHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.0304687, 1)
+texture = ExtResource("1_bdrow")
+
+[node name="Portrait" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -608.0
+offset_top = -69.0
+offset_right = -486.0
+offset_bottom = 60.0
+expand_mode = 2
+
+[node name="spell1" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 7.0
+offset_top = -59.0
+offset_right = 59.0
+offset_bottom = -3.0
+stretch_mode = 0
+
+[node name="spell2" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 75.0
+offset_top = -59.0
+offset_right = 127.0
+offset_bottom = -3.0
+stretch_mode = 0
+
+[node name="spell3" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 142.0
+offset_top = -59.0
+offset_right = 194.0
+offset_bottom = -3.0
+stretch_mode = 0
+
+[node name="spell4" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 209.0
+offset_top = -59.0
+offset_right = 261.0
+offset_bottom = -3.0
+stretch_mode = 0
+
+[node name="speel5" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 275.0
+offset_top = -60.0
+offset_right = 327.0
+offset_bottom = -4.0
+stretch_mode = 0
+
+[node name="spell6" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 342.0
+offset_top = -60.0
+offset_right = 394.0
+offset_bottom = -4.0
+stretch_mode = 0
+
+[node name="spell7" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = 410.0
+offset_top = -60.0
+offset_right = 462.0
+offset_bottom = -4.0
+stretch_mode = 0
+
+[node name="effect1" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 495.0
+offset_top = -85.0
+offset_right = 540.0
+offset_bottom = -41.0
+stretch_mode = 2
+
+[node name="effect2" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 551.0
+offset_top = -85.0
+offset_right = 596.0
+offset_bottom = -41.0
+stretch_mode = 2
+
+[node name="effect3" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 495.0
+offset_top = -34.0
+offset_right = 540.0
+offset_bottom = 10.0
+stretch_mode = 2
+
+[node name="effect4" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = 551.0
+offset_top = -33.0
+offset_right = 596.0
+offset_bottom = 11.0
+stretch_mode = 2
+
+[node name="box12" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -65.0
+offset_top = -52.0
+offset_right = -38.0
+offset_bottom = -32.0
+stretch_mode = 2
+
+[node name="box22" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -65.0
+offset_top = 12.0
+offset_right = -38.0
+offset_bottom = 32.0
+stretch_mode = 2
+
+[node name="box24" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -65.0
+offset_top = 33.0
+offset_right = -38.0
+offset_bottom = 53.0
+stretch_mode = 2
+
+[node name="box23" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -94.0
+offset_top = 33.0
+offset_right = -67.0
+offset_bottom = 53.0
+stretch_mode = 2
+
+[node name="box21" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -94.0
+offset_top = 12.0
+offset_right = -67.0
+offset_bottom = 32.0
+stretch_mode = 2
+
+[node name="box14" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -65.0
+offset_top = -31.0
+offset_right = -38.0
+offset_bottom = -11.0
+stretch_mode = 2
+
+[node name="box13" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -94.0
+offset_top = -31.0
+offset_right = -67.0
+offset_bottom = -11.0
+stretch_mode = 2
+
+[node name="box11" type="TextureRect" parent="."]
+z_index = -1
+layout_mode = 0
+offset_left = -94.0
+offset_top = -52.0
+offset_right = -67.0
+offset_bottom = -32.0
+stretch_mode = 2
+
+[node name="energyBar" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_left = -377.0
+offset_top = -35.0
+offset_right = -274.0
+offset_bottom = -25.0
+
+[node name="healthBar" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_left = -413.0
+offset_top = -48.0
+offset_right = -239.0
+offset_bottom = -38.0
+
+[node name="Attack" type="Label" parent="."]
+layout_mode = 0
+offset_left = -402.0
+offset_top = 13.0
+offset_right = -332.0
+offset_bottom = 25.0
+text = "Attack: ..."
+label_settings = SubResource("LabelSettings_bdrow")
+
+[node name="Velocity" type="Label" parent="."]
+layout_mode = 0
+offset_left = -311.0
+offset_top = 22.0
+offset_right = -241.0
+offset_bottom = 34.0
+text = "Velocity: ..."
+label_settings = SubResource("LabelSettings_bdrow")
+
+[node name="Deffense" type="Label" parent="."]
+layout_mode = 0
+offset_left = -402.0
+offset_top = 35.0
+offset_right = -332.0
+offset_bottom = 47.0
+text = "Deffense: ..."
+label_settings = SubResource("LabelSettings_bdrow")
+
+[node name="UnitType" type="Label" parent="."]
+layout_mode = 0
+offset_left = -387.0
+offset_top = -21.0
+offset_right = -265.0
+offset_bottom = -9.0
+text = "Unit type: ..."
+label_settings = SubResource("LabelSettings_bdrow")

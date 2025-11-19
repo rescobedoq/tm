@@ -1,7 +1,6 @@
-[gd_scene load_steps=44 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=42 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
-[ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
 [ext_resource type="Texture2D" uid="uid://byd1rvnbstdph" path="res://Assets/Textures/PavingStones139/PavingStones139.dds" id="1_sklg3"]
 [ext_resource type="Texture2D" uid="uid://huwl67nj6mr0" path="res://Assets/Textures/PavingStones139/PavingStones139_normal.dds" id="2_654wj"]
 [ext_resource type="Texture2D" uid="uid://lny0g4u8o56g" path="res://Assets/Models/MapElements/grass/textures/grass_bush_spring.png" id="2_hjoq5"]
@@ -11,8 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://bhfymb7jaa3qq" path="res://Assets/Textures/Ground085/Ground085_normal.dds" id="6_qf57n"]
 [ext_resource type="Texture2D" uid="uid://bhl56h35up57t" path="res://Assets/Textures/Rocks022/Rocks022.dds" id="7_3ndsq"]
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="8_v03kk"]
+[ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="9_v03kk"]
 [ext_resource type="PackedScene" uid="uid://cfippt6fd2514" path="res://Scenes/Game/Map/MapModels/tree_02.tscn" id="10_76gom"]
-[ext_resource type="PackedScene" uid="uid://bdf557rqesylj" path="res://Scripts/Player/PlayerController/PlayerController.tscn" id="11_5n536"]
 [ext_resource type="PackedScene" uid="uid://dcol3qt7odf2p" path="res://Scenes/Game/Map/MapModels/tree_01.tscn" id="11_qf57n"]
 [ext_resource type="PackedScene" uid="uid://bkp78tmtfe67e" path="res://Scenes/Game/Map/MapModels/tree_04.tscn" id="12_r8xti"]
 [ext_resource type="PackedScene" uid="uid://bqpr3i1hcvxkg" path="res://Scenes/Game/Map/MapModels/tree_03.tscn" id="13_mjw5g"]
@@ -27,7 +26,6 @@
 [ext_resource type="PackedScene" uid="uid://cypeag16cydn4" path="res://Assets/Models/MapElements/walls/wallDoor/wallDoor.fbx" id="24_5n536"]
 [ext_resource type="PackedScene" uid="uid://jklhuy1a7vkc" path="res://Assets/Models/MapElements/walls/wallFlat/wallFlat.fbx" id="26_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://prn7yngh7jse" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn" id="27_jwd7e"]
-[ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="28_gwrvl"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -173,7 +171,6 @@ mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_infvj"), 
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_poqdo"), SubResource("Terrain3DTextureAsset_emt48"), SubResource("Terrain3DTextureAsset_hjoq5"), SubResource("Terrain3DTextureAsset_76gom")])
 
 [node name="BaseMap" type="Node3D"]
-script = ExtResource("1_jwd7e")
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://Scenes/Game/Map/BaseMap"
@@ -182,17 +179,18 @@ assets = SubResource("Terrain3DAssets_moed6")
 top_level = true
 metadata/_edit_lock_ = true
 
-[node name="PlayerController" parent="." instance=ExtResource("11_5n536")]
-player_name = "xdxd"
-zoom_speed = 1000.0
-min_zoom = 0.0
-
-[node name="UnitHud" parent="." instance=ExtResource("28_gwrvl")]
-offset_left = 595.0
-offset_top = 552.0
-offset_right = -94.0
-offset_bottom = 139.0
-scale = Vector2(0.885, 0.885)
+[node name="RtsController" parent="." instance=ExtResource("9_v03kk")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125, -40, -125)
+movement_speed = 250.0
+rotation_speed = 10.0
+min_zoom = 8.0
+max_zoom = 56.0
+min_elevation_angle = 0.0
+max_elevation_angle = 50.0
+min_x = 20.0
+max_x = 230.0
+min_z = -230.0
+max_z = 20.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)
@@ -363,10 +361,13 @@ transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230
 [node name="wallFlat15" parent="Walls" instance=ExtResource("26_gwrvl")]
 transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230, 0, -80)
 
-[node name="MedievalSoldierControler" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
+[node name="MedievalSoldierControler" parent="." instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108.22387, 0, -58.9554)
-player_owner = NodePath("../PlayerController")
-
-[node name="MedievalSoldierControler2" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.24521, 0, -56.22386)
-player_owner = NodePath("../PlayerController")
+attack_damage = null
+attack_range = null
+entity_name = null
+health = null
+max_health = null
+move_speed = null
+is_alive = null
+selected = null

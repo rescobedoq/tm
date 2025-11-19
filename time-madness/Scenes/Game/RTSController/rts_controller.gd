@@ -1,25 +1,23 @@
 extends Node3D
 
 # ---------------------------------------------------
-# Parámetros exportados para tunear desde el Inspector
+# Parámetros que recibirán desde PlayerController
 # ---------------------------------------------------
-@export_range(0, 1000) var movement_speed: float = 64
-@export_range(0, 1000) var rotation_speed: float = 5
-@export_range(0, 1000, 0.1) var zoom_speed: float = 50
-@export_range(0, 1000) var min_zoom: float = 32
-@export_range(0, 1000) var max_zoom: float = 256
-@export_range(0, 90) var min_elevation_angle: float = 10
-@export_range(0, 90) var max_elevation_angle: float = 90
-@export var edge_margin: float = 50
-@export var allow_rotation: bool = true
-@export var allow_zoom: bool = true
-@export var allow_pan: bool = true
-
-# Límites del terreno
-@export var min_x: float = 0
-@export var max_x: float = 250
-@export var min_z: float = -250
-@export var max_z: float = 0
+var movement_speed: float
+var rotation_speed: float
+var zoom_speed: float
+var min_zoom: float
+var max_zoom: float
+var min_elevation_angle: float
+var max_elevation_angle: float
+var edge_margin: float
+var allow_rotation: bool
+var allow_zoom: bool
+var allow_pan: bool
+var min_x: float
+var max_x: float
+var min_z: float
+var max_z: float
 
 # ---------------------------------------------------
 # Nodos de la cámara
@@ -162,13 +160,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		is_rotating = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-	if event.is_action_pressed("camera_pan"):
-		is_panning = true
-		last_mouse_position = get_viewport().get_mouse_position()
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	elif event.is_action_released("camera_pan"):
-		is_panning = false
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	if event.is_action_pressed("zoom_in"):
 		zoom_level -= zoom_speed
