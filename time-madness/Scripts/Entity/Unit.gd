@@ -3,10 +3,20 @@ extends Entity
 class_name Unit
 
 # ------------------------------------------
+# Atributos base de la unidad
+# ------------------------------------------
+@export var unit_type: String = "Default"
+
+# ------------------------------------------
 # Atributos de combate
 # ------------------------------------------
 @export var attack_damage: float = 10.0
 @export var attack_range: float = 5.0
+@export var defense: float = 5.0
+# Magia
+@export var max_magic: float = 50.0
+@export var current_magic: float
+
 
 # ------------------------------------------
 # Movimiento

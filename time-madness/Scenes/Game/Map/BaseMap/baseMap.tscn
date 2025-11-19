@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=45 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://bkp78tmtfe67e" path="res://Scenes/Game/Map/MapModels/tree_04.tscn" id="12_r8xti"]
 [ext_resource type="PackedScene" uid="uid://bqpr3i1hcvxkg" path="res://Scenes/Game/Map/MapModels/tree_03.tscn" id="13_mjw5g"]
 [ext_resource type="PackedScene" uid="uid://dge57lgxq555p" path="res://Scenes/Game/Map/MapModels/bush_01.tscn" id="14_c8bs7"]
+[ext_resource type="PackedScene" uid="uid://w41fknq8gsi" path="res://Scenes/Game/HUD/teamHUD.tscn" id="14_l277d"]
 [ext_resource type="PackedScene" uid="uid://b02l4sdlckrb" path="res://Scenes/Game/Map/MapModels/bush_02.tscn" id="15_poqdo"]
 [ext_resource type="PackedScene" uid="uid://bqs8r2ylnaxnd" path="res://Scenes/Game/Map/MapModels/bush_03.tscn" id="16_emt48"]
 [ext_resource type="PackedScene" uid="uid://die1p52rxt62j" path="res://Scenes/Game/Map/MapModels/bush_04.tscn" id="17_hjoq5"]
@@ -184,7 +185,7 @@ metadata/_edit_lock_ = true
 
 [node name="PlayerController" parent="." instance=ExtResource("11_5n536")]
 player_name = "xdxd"
-zoom_speed = 1000.0
+movement_speed = 400.0
 min_zoom = 0.0
 
 [node name="UnitHud" parent="." instance=ExtResource("28_gwrvl")]
@@ -192,7 +193,13 @@ offset_left = 595.0
 offset_top = 552.0
 offset_right = -94.0
 offset_bottom = 139.0
-scale = Vector2(0.885, 0.885)
+scale = Vector2(0.93, 0.93)
+
+[node name="TeamHud" parent="." instance=ExtResource("14_l277d")]
+offset_left = 576.0
+offset_top = 54.0
+offset_right = -356.0
+offset_bottom = -514.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)

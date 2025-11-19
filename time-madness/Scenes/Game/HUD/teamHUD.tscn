@@ -1,0 +1,95 @@
+[gd_scene load_steps=3 format=3 uid="uid://w41fknq8gsi"]
+
+[ext_resource type="Texture2D" uid="uid://c4k1oeefpl2uo" path="res://Assets/Images/HUD/teamInformation.png" id="1_og8un"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_og8un"]
+font_size = 10
+
+[node name="TeamHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(1.1582372, 0.974)
+texture = ExtResource("1_og8un")
+
+[node name="menu" type="Button" parent="."]
+layout_mode = 0
+offset_left = 82.0
+offset_top = -14.0
+offset_right = 118.0
+offset_bottom = 14.0
+
+[node name="help" type="Button" parent="."]
+layout_mode = 0
+offset_left = 201.0
+offset_top = -14.0
+offset_right = 237.0
+offset_bottom = 14.0
+
+[node name="options" type="Button" parent="."]
+layout_mode = 0
+offset_left = 142.0
+offset_top = -14.0
+offset_right = 180.0
+offset_bottom = 14.0
+
+[node name="hour" type="Label" parent="."]
+layout_mode = 0
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 20.0
+offset_bottom = 11.0
+text = "5:30"
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 22.0
+offset_right = -72.0
+offset_bottom = 33.0
+color = Color(0.13333334, 0.06666667, 0.019607844, 1)
+
+[node name="ColorRect3" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -162.0
+offset_top = 22.0
+offset_right = -128.0
+offset_bottom = 33.0
+color = Color(0.13333334, 0.06666667, 0.019607844, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = -216.0
+offset_top = 22.0
+offset_right = -182.0
+offset_bottom = 33.0
+color = Color(0.13333334, 0.06666667, 0.019607844, 1)
+
+[node name="maintenance" type="Label" parent="."]
+layout_mode = 0
+offset_left = -106.0
+offset_top = 21.0
+offset_right = -72.0
+offset_bottom = 35.0
+label_settings = SubResource("LabelSettings_og8un")
+
+[node name="prime" type="Label" parent="."]
+layout_mode = 0
+offset_left = -162.0
+offset_top = 21.0
+offset_right = -128.0
+offset_bottom = 35.0
+label_settings = SubResource("LabelSettings_og8un")
+
+[node name="money" type="Label" parent="."]
+layout_mode = 0
+offset_left = -216.0
+offset_top = 21.0
+offset_right = -182.0
+offset_bottom = 35.0
+label_settings = SubResource("LabelSettings_og8un")

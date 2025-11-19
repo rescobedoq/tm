@@ -28,7 +28,7 @@ var _selected_internal: bool = false
 #   ATRIBUTOS
 # ---------------------------------------------------------
 @export var entity_name := "Entidad"
-@export var health := 100.0
+@export var current_health := 100.0
 @export var max_health := 100.0
 @export var move_speed := 10.0
 @export var is_alive := true
@@ -61,14 +61,14 @@ func deselect():
 func take_damage(amount: float) -> void:
 	if not is_alive:
 		return
-	health -= amount
-	if health <= 0:
+	current_health -= amount
+	if current_health <= 0:
 		die()
 
 func heal(amount: float) -> void:
 	if not is_alive:
 		return
-	health = min(health + amount, max_health)
+	current_health = min(current_health + amount, max_health)
 
 func die() -> void:
 	is_alive = false
