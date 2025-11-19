@@ -1,4 +1,5 @@
 extends Unit
+class_name MedievalSoldier
 
 @onready var anim_player = $medievalSoldier/AnimationPlayer
 @onready var collision_shape = $CollisionShape3D
@@ -8,6 +9,17 @@ const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSoldier.png"
 
 var selection_tween: Tween
 func _ready():
+	unit_type = "Medieval Soldier"
+	max_health = 200
+	current_health = max_health
+	max_magic = 30
+	current_magic = max_magic
+	attack_damage = 25
+	defense = 10
+	move_speed = 3.5
+	attack_range = 3.0
+	
+	
 	play_idle()
 
 	# --- CARGAR RETRATO AUTOMÁTICAMENTE ---

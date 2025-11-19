@@ -6,6 +6,12 @@ class_name PlayerController
 # ------------------------------
 @export var player_name: String = "Jugador"
 @onready var hud_portrait: TextureRect = $"../UnitHud/Portrait"
+@onready var hud_attack: Label = $"../UnitHud/Attack"
+@onready var hud_defense: Label = $"../UnitHud/Defense"
+@onready var hud_velocity: Label = $"../UnitHud/Velocity"
+@onready var hud_health: TextureProgressBar = $"../UnitHud/healthBar"
+@onready var hud_energy: TextureProgressBar = $"../UnitHud/energyBar"
+@onready var hud_name: Label = $"../UnitHud/UnitType"
 
 # ------------------------------
 # Opciones de la camara.
@@ -103,16 +109,16 @@ func _input(event):
 			deselect_current_unit()
 
 
-func select_unit(unit: Entity) -> void:
-	if unit == null:
+func select_unit(entity: Entity) -> void:
+	if entity == null:
 		return
 
 	# Deseleccionar unidad anterior
-	if selected_unit != null and selected_unit != unit:
+	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
 	# Marcar la nueva unidad
-	selected_unit = unit
+	selected_unit = entity
 	selected_unit.select()
 
 	print("Unidad seleccionada: ", selected_unit.name)
@@ -120,16 +126,29 @@ func select_unit(unit: Entity) -> void:
 	# ---- IMPRIME Y ACTUALIZA PORTRAIT ----
 	if selected_unit.portrait:
 		print("El portrait es:", selected_unit.portrait)
-		
+
 		if hud_portrait:
 			hud_portrait.texture = selected_unit.portrait
 	else:
 		print("Esta unidad NO tiene portrait asignado.")
-		
+
 		if hud_portrait:
 			hud_portrait.texture = null
 
-	
+
+	# ---- CASTING SEGÚN TIPO ----
+	if entity is Unit:
+		print("SE HA SELECCIONADO UNA UNIDAD!!!!")
+		var u := entity as Unit  
+		hud_attack.text = "Attack: " + str(u.attack_damage)
+		hud_defense.text = "Defense: " + str(u.defense)
+		hud_velocity.text = "Speed: " + str(u.move_speed)
+		hud_health.max_value = u.max_health
+		hud_energy.max_value = u.max_magic
+		hud_name.text = u.unit_type
+		hud_health.value = u.current_health
+		hud_energy.value = u.current_magic
+		
 func deselect_current_unit() -> void:
 	if selected_unit != null:
 		selected_unit.deselect()
@@ -138,7 +157,16 @@ func deselect_current_unit() -> void:
 		# limpiar portrait del HUD
 		if hud_portrait:
 			hud_portrait.texture = null
+			
+		hud_attack.text = "Attack: -"
+		hud_defense.text = "Defense: -"
+		hud_velocity.text = "Speed: -"
+		hud_health.max_value = 10000
+		hud_energy.max_value = 10000
+		hud_name.text = ""
 
+		hud_health.value = 0
+		hud_energy.value = 0
 
 
 func _ready() -> void:
