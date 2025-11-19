@@ -7,6 +7,12 @@ class_name Entity
 @onready var selection: Node3D = get_node_or_null("Selection")
 
 # ---------------------------------------------------------
+#   RETRATO / PORTRAIT
+# ---------------------------------------------------------
+@export var portrait: Texture2D
+
+
+# ---------------------------------------------------------
 #   SELECCIÓN
 # ---------------------------------------------------------
 var _selected_internal: bool = false

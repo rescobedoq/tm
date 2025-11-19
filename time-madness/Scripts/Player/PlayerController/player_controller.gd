@@ -5,6 +5,7 @@ class_name PlayerController
 # Nombre del jugador
 # ------------------------------
 @export var player_name: String = "Jugador"
+@onready var hud_portrait: TextureRect = $"../UnitHud/Portrait"
 
 # ------------------------------
 # Opciones de la camara.
@@ -102,25 +103,41 @@ func _input(event):
 			deselect_current_unit()
 
 
-#Seleccion de unidades!
 func select_unit(unit: Entity) -> void:
 	if unit == null:
 		return
 
-	# Deselecciona la unidad anterior
+	# Deseleccionar unidad anterior
 	if selected_unit != null and selected_unit != unit:
-		selected_unit.deselect()  # Asegúrate que tu Unit/Entity tenga esta función
+		selected_unit.deselect()
 
-	# Marca la nueva unidad
+	# Marcar la nueva unidad
 	selected_unit = unit
-	selected_unit.select()       # Asegúrate que tu Unit/Entity tenga esta función
+	selected_unit.select()
 
 	print("Unidad seleccionada: ", selected_unit.name)
+
+	# ---- IMPRIME Y ACTUALIZA PORTRAIT ----
+	if selected_unit.portrait:
+		print("El portrait es:", selected_unit.portrait)
+		
+		if hud_portrait:
+			hud_portrait.texture = selected_unit.portrait
+	else:
+		print("Esta unidad NO tiene portrait asignado.")
+		
+		if hud_portrait:
+			hud_portrait.texture = null
+
 	
 func deselect_current_unit() -> void:
 	if selected_unit != null:
 		selected_unit.deselect()
 		selected_unit = null
+
+		# limpiar portrait del HUD
+		if hud_portrait:
+			hud_portrait.texture = null
 
 
 

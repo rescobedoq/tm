@@ -4,7 +4,19 @@ extends Unit
 @onready var collision_shape = $CollisionShape3D
 @onready var selection_circle = $Selection
 
+const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSoldier.png"
+
 var selection_tween: Tween
+func _ready():
+	play_idle()
+
+	# --- CARGAR RETRATO AUTOMÁTICAMENTE ---
+	var tex := load(PORTRAIT_PATH)
+	if tex:
+		portrait = tex
+		print("Retrato cargado correctamente:", PORTRAIT_PATH)
+	else:
+		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
 
 # ---------------------------------------------------
 #   ANIMACIONES DEL SOLDADO

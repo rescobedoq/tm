@@ -23,7 +23,7 @@ offset_left = -608.0
 offset_top = -69.0
 offset_right = -486.0
 offset_bottom = 60.0
-stretch_mode = 2
+expand_mode = 2
 
 [node name="spell1" type="TextureButton" parent="."]
 layout_mode = 0
