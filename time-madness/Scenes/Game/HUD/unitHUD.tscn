@@ -1,6 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bd32dmikxffxd"]
+[gd_scene load_steps=6 format=3 uid="uid://bd32dmikxffxd"]
 
 [ext_resource type="Texture2D" uid="uid://clwt1r4aqldqq" path="res://Assets/Images/HUD/unitInformation.png" id="1_bdrow"]
+[ext_resource type="Texture2D" uid="uid://c5bn03vgclavg" path="res://Assets/Images/HUD/bars/progress.png" id="2_76ty4"]
+[ext_resource type="Texture2D" uid="uid://c02vd6s7uunp4" path="res://Assets/Images/HUD/bars/under.png" id="2_843ms"]
+[ext_resource type="Texture2D" uid="uid://bwep5reeg1j4o" path="res://Assets/Images/HUD/bars/progress2.png" id="4_qjcyh"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bdrow"]
 font_size = 8
@@ -189,19 +192,28 @@ offset_right = -67.0
 offset_bottom = -32.0
 stretch_mode = 2
 
+[node name="healthBar" type="TextureProgressBar" parent="."]
+clip_contents = true
+layout_mode = 0
+offset_left = -411.0
+offset_top = -52.0
+offset_right = -236.0
+offset_bottom = -40.0
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("2_843ms")
+texture_progress = ExtResource("2_76ty4")
+
 [node name="energyBar" type="TextureProgressBar" parent="."]
 layout_mode = 0
 offset_left = -377.0
 offset_top = -35.0
 offset_right = -274.0
 offset_bottom = -25.0
-
-[node name="healthBar" type="TextureProgressBar" parent="."]
-layout_mode = 0
-offset_left = -413.0
-offset_top = -48.0
-offset_right = -239.0
-offset_bottom = -38.0
+value = 50.0
+nine_patch_stretch = true
+texture_under = ExtResource("2_843ms")
+texture_progress = ExtResource("4_qjcyh")
 
 [node name="Attack" type="Label" parent="."]
 layout_mode = 0
