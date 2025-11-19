@@ -183,7 +183,8 @@ metadata/_edit_lock_ = true
 
 [node name="PlayerController" parent="." instance=ExtResource("11_5n536")]
 player_name = "xdxd"
-movement_speed = 251.99
+zoom_speed = 1000.0
+min_zoom = 0.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)
