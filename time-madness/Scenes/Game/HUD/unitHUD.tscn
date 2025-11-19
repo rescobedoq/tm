@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bd32dmikxffxd"]
+[gd_scene load_steps=10 format=3 uid="uid://bd32dmikxffxd"]
 
 [ext_resource type="Texture2D" uid="uid://clwt1r4aqldqq" path="res://Assets/Images/HUD/unitInformation.png" id="1_bdrow"]
 [ext_resource type="Texture2D" uid="uid://c5bn03vgclavg" path="res://Assets/Images/HUD/bars/progress.png" id="2_76ty4"]
 [ext_resource type="Texture2D" uid="uid://c02vd6s7uunp4" path="res://Assets/Images/HUD/bars/under.png" id="2_843ms"]
 [ext_resource type="Texture2D" uid="uid://bwep5reeg1j4o" path="res://Assets/Images/HUD/bars/progress2.png" id="4_qjcyh"]
+[ext_resource type="Texture2D" uid="uid://cy4cnpckk7wcf" path="res://Assets/Images/HUD/icons/attack.png" id="5_8drlw"]
+[ext_resource type="Texture2D" uid="uid://cl3we2qrtfex6" path="res://Assets/Images/HUD/icons/deffense.png" id="6_6pgs7"]
+[ext_resource type="Texture2D" uid="uid://cj5pb0i8li0h5" path="res://Assets/Images/HUD/icons/velocity.png" id="7_8erm8"]
+[ext_resource type="Texture2D" uid="uid://yl4npud61tgq" path="res://Assets/Images/HUD/icons/type.png" id="8_xiw2i"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_bdrow"]
 font_size = 8
@@ -217,36 +221,65 @@ texture_progress = ExtResource("4_qjcyh")
 
 [node name="Attack" type="Label" parent="."]
 layout_mode = 0
-offset_left = -402.0
-offset_top = 13.0
-offset_right = -332.0
-offset_bottom = 25.0
-text = "Attack: ..."
+offset_left = -392.0
+offset_top = 9.0
+offset_right = -322.0
+offset_bottom = 21.0
+text = "Attack: -"
 label_settings = SubResource("LabelSettings_bdrow")
 
 [node name="Velocity" type="Label" parent="."]
 layout_mode = 0
-offset_left = -311.0
+offset_left = -293.0
 offset_top = 22.0
-offset_right = -241.0
+offset_right = -223.0
 offset_bottom = 34.0
-text = "Velocity: ..."
+text = "Velocity: -"
 label_settings = SubResource("LabelSettings_bdrow")
 
 [node name="Deffense" type="Label" parent="."]
 layout_mode = 0
-offset_left = -402.0
-offset_top = 35.0
-offset_right = -332.0
-offset_bottom = 47.0
-text = "Deffense: ..."
+offset_left = -392.0
+offset_top = 34.0
+offset_right = -322.0
+offset_bottom = 46.0
+text = "Deffense: -"
 label_settings = SubResource("LabelSettings_bdrow")
 
 [node name="UnitType" type="Label" parent="."]
 layout_mode = 0
-offset_left = -387.0
-offset_top = -21.0
-offset_right = -265.0
-offset_bottom = -9.0
+offset_left = -340.0
+offset_top = -18.0
+offset_right = -218.0
+offset_bottom = -6.0
 text = "Unit type: ..."
 label_settings = SubResource("LabelSettings_bdrow")
+
+[node name="Attack2" type="Sprite2D" parent="."]
+position = Vector2(-406, 15.000001)
+scale = Vector2(0.075, 0.075)
+texture = ExtResource("5_8drlw")
+
+[node name="Deffense2" type="Sprite2D" parent="."]
+position = Vector2(-407, 42)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("6_6pgs7")
+
+[node name="Velocity2" type="Sprite2D" parent="."]
+position = Vector2(-303, 27)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("7_8erm8")
+
+[node name="Type" type="Sprite2D" parent="."]
+position = Vector2(-353, -12.999998)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("8_xiw2i")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -345
+layout_mode = 0
+offset_left = -445.0
+offset_top = -60.0
+offset_right = -214.0
+offset_bottom = 62.0
+color = Color(0, 0, 0, 0.3019608)
