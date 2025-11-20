@@ -5,6 +5,7 @@ class_name PlayerController
 # Nombre del jugador
 # ------------------------------
 @export var player_name: String = "Jugador"
+
 @onready var hud_portrait: TextureRect = $"../UnitHud/Portrait"
 @onready var hud_attack: Label = $"../UnitHud/Attack"
 @onready var hud_defense: Label = $"../UnitHud/Defense"
@@ -69,10 +70,10 @@ func add_unit(unit: Entity) -> void:
 		
 
 # En PlayerController.gd
-func _input(event):
+func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		print(">>> Click izquierdo detectado")
-		
+			
 		if camera == null:
 			print("ERROR: No hay cámara asignada en PlayerController")
 			return

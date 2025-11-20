@@ -1,8 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://bd32dmikxffxd"]
+[gd_scene load_steps=15 format=3 uid="uid://bd32dmikxffxd"]
 
 [ext_resource type="Texture2D" uid="uid://clwt1r4aqldqq" path="res://Assets/Images/HUD/unitInformation.png" id="1_bdrow"]
+[ext_resource type="Texture2D" uid="uid://cqniajy7ptnjg" path="res://Assets/Images/HUD/icons/moveIcon.png" id="2_4rmug"]
+[ext_resource type="Texture2D" uid="uid://cncfkc6n804ig" path="res://Assets/Images/HUD/icons/attackIcon.png" id="2_8erm8"]
 [ext_resource type="Texture2D" uid="uid://c5bn03vgclavg" path="res://Assets/Images/HUD/bars/progress.png" id="2_76ty4"]
 [ext_resource type="Texture2D" uid="uid://c02vd6s7uunp4" path="res://Assets/Images/HUD/bars/under.png" id="2_843ms"]
+[ext_resource type="Texture2D" uid="uid://dp5ee623bh7i" path="res://Assets/Images/HUD/icons/keepPosIcon.png" id="3_5wg7h"]
+[ext_resource type="Texture2D" uid="uid://dchbkc2gios76" path="res://Assets/Images/HUD/icons/stopIcon.png" id="4_i5ls2"]
 [ext_resource type="Texture2D" uid="uid://bwep5reeg1j4o" path="res://Assets/Images/HUD/bars/progress2.png" id="4_qjcyh"]
 [ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="5_6pgs7"]
 [ext_resource type="Texture2D" uid="uid://cy4cnpckk7wcf" path="res://Assets/Images/HUD/icons/attack.png" id="5_8drlw"]
@@ -126,77 +130,49 @@ offset_right = 596.0
 offset_bottom = 11.0
 stretch_mode = 2
 
-[node name="box12" type="TextureRect" parent="."]
+[node name="box12" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
-offset_left = -65.0
-offset_top = -52.0
+offset_left = -68.0
+offset_top = 25.0
 offset_right = -38.0
-offset_bottom = -32.0
-stretch_mode = 2
+offset_bottom = 55.0
+texture_normal = ExtResource("2_4rmug")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="box22" type="TextureRect" parent="."]
+[node name="box14" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
-offset_left = -65.0
-offset_top = 12.0
-offset_right = -38.0
-offset_bottom = 32.0
-stretch_mode = 2
+offset_left = -67.0
+offset_top = -37.0
+offset_right = -37.0
+offset_bottom = -7.0
+texture_normal = ExtResource("3_5wg7h")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="box24" type="TextureRect" parent="."]
+[node name="box13" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
-offset_left = -65.0
-offset_top = 33.0
-offset_right = -38.0
-offset_bottom = 53.0
-stretch_mode = 2
+offset_left = -96.0
+offset_top = 11.0
+offset_right = -66.0
+offset_bottom = 41.0
+texture_normal = ExtResource("4_i5ls2")
+ignore_texture_size = true
+stretch_mode = 0
 
-[node name="box23" type="TextureRect" parent="."]
+[node name="box11" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
-offset_left = -94.0
-offset_top = 33.0
-offset_right = -67.0
-offset_bottom = 53.0
-stretch_mode = 2
-
-[node name="box21" type="TextureRect" parent="."]
-z_index = -1
-layout_mode = 0
-offset_left = -94.0
-offset_top = 12.0
-offset_right = -67.0
-offset_bottom = 32.0
-stretch_mode = 2
-
-[node name="box14" type="TextureRect" parent="."]
-z_index = -1
-layout_mode = 0
-offset_left = -65.0
-offset_top = -31.0
-offset_right = -38.0
-offset_bottom = -11.0
-stretch_mode = 2
-
-[node name="box13" type="TextureRect" parent="."]
-z_index = -1
-layout_mode = 0
-offset_left = -94.0
-offset_top = -31.0
-offset_right = -67.0
-offset_bottom = -11.0
-stretch_mode = 2
-
-[node name="box11" type="TextureRect" parent="."]
-z_index = -1
-layout_mode = 0
-offset_left = -94.0
-offset_top = -52.0
-offset_right = -67.0
-offset_bottom = -32.0
-stretch_mode = 2
+offset_left = -95.0
+offset_top = -53.0
+offset_right = -65.0
+offset_bottom = -23.0
+texture_normal = ExtResource("2_8erm8")
+ignore_texture_size = true
+stretch_mode = 0
 
 [node name="healthBar" type="TextureProgressBar" parent="."]
 clip_contents = true
