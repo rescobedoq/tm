@@ -14,6 +14,12 @@ class_name PlayerController
 @onready var hud_energy: TextureProgressBar = $"../UnitHud/energyBar"
 @onready var hud_name: Label = $"../UnitHud/UnitType"
 
+@onready var attackButton: TextureButton = $"../UnitHud/attackButton"
+@onready var stopButton: TextureButton = $"../UnitHud/stopButton"
+@onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
+@onready var moveButton: TextureButton = $"../UnitHud/moveButton"
+
+
 # ------------------------------
 # Opciones de la camara.
 # ------------------------------
@@ -47,6 +53,11 @@ class_name PlayerController
 var units: Array = []             # Lista de unidades que pertenecen al jugador
 var selected_unit: Entity = null  # Unidad actualmente seleccionada
 
+# Variables para manejar el cursor.
+var select_cursor_instance: Node2D = null
+var is_selecting_terrain: bool = false
+
+
 # ------------------------------
 # Cámara del jugador para raycasts
 # ------------------------------
@@ -71,6 +82,7 @@ func add_unit(unit: Entity) -> void:
 
 # En PlayerController.gd
 func _unhandled_input(event):
+
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		print(">>> Click izquierdo detectado")
 			
@@ -187,3 +199,36 @@ func _ready() -> void:
 	rts.max_x = max_x
 	rts.min_z = min_z
 	rts.max_z = max_z
+	
+	#Senales de los botones
+	# Conectar señal del botón
+	moveButton.pressed.connect(_on_move_button_pressed)
+	
+func _on_move_button_pressed() -> void:
+	if is_selecting_terrain:
+		return # Ya esta en modo seleccion
+
+	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+	if select_scene == null:
+		print("ERROR: No se pudo cargar SelectTerrain.tscn")
+		return
+	
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+	
+	is_selecting_terrain = true
+	print("Modo selección de terreno activado")
+	
+	# Opcional: ocultar cursor normal
+	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
+func _process(delta: float) -> void:
+	if is_selecting_terrain and select_cursor_instance:
+		var mouse_pos = get_viewport().get_mouse_position()
+		select_cursor_instance.position = mouse_pos
+		
+		# Avanzar animación
+		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
+		if animated_sprite:
+			if not animated_sprite.is_playing():
+				animated_sprite.play("default")

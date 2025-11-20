@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://cmaqidoeir5ga"]
+
+[ext_resource type="Texture2D" uid="uid://bmrq04ll2c3sy" path="res://Assets/Images/HUD/sprites/select/selectSprite.png" id="1_oelh7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cwymk"]
+atlas = ExtResource("1_oelh7")
+region = Rect2(0, 0, 31, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2h6jg"]
+atlas = ExtResource("1_oelh7")
+region = Rect2(31, 0, 31, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nh3ph"]
+atlas = ExtResource("1_oelh7")
+region = Rect2(62, 0, 31, 30)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_35q74"]
+atlas = ExtResource("1_oelh7")
+region = Rect2(93, 0, 31, 30)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v0tpd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cwymk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2h6jg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nh3ph")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_35q74")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
+[node name="SelectTerrain" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_v0tpd")
+frame = 2
+frame_progress = 0.29528573

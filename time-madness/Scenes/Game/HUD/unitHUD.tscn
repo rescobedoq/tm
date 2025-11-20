@@ -130,7 +130,7 @@ offset_right = 596.0
 offset_bottom = 11.0
 stretch_mode = 2
 
-[node name="box12" type="TextureButton" parent="."]
+[node name="moveButton" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
 offset_left = -68.0
@@ -141,7 +141,7 @@ texture_normal = ExtResource("2_4rmug")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="box14" type="TextureButton" parent="."]
+[node name="keepPosButton" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
 offset_left = -67.0
@@ -152,7 +152,7 @@ texture_normal = ExtResource("3_5wg7h")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="box13" type="TextureButton" parent="."]
+[node name="stopButton" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
 offset_left = -96.0
@@ -163,7 +163,7 @@ texture_normal = ExtResource("4_i5ls2")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="box11" type="TextureButton" parent="."]
+[node name="attackButton" type="TextureButton" parent="."]
 z_index = -1
 layout_mode = 0
 offset_left = -95.0
