@@ -80,12 +80,37 @@ func add_unit(unit: Entity) -> void:
 		
 		
 
-# En PlayerController.gd
+# En PlayerController.gd	
 func _unhandled_input(event):
-
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		print(">>> Click izquierdo detectado")
+		if is_selecting_terrain:
+			print("Click en modo terreno → ignorando unidades.")
+		
+			# Lanzar raycast pero ignorando entidades
+			var from = camera.project_ray_origin(event.position)
+			var to = from + camera.project_ray_normal(event.position) * 2000
 			
+			var params = PhysicsRayQueryParameters3D.create(from, to)
+			params.collision_mask = 1 << 0  # ← asegúrate de que el TERRENO esté en la capa 0
+
+			var result = get_world_3d().direct_space_state.intersect_ray(params)
+			if result:
+				print("Terreno detectado en:", result.position)
+				
+				if selected_unit:
+					var u := selected_unit as Unit  
+					selected_unit.move_to(result.position)
+					print("Moviendo unidad seleccionada a:", result.position)
+
+
+			is_selecting_terrain = false
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			if select_cursor_instance:
+				select_cursor_instance.queue_free()
+				select_cursor_instance = null
+
+			return  # ← MUY IMPORTANTE, evita seleccionar entidades
 		if camera == null:
 			print("ERROR: No hay cámara asignada en PlayerController")
 			return

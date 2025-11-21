@@ -6,14 +6,6 @@
 [node name="medievalSoldier" instance=ExtResource("1_6x1t2")]
 transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0)
 script = ExtResource("2_uc88y")
-attack_damage = null
-attack_range = null
-selected = null
-entity_name = null
-health = null
-max_health = null
-move_speed = null
-is_alive = null
 
 [node name="Skeleton3D" parent="Armature" index="0"]
 bones/0/rotation = Quaternion(0.52386063, 0.116045505, 0.15204114, 0.83005244)

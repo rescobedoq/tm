@@ -374,6 +374,7 @@ transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230
 [node name="MedievalSoldierControler" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108.22387, 0, -58.9554)
 player_owner = NodePath("../PlayerController")
+move_speed = 50.0
 
 [node name="MedievalSoldierControler2" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.24521, 0, -56.22386)

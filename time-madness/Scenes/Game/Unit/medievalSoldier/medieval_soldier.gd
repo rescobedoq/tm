@@ -43,6 +43,7 @@ func play_idle():
 func play_move():
 	print(">>> play_move CALLED <<<")
 	anim_player.play("Walking_frame_rate_24_fbx")
+	anim_player.get_animation("Walking_frame_rate_24_fbx").loop = true
 
 
 func play_attack():
