@@ -1,10 +1,12 @@
 extends Node3D
 class_name PlayerController
 
-# ------------------------------
+# ==============================
 # Nombre del jugador
-# ------------------------------
+# ==============================
 @export var player_name: String = "Jugador"
+
+# ===== HUD =====================
 @onready var hud_portrait: TextureRect = $"../UnitHud/Portrait"
 @onready var hud_attack: Label = $"../UnitHud/Attack"
 @onready var hud_defense: Label = $"../UnitHud/Defense"
@@ -13,9 +15,12 @@ class_name PlayerController
 @onready var hud_energy: TextureProgressBar = $"../UnitHud/energyBar"
 @onready var hud_name: Label = $"../UnitHud/UnitType"
 
-# ------------------------------
-# Opciones de la camara.
-# ------------------------------
+@onready var attackButton: TextureButton = $"../UnitHud/attackButton"
+@onready var stopButton: TextureButton = $"../UnitHud/stopButton"
+@onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
+@onready var moveButton: TextureButton = $"../UnitHud/moveButton"
+
+# ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
 @export_range(0, 1000) var rotation_speed: float = 5
 @export_range(0, 1000, 0.1) var zoom_speed: float = 50
@@ -33,142 +38,196 @@ class_name PlayerController
 @export var min_z: float = -250
 @export var max_z: float = 0
 
+# ===== Recursos =====
+@export var gold: int = 500
+@export var upkeep: int = 0
 
-# ------------------------------
-# Recursos
-# ------------------------------
-@export var gold: int = 500       # Oro inicial
-@export var upkeep: int = 0       # Manutención (por unidad o edificio)
+# ===== Unidades =====
+var units: Array = []
+var selected_unit: Entity = null
 
-# ------------------------------
-# Unidades del jugador
-# ------------------------------
-var units: Array = []             # Lista de unidades que pertenecen al jugador
-var selected_unit: Entity = null  # Unidad actualmente seleccionada
+# Cursor de selección de terreno
+var select_cursor_instance: Node2D = null
+var is_selecting_terrain: bool = false
 
-# ------------------------------
-# Cámara del jugador para raycasts
-# ------------------------------
+# Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
-# ------------------------------
-# Gestión de unidades del jugador
-# ------------------------------
 
-# Registra una unidad en el jugador
+# ==============================
+# Añadir unidades
+# ==============================
 func add_unit(unit: Entity) -> void:
 	if unit == null:
 		return
-	
-	# Evita duplicados
 	if unit not in units:
 		units.append(unit)
-		# Asigna automáticamente al jugador
 		unit.player_owner = self
 		print("Unidad agregada a ", player_name, ": ", unit.name)
-		
-		
 
-# En PlayerController.gd
-func _input(event):
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print(">>> Click izquierdo detectado")
-		
-		if camera == null:
-			print("ERROR: No hay cámara asignada en PlayerController")
-			return
+# ==============================
+# Manejo de input (clicks)
+# ==============================
+func _unhandled_input(event):
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	print("CLICK!!!!")
+	
+	if camera == null:
+		print("ERROR: No hay cámara asignada en PlayerController")
+		return
 
-		# Obtener ray
-		var from = camera.project_ray_origin(event.position)
-		var to = from + camera.project_ray_normal(event.position) * 1000
-		print("Ray desde cámara:", from, " -> ", to)
-
-		# Crear parámetros del raycast
-		var params = PhysicsRayQueryParameters3D.create(from, to)
+	var mouse_pos = event.position
+	# ------------------------------
+# MODO DE SELECCIÓN DE TERRENO
+# ------------------------------
+	if is_selecting_terrain:
+		print(">>> Entramos en MODO SELECCIÓN DE TERRENO")
 		
-		# Ejecutar raycast
+		# Obtener posición del mouse en viewport
+		mouse_pos = get_viewport().get_mouse_position()
+		print("Mouse position en viewport:", mouse_pos)
+		
+		# Obtener rayo desde cámara
+		var from = camera.project_ray_origin(mouse_pos)
+		var dir = camera.project_ray_normal(mouse_pos)
+		print("Ray desde cámara (origen):", from, " - dirección:", dir)
+		
+		# Intersectar con plano horizontal del terreno (Y=0)
+		var plane_y = 0.0  # altura del terreno
+		var target_pos: Vector3  # declarar aquí para todo el scope
+
+		if dir.y == 0:
+			print("Dirección del raycast paralela al plano, no se puede calcular intersección")
+			target_pos = from
+		else:
+			var t = (plane_y - from.y) / dir.y
+			target_pos = from + dir * t
+
+		
+		print("Posición objetivo en plano del terreno:", target_pos)
+		
+		# Mover la unidad si hay una seleccionada
+		if selected_unit:
+			print("Unidad seleccionada:", selected_unit.name)
+			selected_unit.move_to(target_pos)
+			print("Moviendo unidad a:", target_pos)
+		else:
+			print("No hay unidad seleccionada, no se mueve nada")
+		
+		# Restaurar estado del cursor
+		is_selecting_terrain = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		if select_cursor_instance:
+			print("Eliminando cursor de selección")
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		print(">>> Fin del modo selección de terreno")
+		return  # Evita seleccionar unidades mientras estamos en modo terreno
+
+
+	else:
+		# ------------------------------
+		# Modo selección de unidades
+		# ------------------------------
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
 		var result = get_world_3d().direct_space_state.intersect_ray(params)
-		
-		if result:
-			print("Collider detectado:", result.collider)
-			
-			if result.collider is Entity:
-				var entity = result.collider as Entity
-				print("Collider es una Entity:", entity.name)
-				
-				if entity.player_owner == self:
-					print("Unidad pertenece a este jugador, seleccionando...")
-					select_unit(entity)
-				else:
-					print("Unidad NO pertenece a este jugador, deseleccionando actual")
-					deselect_current_unit()
+		if result and result.collider is Entity:
+			var entity = result.collider as Entity
+			if entity.player_owner == self:
+				select_unit(entity)
 			else:
-				print("Collider NO es una Entity, deseleccionando actual")
 				deselect_current_unit()
 		else:
-			print("No se detectó ningún collider, deseleccionando actual")
 			deselect_current_unit()
 
-
+# ==============================
+# Seleccionar / deseleccionar
+# ==============================
 func select_unit(entity: Entity) -> void:
 	if entity == null:
 		return
-
-	# Deseleccionar unidad anterior
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
-	# Marcar la nueva unidad
 	selected_unit = entity
 	selected_unit.select()
+	print("Unidad seleccionada:", entity.name)
 
-	print("Unidad seleccionada: ", selected_unit.name)
-
-	# ---- IMPRIME Y ACTUALIZA PORTRAIT ----
-	if selected_unit.portrait:
-		print("El portrait es:", selected_unit.portrait)
-
-		if hud_portrait:
-			hud_portrait.texture = selected_unit.portrait
+	# Actualizar HUD
+	if selected_unit.portrait and hud_portrait:
+		hud_portrait.texture = selected_unit.portrait
 	else:
-		print("Esta unidad NO tiene portrait asignado.")
+		hud_portrait.texture = null
 
-		if hud_portrait:
-			hud_portrait.texture = null
-
-
-	# ---- CASTING SEGÚN TIPO ----
 	if entity is Unit:
-		print("SE HA SELECCIONADO UNA UNIDAD!!!!")
-		var u := entity as Unit  
+		var u := entity as Unit
 		hud_attack.text = "Attack: " + str(u.attack_damage)
 		hud_defense.text = "Defense: " + str(u.defense)
 		hud_velocity.text = "Speed: " + str(u.move_speed)
 		hud_health.max_value = u.max_health
-		hud_energy.max_value = u.max_magic
-		hud_name.text = u.unit_type
 		hud_health.value = u.current_health
+		hud_energy.max_value = u.max_magic
 		hud_energy.value = u.current_magic
-		
+		hud_name.text = u.unit_type
+
 func deselect_current_unit() -> void:
 	if selected_unit != null:
 		selected_unit.deselect()
 		selected_unit = null
 
-		# limpiar portrait del HUD
-		if hud_portrait:
-			hud_portrait.texture = null
-			
-		hud_attack.text = "Attack: -"
-		hud_defense.text = "Defense: -"
-		hud_velocity.text = "Speed: -"
-		hud_health.max_value = 10000
-		hud_energy.max_value = 10000
-		hud_name.text = ""
+	if hud_portrait:
+		hud_portrait.texture = null
+	hud_attack.text = "Attack: -"
+	hud_defense.text = "Defense: -"
+	hud_velocity.text = "Speed: -"
+	hud_health.max_value = 10000
+	hud_health.value = 0
+	hud_energy.max_value = 10000
+	hud_energy.value = 0
+	hud_name.text = ""
 
-		hud_health.value = 0
-		hud_energy.value = 0
+# ==============================
+# Botón mover
+# ==============================
+func _on_move_button_pressed() -> void:
+	if is_selecting_terrain:
+		return  # Ya está en modo selección
 
+	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar SelectTerrain.tscn")
+		return
 
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_terrain = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)  # Usamos cursor visible
+	print("Modo selección de terreno activado")
+
+# ==============================
+# Cursor de selección
+# ==============================
+func _process(delta: float) -> void:
+	if is_selecting_terrain and select_cursor_instance:
+		var mouse_pos = get_viewport().get_mouse_position()
+		select_cursor_instance.position = mouse_pos
+
+		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
+		if animated_sprite and not animated_sprite.is_playing():
+			animated_sprite.play("default")
+
+# ==============================
+# _ready: inicializar RTS
+# ==============================
 func _ready() -> void:
 	var rts = $RtsController
 	rts.movement_speed = movement_speed
@@ -186,3 +245,5 @@ func _ready() -> void:
 	rts.max_x = max_x
 	rts.min_z = min_z
 	rts.max_z = max_z
+
+	moveButton.pressed.connect(_on_move_button_pressed)

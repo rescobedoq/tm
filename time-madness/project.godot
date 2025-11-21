@@ -20,6 +20,13 @@ config/icon="res://icon.svg"
 FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
 GlobalUser="*res://GlobalUser.gd"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/terrain_3d/plugin.cfg")

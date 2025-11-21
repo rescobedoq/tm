@@ -9,6 +9,7 @@ radius = 1.6655273
 height = 5.296753
 
 [node name="MedievalSoldierControler" type="CharacterBody3D"]
+collision_layer = 2
 script = ExtResource("1_onu1i")
 
 [node name="medievalSoldier" parent="." instance=ExtResource("1_4ljfn")]
