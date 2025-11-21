@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=46 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://jklhuy1a7vkc" path="res://Assets/Models/MapElements/walls/wallFlat/wallFlat.fbx" id="26_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://prn7yngh7jse" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn" id="27_jwd7e"]
 [ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="28_gwrvl"]
+[ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="30_q2lsj"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -381,3 +382,9 @@ move_speed = 50.0
 [node name="MedievalSoldierControler2" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.24521, 0, -56.22386)
 player_owner = NodePath("../PlayerController")
+
+[node name="PlayerHud" parent="." instance=ExtResource("30_q2lsj")]
+offset_left = 1918.0
+offset_top = 40.0
+offset_right = -2.0
+offset_bottom = -1040.0
