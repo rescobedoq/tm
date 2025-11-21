@@ -24,7 +24,8 @@ var velocity: Vector3 = Vector3.ZERO
 var move_target: Vector3 = Vector3.ZERO
 var has_move_target: bool = false
 var is_moving: bool = false
-
+# Velocidad de rotación 
+@export var rotation_speed: float = 6.0
 # ------------------------------------------
 # Animaciones (cada unidad puede sobreescribir)
 # ------------------------------------------
@@ -55,12 +56,20 @@ func _physics_process(delta: float) -> void:
 	direction.y = 0
 
 	if direction.length() > 0.1:
+
+		# ------------------------------------------
+		# ROTACIÓN SUAVE EN DIRECCIÓN DEL MOVIMIENTO
+		# ------------------------------------------
+		var target_rot = atan2(direction.x, direction.z)  # rotación Y
+		rotation.y = lerp_angle(rotation.y, target_rot, rotation_speed * delta)
+
 		if not is_moving:
 			is_moving = true
 			play_move()
 
 		velocity = direction.normalized() * move_speed
 		global_translate(velocity * delta)
+
 	else:
 		has_move_target = false
 		if is_moving:

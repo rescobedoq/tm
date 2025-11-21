@@ -16,7 +16,7 @@ func _ready():
 	current_magic = max_magic
 	attack_damage = 25
 	defense = 10
-	move_speed = 3.5
+	move_speed = 10
 	attack_range = 3.0
 	
 	
@@ -42,8 +42,8 @@ func play_idle():
 
 func play_move():
 	print(">>> play_move CALLED <<<")
-	anim_player.play("Walking_frame_rate_24_fbx")
-	anim_player.get_animation("Walking_frame_rate_24_fbx").loop = true
+	anim_player.play("Running_frame_rate_24_fbx")
+	anim_player.get_animation("Running_frame_rate_24_fbx").loop = true
 
 
 func play_attack():
