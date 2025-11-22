@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://uy2wufk0gbd8"]
+
+[ext_resource type="PackedScene" uid="uid://dp1m0llganvvg" path="res://Assets/Models/Buildings/medievalFarm/medievalFarm.fbx" id="1_i6gyi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38i0p"]
+
+[node name="MedievalFarmController" type="CharacterBody3D"]
+
+[node name="medievalFarm" parent="." instance=ExtResource("1_i6gyi")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_38i0p")

@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://4mnejpabr56t"]
+
+[ext_resource type="PackedScene" uid="uid://coiot40rb3isk" path="res://Assets/Models/Buildings/medievalHarbor/medievalHarbor.fbx" id="1_k4736"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_13847"]
+size = Vector3(1, 0.55, 1)
+
+[node name="MedievalHarborController" type="CharacterBody3D"]
+
+[node name="medievalHarbor" parent="." instance=ExtResource("1_k4736")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_13847")

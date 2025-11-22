@@ -358,31 +358,35 @@ func _on_player_hud_barracks_pressed() -> void:
 	pass
 
 
-
-
 func _on_player_hud_dragon_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("dragon")
+	pass
 
 
 func _on_player_hud_farm_pressed() -> void:
-	pass # Replace with function body.
-
+	_start_build_mode("farm")
+	pass
 
 func _on_player_hud_harbor_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("harbor")
+	pass
 
 
 func _on_player_hud_magic_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("magic")
+	pass
 
 
 func _on_player_hud_shrine_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("shrine")
+	pass
 
 
 func _on_player_hud_smithy_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("smithy")
+	pass 
 
 
 func _on_player_hud_tower_pressed() -> void:
-	pass # Replace with function body.
+	_start_build_mode("tower")
+	pass

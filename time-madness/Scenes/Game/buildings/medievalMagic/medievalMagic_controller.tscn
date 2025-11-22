@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://cmqyhtbql1ms0"]
+
+[ext_resource type="PackedScene" uid="uid://c7mkufmohvhfw" path="res://Assets/Models/Buildings/medievalMagicSchool/medievalMagicSchool.fbx" id="1_ou1kl"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vf0dq"]
+
+[node name="MedievalMagicController" type="CharacterBody3D"]
+
+[node name="medievalMagicSchool" parent="." instance=ExtResource("1_ou1kl")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_vf0dq")

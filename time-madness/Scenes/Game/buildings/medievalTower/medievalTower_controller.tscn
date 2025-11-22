@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://doecriit5rn13"]
+
+[ext_resource type="PackedScene" uid="uid://dxmwa0d5kmd3g" path="res://Assets/Models/Buildings/medievalTower/medievalTower.fbx" id="1_mnsa5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_iv722"]
+size = Vector3(0.49, 1, 0.37)
+
+[node name="MedievalTowerController" type="CharacterBody3D"]
+
+[node name="medievalTower" parent="." instance=ExtResource("1_mnsa5")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_iv722")
