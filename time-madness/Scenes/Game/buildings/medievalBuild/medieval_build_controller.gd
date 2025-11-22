@@ -1,18 +1,38 @@
 extends CharacterBody3D
 
 var building_type: String = ""
+var default_scale: Vector3 = Vector3(10, 10, 10)
+
+func _ready():
+	pass 
+
 
 func set_building_type(b: String) -> void:
 	building_type = b
-	print("el tipo es: ", building_type)
-	
-	
+	var sz: int = 1
+
+	match building_type:
+		"barracks": sz = Barracks.BUILDING_SCALE
+		"dragon": sz = Hatchery.BUILDING_SCALE
+		"farm": sz = Farm.BUILDING_SCALE
+		"harbor": sz = Harbor.BUILDING_SCALE
+		"magic": sz = Magic.BUILDING_SCALE
+		"shrine": sz = Shrine.BUILDING_SCALE
+		"smithy": sz = Smithy.BUILDING_SCALE
+		"tower": sz = Tower.BUILDING_SCALE
+		_:
+			print("Tipo de edificio desconocido: %s" % building_type)
+			return
+
+	scale = Vector3(sz, sz, sz)
+	print("Placeholder escalado a: ", scale)
+
+
 func get_build() -> Node3D:
-	
 	if building_type == "":
 		print("No se ha definido building_type")
 		return null
-
+		
 	var scene_path := ""
 
 
@@ -30,10 +50,9 @@ func get_build() -> Node3D:
 		"shrine":
 			scene_path = "res://Scenes/Game/buildings/medievalShrine/medievalShrine_controller.tscn"
 		"smithy":
-			scene_path = "res://Scenes/Game/buildings/medievalSmithy/medievalSmihty.tscn"
+			scene_path = "res://Scenes/Game/buildings/medievalSmithy/medievalSmithy_controller.tscn"
 		"tower":
 			scene_path = "res://Scenes/Game/buildings/medievalTower/medievalTower_controller.tscn"
-			
 		_:
 			print("Tipo de edificio desconocido: %s" % building_type)
 			return null

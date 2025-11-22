@@ -336,7 +336,9 @@ func _start_build_mode(building_name: String) -> void:
 		return
 
 	build_placeholder = controller_scene.instantiate()
-
+	
+	#build_placeholder.scale = Vector3(10, 10, 10)
+	
 	#notificarle al controller qué edificio va a ser
 	if build_placeholder.has_method("set_building_type"):
 		build_placeholder.set_building_type(building_name)

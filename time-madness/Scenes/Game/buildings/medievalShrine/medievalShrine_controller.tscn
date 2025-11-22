@@ -1,13 +1,16 @@
-[gd_scene load_steps=3 format=3 uid="uid://cyf5ixpb8nlbi"]
+[gd_scene load_steps=4 format=3 uid="uid://cyf5ixpb8nlbi"]
 
 [ext_resource type="PackedScene" uid="uid://l3bvhlhaefr8" path="res://Assets/Models/Buildings/medievalForestShrine/medievalForestShrine.fbx" id="1_8gvyg"]
+[ext_resource type="Script" uid="uid://bsdjba5kasnvl" path="res://Scenes/Game/buildings/medievalShrine/medieval_shrine_controller.gd" id="1_f5ppr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f5ppr"]
 size = Vector3(1, 0.765, 1)
 
 [node name="MedievalShrineController" type="CharacterBody3D"]
+script = ExtResource("1_f5ppr")
 
 [node name="medievalForestShrine" parent="." instance=ExtResource("1_8gvyg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.085, 0)
