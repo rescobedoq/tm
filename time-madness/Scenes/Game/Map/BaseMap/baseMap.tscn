@@ -1,4 +1,4 @@
-[gd_scene load_steps=48 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=50 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -133,6 +133,25 @@ last_lod = 0
 last_shadow_lod = 0
 lod0_range = 128.0
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4vkf8"]
+transparency = 4
+cull_mode = 2
+vertex_color_use_as_albedo = true
+backlight_enabled = true
+backlight = Color(0.5, 0.5, 0.5, 1)
+distance_fade_mode = 1
+distance_fade_min_distance = 128.0
+distance_fade_max_distance = 96.0
+
+[sub_resource type="Terrain3DMeshAsset" id="Terrain3DMeshAsset_0m6nw"]
+id = 3
+generated_type = 1
+height_offset = 0.5
+material_override = SubResource("StandardMaterial3D_4vkf8")
+last_lod = 0
+last_shadow_lod = 0
+lod0_range = 128.0
+
 [sub_resource type="Terrain3DTextureAsset" id="Terrain3DTextureAsset_poqdo"]
 name = "Ground093"
 albedo_color = Color(0.6955032, 0.6955031, 0.6955031, 1)
@@ -173,7 +192,7 @@ roughness = -0.005
 uv_scale = 0.166
 
 [sub_resource type="Terrain3DAssets" id="Terrain3DAssets_moed6"]
-mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_infvj"), SubResource("Terrain3DMeshAsset_4rmid"), SubResource("Terrain3DMeshAsset_hjoq5")])
+mesh_list = Array[Terrain3DMeshAsset]([SubResource("Terrain3DMeshAsset_infvj"), SubResource("Terrain3DMeshAsset_4rmid"), SubResource("Terrain3DMeshAsset_hjoq5"), SubResource("Terrain3DMeshAsset_0m6nw")])
 texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_poqdo"), SubResource("Terrain3DTextureAsset_emt48"), SubResource("Terrain3DTextureAsset_hjoq5"), SubResource("Terrain3DTextureAsset_76gom")])
 
 [node name="BaseMap" type="Node3D"]
@@ -185,7 +204,6 @@ material = SubResource("Terrain3DMaterial_ft4ud")
 assets = SubResource("Terrain3DAssets_moed6")
 collision_mask = 0
 top_level = true
-metadata/_edit_lock_ = true
 
 [node name="PlayerController" parent="." instance=ExtResource("11_5n536")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 134.00847, 0, -140.7463)

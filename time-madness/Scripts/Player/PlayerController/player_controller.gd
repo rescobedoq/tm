@@ -60,6 +60,10 @@ var selected_unit: Entity = null
 var select_cursor_instance: Node2D = null
 var is_selecting_terrain: bool = false
 
+var is_placing_building: bool = false
+var build_placeholder: Node3D = null
+
+
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
 
@@ -252,6 +256,32 @@ func _process(delta: float) -> void:
 		if animated_sprite and not animated_sprite.is_playing():
 			animated_sprite.play("default")
 
+	# ----------- CURSOR DE CONSTRUCCIÓN
+	if is_placing_building and build_placeholder:
+		_update_build_placeholder_position()
+
+func _update_build_placeholder_position() -> void:
+	if not is_placing_building or build_placeholder == null:
+		return
+
+	var mouse_pos = get_viewport().get_mouse_position()
+
+	var from = camera.project_ray_origin(mouse_pos)
+	var dir = camera.project_ray_normal(mouse_pos)
+
+	var plane_y := 0.0
+	var t = (plane_y - from.y) / dir.y
+	var target_pos = from + dir * t
+
+	# ----------------------------
+	# OFFSET PARA ELEVAR EL MODELO
+	# ----------------------------
+	var offset_y := 2
+	build_placeholder.global_position = target_pos + Vector3(0, offset_y, 0)
+
+
+
+
 # ==============================
 # _ready: inicializar RTS
 # ==============================
@@ -274,8 +304,37 @@ func _ready() -> void:
 	rts.max_z = max_z
 	update_team_hud() 
 	moveButton.pressed.connect(_on_move_button_pressed)
+	
+var building_to_build: String = ""
+
+func _start_build_mode(building_name: String) -> void:
+	building_to_build = building_name
+	
+	var controller_scene = load("res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn")
+	if controller_scene == null:
+		print("ERROR: no se pudo cargar medievalBuild_controller")
+		return
+
+	build_placeholder = controller_scene.instantiate()
+
+	#notificarle al controller qué edificio va a ser
+	if build_placeholder.has_method("set_building_type"):
+		build_placeholder.set_building_type(building_name)
+
+	# desactivar colisiones y lógica mientras es fantasma
+	build_placeholder.collision_layer = 0
+	build_placeholder.collision_mask = 0
+	build_placeholder.set_physics_process(false)
+
+	get_tree().current_scene.add_child(build_placeholder)
+
+	is_placing_building = true
+	print("Modo construcción activado para:", building_name)
+
+
 
 func _on_player_hud_barracks_pressed() -> void:
+	_start_build_mode("barracks")
 	print("Barracks!")
 	pass
 
