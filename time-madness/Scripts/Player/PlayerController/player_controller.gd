@@ -26,6 +26,8 @@ class_name PlayerController
 @onready var resourcesLabel: Label = $"../TeamHud/prime"
 @onready var goldLabel: Label = $"../TeamHud/money"
 
+@onready var menu_hud: Control = $"../PlayerHud";
+
 # ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
 @export_range(0, 1000) var rotation_speed: float = 5
@@ -221,6 +223,7 @@ func deselect_current_unit() -> void:
 # ==============================
 # Botón mover
 # ==============================
+
 func _on_move_button_pressed() -> void:
 	if is_selecting_terrain:
 		return  # Ya está en modo selección
@@ -271,3 +274,37 @@ func _ready() -> void:
 	rts.max_z = max_z
 	update_team_hud() 
 	moveButton.pressed.connect(_on_move_button_pressed)
+
+func _on_player_hud_barracks_pressed() -> void:
+	print("Barracks!")
+	pass
+
+
+
+
+func _on_player_hud_dragon_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_farm_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_harbor_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_magic_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_shrine_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_smithy_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_tower_pressed() -> void:
+	pass # Replace with function body.

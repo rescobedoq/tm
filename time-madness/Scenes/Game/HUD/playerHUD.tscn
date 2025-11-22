@@ -241,7 +241,7 @@ label_settings = SubResource("LabelSettings_g0itf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureButton6" type="TextureButton" parent="TextureRect/Control"]
+[node name="harborButton" type="TextureButton" parent="TextureRect/Control"]
 layout_mode = 0
 offset_left = 21.0
 offset_top = 329.0
@@ -251,7 +251,7 @@ texture_normal = ExtResource("8_adeeb")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Label" type="Label" parent="TextureRect/Control/TextureButton6"]
+[node name="Label" type="Label" parent="TextureRect/Control/harborButton"]
 layout_mode = 0
 offset_left = 11.0
 offset_top = 43.0
@@ -285,7 +285,7 @@ label_settings = SubResource("LabelSettings_g0itf")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TextureButton3" type="TextureButton" parent="TextureRect/Control"]
+[node name="barracksButton" type="TextureButton" parent="TextureRect/Control"]
 layout_mode = 0
 offset_left = 125.0
 offset_top = 11.0
@@ -295,7 +295,7 @@ texture_normal = ExtResource("10_ch33g")
 ignore_texture_size = true
 stretch_mode = 0
 
-[node name="Label" type="Label" parent="TextureRect/Control/TextureButton3"]
+[node name="Label" type="Label" parent="TextureRect/Control/barracksButton"]
 layout_mode = 0
 offset_left = 1.0
 offset_top = 43.0
