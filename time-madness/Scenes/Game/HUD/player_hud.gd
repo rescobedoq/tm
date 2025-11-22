@@ -4,7 +4,7 @@ extends Control
 @onready var panel = $TextureRect
 
 var menu_open := true
-const MENU_WIDTH := 300
+const MENU_WIDTH := 400
 
 func _ready() -> void:
 	await get_tree().process_frame  # Esperar a que size sea correcto
