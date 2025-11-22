@@ -20,6 +20,14 @@ class_name PlayerController
 @onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
 @onready var moveButton: TextureButton = $"../UnitHud/moveButton"
 
+
+# ===== TeamHUD =====================
+@onready var upKeepLabel: Label = $"../TeamHud/maintenance"
+@onready var resourcesLabel: Label = $"../TeamHud/prime"
+@onready var goldLabel: Label = $"../TeamHud/money"
+
+@onready var menu_hud: Control = $"../PlayerHud";
+
 # ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
 @export_range(0, 1000) var rotation_speed: float = 5
@@ -40,7 +48,9 @@ class_name PlayerController
 
 # ===== Recursos =====
 @export var gold: int = 500
+@export var resources: int = 500
 @export var upkeep: int = 0
+@export var maxUpKeep: int = 10
 
 # ===== Unidades =====
 var units: Array = []
@@ -63,6 +73,22 @@ func add_unit(unit: Entity) -> void:
 		units.append(unit)
 		unit.player_owner = self
 		print("Unidad agregada a ", player_name, ": ", unit.name)
+		
+		
+		
+func update_team_hud() -> void:
+	print("SE LLAMO!")
+	if upKeepLabel:
+		print("waos1")
+		upKeepLabel.text = str(upkeep) + " / " + str(maxUpKeep)
+	if resourcesLabel:
+		print("waos2")
+		resourcesLabel.text = str(resources)
+	if goldLabel:
+		print("waos3")
+		goldLabel.text = str(gold)
+
+
 
 # ==============================
 # Manejo de input (clicks)
@@ -197,6 +223,7 @@ func deselect_current_unit() -> void:
 # ==============================
 # Botón mover
 # ==============================
+
 func _on_move_button_pressed() -> void:
 	if is_selecting_terrain:
 		return  # Ya está en modo selección
@@ -245,5 +272,39 @@ func _ready() -> void:
 	rts.max_x = max_x
 	rts.min_z = min_z
 	rts.max_z = max_z
-
+	update_team_hud() 
 	moveButton.pressed.connect(_on_move_button_pressed)
+
+func _on_player_hud_barracks_pressed() -> void:
+	print("Barracks!")
+	pass
+
+
+
+
+func _on_player_hud_dragon_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_farm_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_harbor_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_magic_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_shrine_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_smithy_pressed() -> void:
+	pass # Replace with function body.
+
+
+func _on_player_hud_tower_pressed() -> void:
+	pass # Replace with function body.

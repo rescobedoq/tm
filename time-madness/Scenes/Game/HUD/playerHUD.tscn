@@ -1,0 +1,330 @@
+[gd_scene load_steps=14 format=3 uid="uid://dfsqt0imxcvg6"]
+
+[ext_resource type="Texture2D" uid="uid://cd2hob11jspts" path="res://Assets/Images/HUD/playerInformation.png" id="1_634y2"]
+[ext_resource type="Script" uid="uid://p0jh2tdpf0hg" path="res://Scenes/Game/HUD/player_hud.gd" id="1_cyh1c"]
+[ext_resource type="Texture2D" uid="uid://dhcnwuam1tvno" path="res://Assets/Images/Portraits/Buildings/medievalTower.jpg" id="4_ov7p4"]
+[ext_resource type="Texture2D" uid="uid://comn3kekh87m3" path="res://Assets/Images/HUD/icons/buildButton.png" id="4_uap61"]
+[ext_resource type="Texture2D" uid="uid://w3p01v8geqc8" path="res://Assets/Images/Portraits/Buildings/medievalSmithy.jpg" id="5_kk5qp"]
+[ext_resource type="Texture2D" uid="uid://5q5r2t8r4ucb" path="res://Assets/Images/Portraits/Buildings/medievalMagicSchool.jpg" id="6_g0itf"]
+[ext_resource type="Texture2D" uid="uid://dxh3brw7s0rak" path="res://Assets/Images/Portraits/Buildings/medievalHatchery.jpg" id="7_gsu2h"]
+[ext_resource type="Texture2D" uid="uid://bikbw1lls00ne" path="res://Assets/Images/Portraits/Buildings/medievalHarbor.jpg" id="8_adeeb"]
+[ext_resource type="Texture2D" uid="uid://dmrkljbaaxlq2" path="res://Assets/Images/Portraits/Buildings/medievalForestShrine.jpg" id="9_amxdt"]
+[ext_resource type="Texture2D" uid="uid://fu3nhfpu58k1" path="res://Assets/Images/Portraits/Buildings/medievalBarracks.jpg" id="10_ch33g"]
+[ext_resource type="Texture2D" uid="uid://dall37w5ufa34" path="res://Assets/Images/Portraits/Buildings/medievalFarm.jpg" id="11_7ep1p"]
+
+[sub_resource type="FontFile" id="FontFile_ov7p4"]
+cache/0/30/0/ascent = 0.0
+cache/0/30/0/descent = 0.0
+cache/0/30/0/underline_position = 0.0
+cache/0/30/0/underline_thickness = 0.0
+cache/0/30/0/scale = 1.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/1/0/ascent = 0.0
+cache/0/1/0/descent = 0.0
+cache/0/1/0/underline_position = 0.0
+cache/0/1/0/underline_thickness = 0.0
+cache/0/1/0/scale = 1.0
+cache/0/25/0/ascent = 0.0
+cache/0/25/0/descent = 0.0
+cache/0/25/0/underline_position = 0.0
+cache/0/25/0/underline_thickness = 0.0
+cache/0/25/0/scale = 1.0
+cache/0/55/0/ascent = 0.0
+cache/0/55/0/descent = 0.0
+cache/0/55/0/underline_position = 0.0
+cache/0/55/0/underline_thickness = 0.0
+cache/0/55/0/scale = 1.0
+cache/0/65/0/ascent = 0.0
+cache/0/65/0/descent = 0.0
+cache/0/65/0/underline_position = 0.0
+cache/0/65/0/underline_thickness = 0.0
+cache/0/65/0/scale = 1.0
+cache/0/80/0/ascent = 0.0
+cache/0/80/0/descent = 0.0
+cache/0/80/0/underline_position = 0.0
+cache/0/80/0/underline_thickness = 0.0
+cache/0/80/0/scale = 1.0
+cache/0/110/0/ascent = 0.0
+cache/0/110/0/descent = 0.0
+cache/0/110/0/underline_position = 0.0
+cache/0/110/0/underline_thickness = 0.0
+cache/0/110/0/scale = 1.0
+cache/0/140/0/ascent = 0.0
+cache/0/140/0/descent = 0.0
+cache/0/140/0/underline_position = 0.0
+cache/0/140/0/underline_thickness = 0.0
+cache/0/140/0/scale = 1.0
+cache/0/155/0/ascent = 0.0
+cache/0/155/0/descent = 0.0
+cache/0/155/0/underline_position = 0.0
+cache/0/155/0/underline_thickness = 0.0
+cache/0/155/0/scale = 1.0
+cache/0/150/0/ascent = 0.0
+cache/0/150/0/descent = 0.0
+cache/0/150/0/underline_position = 0.0
+cache/0/150/0/underline_thickness = 0.0
+cache/0/150/0/scale = 1.0
+cache/0/130/0/ascent = 0.0
+cache/0/130/0/descent = 0.0
+cache/0/130/0/underline_position = 0.0
+cache/0/130/0/underline_thickness = 0.0
+cache/0/130/0/scale = 1.0
+cache/0/105/0/ascent = 0.0
+cache/0/105/0/descent = 0.0
+cache/0/105/0/underline_position = 0.0
+cache/0/105/0/underline_thickness = 0.0
+cache/0/105/0/scale = 1.0
+cache/0/100/0/ascent = 0.0
+cache/0/100/0/descent = 0.0
+cache/0/100/0/underline_position = 0.0
+cache/0/100/0/underline_thickness = 0.0
+cache/0/100/0/scale = 1.0
+cache/0/90/0/ascent = 0.0
+cache/0/90/0/descent = 0.0
+cache/0/90/0/underline_position = 0.0
+cache/0/90/0/underline_thickness = 0.0
+cache/0/90/0/scale = 1.0
+cache/0/85/0/ascent = 0.0
+cache/0/85/0/descent = 0.0
+cache/0/85/0/underline_position = 0.0
+cache/0/85/0/underline_thickness = 0.0
+cache/0/85/0/scale = 1.0
+cache/0/75/0/ascent = 0.0
+cache/0/75/0/descent = 0.0
+cache/0/75/0/underline_position = 0.0
+cache/0/75/0/underline_thickness = 0.0
+cache/0/75/0/scale = 1.0
+cache/0/70/0/ascent = 0.0
+cache/0/70/0/descent = 0.0
+cache/0/70/0/underline_position = 0.0
+cache/0/70/0/underline_thickness = 0.0
+cache/0/70/0/scale = 1.0
+cache/0/26/0/ascent = 0.0
+cache/0/26/0/descent = 0.0
+cache/0/26/0/underline_position = 0.0
+cache/0/26/0/underline_thickness = 0.0
+cache/0/26/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_g0itf"]
+line_spacing = -15.075
+font = SubResource("FontFile_ov7p4")
+font_size = 26
+font_color = Color(0.012617188, 0.012617188, 0.012617188, 1)
+outline_size = 7
+outline_color = Color(0.8509804, 1, 1, 1)
+shadow_size = 11
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="PlayerHud" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1920.0
+offset_bottom = -1080.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cyh1c")
+
+[node name="TextureButton" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = -159.0
+offset_top = 9.0
+offset_right = -64.0
+offset_bottom = 109.0
+texture_normal = ExtResource("4_uap61")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 400.0
+offset_bottom = 717.0
+texture = ExtResource("1_634y2")
+
+[node name="Control" type="Control" parent="TextureRect"]
+anchors_preset = 0
+offset_left = 73.0
+offset_top = 145.0
+offset_right = 314.0
+offset_bottom = 580.0
+
+[node name="towerButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 329.0
+offset_right = 225.0
+offset_bottom = 429.0
+texture_normal = ExtResource("4_ov7p4")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/towerButton"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 43.0
+offset_right = 91.0
+offset_bottom = 100.0
+text = "Tower
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="smithyButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 223.0
+offset_right = 121.0
+offset_bottom = 323.0
+texture_normal = ExtResource("5_kk5qp")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/smithyButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 43.0
+offset_right = 89.0
+offset_bottom = 100.0
+text = "Smithy
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="magicButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 117.0
+offset_right = 121.0
+offset_bottom = 217.0
+texture_normal = ExtResource("6_g0itf")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/magicButton"]
+layout_mode = 0
+offset_left = 12.0
+offset_top = 43.0
+offset_right = 88.0
+offset_bottom = 100.0
+text = "Magic
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="dragonButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 117.0
+offset_right = 225.0
+offset_bottom = 217.0
+texture_normal = ExtResource("7_gsu2h")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/dragonButton"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 43.0
+offset_right = 96.0
+offset_bottom = 100.0
+text = "Dragon
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="harborButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 329.0
+offset_right = 121.0
+offset_bottom = 429.0
+texture_normal = ExtResource("8_adeeb")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/harborButton"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 43.0
+offset_right = 91.0
+offset_bottom = 100.0
+text = "Harbor
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="shrineButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 223.0
+offset_right = 225.0
+offset_bottom = 323.0
+texture_normal = ExtResource("9_amxdt")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/shrineButton"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 43.0
+offset_right = 96.0
+offset_bottom = 100.0
+text = "Shrine
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="barracksButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 11.0
+offset_right = 225.0
+offset_bottom = 111.0
+texture_normal = ExtResource("10_ch33g")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/barracksButton"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 43.0
+offset_right = 96.0
+offset_bottom = 100.0
+text = "Barracks
+250/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="farmButton" type="TextureButton" parent="TextureRect/Control"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 11.0
+offset_right = 121.0
+offset_bottom = 111.0
+texture_normal = ExtResource("11_7ep1p")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="TextureRect/Control/farmButton"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 43.0
+offset_right = 86.0
+offset_bottom = 100.0
+text = "Farm
+50/40"
+label_settings = SubResource("LabelSettings_g0itf")
+horizontal_alignment = 1
+vertical_alignment = 1
