@@ -107,6 +107,26 @@ func _unhandled_input(event):
 		return
 
 	var mouse_pos = event.position
+# =====================================
+#     MODO DE COLOCAR EDIFICIO
+# =====================================
+	if is_placing_building and build_placeholder:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		
+			print(">>> Edificio colocado en: ", build_placeholder.global_position)
+
+			# Crear edificio real a partir del placeholder existente
+			var final_build_selected = build_placeholder.get_build()
+			if final_build_selected:
+				final_build_selected.global_position = build_placeholder.global_position
+				get_tree().current_scene.add_child(final_build_selected)
+
+			# Quitar placeholder
+			build_placeholder.queue_free()
+			build_placeholder = null
+			is_placing_building = false
+
+			return
 	# ------------------------------
 # MODO DE SELECCIÓN DE TERRENO
 # ------------------------------
@@ -177,7 +197,7 @@ func _unhandled_input(event):
 				deselect_current_unit()
 		else:
 			deselect_current_unit()
-
+	
 # ==============================
 # Seleccionar / deseleccionar
 # ==============================
@@ -335,7 +355,6 @@ func _start_build_mode(building_name: String) -> void:
 
 func _on_player_hud_barracks_pressed() -> void:
 	_start_build_mode("barracks")
-	print("Barracks!")
 	pass
 
 
