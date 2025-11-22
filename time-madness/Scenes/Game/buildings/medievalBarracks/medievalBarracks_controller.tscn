@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://cy6or1l53cys2"]
+
+[ext_resource type="PackedScene" uid="uid://og3kuy0156fv" path="res://Assets/Models/Buildings/medievalBarracks/medievalBarracks.fbx" id="1_7eddx"]
+[ext_resource type="Script" uid="uid://c01uayeejgxy0" path="res://Scenes/Game/buildings/medievalBarracks/medieval_barracks_controller.gd" id="1_behgs"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7eddx"]
+size = Vector3(1, 0.42, 1)
+
+[node name="MedievalBarracksController" type="CharacterBody3D"]
+script = ExtResource("1_behgs")
+
+[node name="medievalBarracks" parent="." instance=ExtResource("1_7eddx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+shape = SubResource("BoxShape3D_7eddx")

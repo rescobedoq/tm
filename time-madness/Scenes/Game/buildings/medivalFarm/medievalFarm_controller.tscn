@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://uy2wufk0gbd8"]
+
+[ext_resource type="Script" uid="uid://cq6ni2tl4tnbf" path="res://Scenes/Game/buildings/medivalFarm/medieval_farm_controller.gd" id="1_38i0p"]
+[ext_resource type="PackedScene" uid="uid://dp1m0llganvvg" path="res://Assets/Models/Buildings/medievalFarm/medievalFarm.fbx" id="1_i6gyi"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38i0p"]
+
+[node name="MedievalFarmController" type="CharacterBody3D"]
+script = ExtResource("1_38i0p")
+
+[node name="medievalFarm" parent="." instance=ExtResource("1_i6gyi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
+shape = SubResource("BoxShape3D_38i0p")

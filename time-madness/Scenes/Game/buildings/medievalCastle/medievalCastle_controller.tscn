@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://6o2u00q4dqxy"]
+
+[ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="1_v46c6"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s6kal"]
+size = Vector3(1, 0.515, 1)
+
+[node name="MedievalCastleController" type="CharacterBody3D"]
+
+[node name="medievalCastle" parent="." instance=ExtResource("1_v46c6")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.175, 0)
+shape = SubResource("BoxShape3D_s6kal")
