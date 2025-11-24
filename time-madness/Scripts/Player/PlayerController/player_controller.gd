@@ -56,6 +56,7 @@ class_name PlayerController
 var units: Array = []
 var buildings: Array = []  # 🔥 NUEVO: Array de edificios
 var selected_unit: Entity = null
+var selected_building: Building = null  # 🔥 NUEVO: Edificio seleccionado
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -242,13 +243,11 @@ func _unhandled_input(event):
 
 		var result_buildings = get_world_3d().direct_space_state.intersect_ray(params_buildings)
 		
-		if result_buildings and result_buildings.collider is CharacterBody3D:
-			var building = result_buildings.collider as CharacterBody3D
+		if result_buildings and result_buildings.collider is Building:
+			var building = result_buildings.collider as Building
 			# Verificar si es nuestro edificio
 			if building in buildings:
-				print("🏰 Se ha seleccionado un edificio bro")
-				# TODO: Aquí puedes añadir lógica para seleccionar el edificio
-				deselect_current_unit()  # Deseleccionar unidad si había alguna
+				select_building(building)  # 🔥 NUEVA FUNCIÓN
 			else:
 				deselect_current_unit()
 			return
@@ -264,6 +263,9 @@ func select_unit(entity: Entity) -> void:
 		return
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
+
+	# Deseleccionar edificio si había uno
+	selected_building = null
 
 	selected_unit = entity
 	selected_unit.select()
@@ -286,10 +288,50 @@ func select_unit(entity: Entity) -> void:
 		hud_energy.value = u.current_magic
 		hud_name.text = u.unit_type
 
+# 🔥 NUEVA FUNCIÓN: Seleccionar edificio
+func select_building(building: Building) -> void:
+	if building == null:
+		return
+	
+	# Deseleccionar unidad si había una
+	if selected_unit != null:
+		selected_unit.deselect()
+		selected_unit = null
+	
+	selected_building = building
+	print("🏰 Edificio seleccionado:", building.name)
+	
+	# Cargar retrato del edificio
+	var portrait_path = building.get_building_portrait()
+	if portrait_path != "" and hud_portrait:
+		var texture = load(portrait_path)
+		if texture:
+			hud_portrait.texture = texture
+			print("✅ Retrato cargado:", portrait_path)
+		else:
+			print("❌ No se pudo cargar el retrato:", portrait_path)
+			hud_portrait.texture = null
+	else:
+		if hud_portrait:
+			hud_portrait.texture = null
+	
+	# Limpiar el resto del HUD (opcional, por ahora)
+	hud_attack.text = "Attack: -"
+	hud_defense.text = "Defense: -"
+	hud_velocity.text = "Speed: -"
+	hud_health.max_value = 10000
+	hud_health.value = 0
+	hud_energy.max_value = 10000
+	hud_energy.value = 0
+	hud_name.text = building.get_class()  # Nombre del edificio
+
 func deselect_current_unit() -> void:
 	if selected_unit != null:
 		selected_unit.deselect()
 		selected_unit = null
+	
+	# También deseleccionar edificio
+	selected_building = null
 
 	if hud_portrait:
 		hud_portrait.texture = null

@@ -1,5 +1,5 @@
 # Building.gd
-extends CharacterBody3D
+extends Entity
 class_name Building
 
 # 🔥 Diccionario de escalas (accesible sin instanciar)
@@ -13,13 +13,30 @@ const BUILDING_SCALES = {
 	"smithy": 18,
 	"tower": 25
 }
+const BUILDING_PORTRAITS = {
+	"barracks": "res://Assets/Images/Portraits/Buildings/medievalBarracks.jpg",
+	"dragon": "res://Assets/Images/Portraits/Buildings/medievalHatchery.jpg",
+	"farm": "res://Assets/Images/Portraits/Buildings/medievalFarm.jpg",
+	"harbor": "res://Assets/Images/Portraits/Buildings/medievalHarbor.jpg",
+	"magic": "res://Assets/Images/Portraits/Buildings/medievalMagicSchool.jpg",
+	"shrine": "res://Assets/Images/Portraits/Buildings/medievalForestShrine.jpg",
+	"smithy": "res://Assets/Images/Portraits/Buildings/medievalSmithy.jpg",
+	"tower": "res://Assets/Images/Portraits/Buildings/medievalTower.jpg"
+}
+
+
 
 # Función estática para obtener escala sin instanciar
 static func get_building_scale_value(building_type: String) -> int:
 	return BUILDING_SCALES.get(building_type, 10)
 
+static func get_building_portrait_path(building_type: String) -> String:
+	return BUILDING_PORTRAITS.get(building_type, "")
+
 func get_building_scale() -> int:
 	return 10  # Valor por defecto, los hijos lo sobrescriben
+func get_building_portrait() -> String:
+	return ""  # Valor por defecto, los hijos lo sobrescriben
 
 func _ready():
 	_setup_building()
