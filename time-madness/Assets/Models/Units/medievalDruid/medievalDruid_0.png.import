@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xrkk4tp5uqr5"
-path.s3tc="res://.godot/imported/medievalSoldier_0.png-320529ca68037473e295990074c290fa.s3tc.ctex"
+uid="uid://rcyucnagrf6l"
+path.s3tc="res://.godot/imported/medievalDruid_0.png-199cc18ec3123e390b1aa1e35ae249b8.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "7f75225627da1b1dcc9724d6214742e1"
+}
 
 [deps]
 
-source_file="res://Assets/Models/Units/medievalSoldier/medievalSoldier_0.png"
-dest_files=["res://.godot/imported/medievalSoldier_0.png-320529ca68037473e295990074c290fa.s3tc.ctex"]
+source_file="res://Assets/Models/Units/medievalDruid/medievalDruid_0.png"
+dest_files=["res://.godot/imported/medievalDruid_0.png-199cc18ec3123e390b1aa1e35ae249b8.s3tc.ctex"]
 
 [params]
 

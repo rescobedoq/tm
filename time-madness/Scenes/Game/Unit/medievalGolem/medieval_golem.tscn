@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://dgurbwkkso1gy"]
+
+[ext_resource type="PackedScene" uid="uid://drgoirh8l8b14" path="res://Assets/Models/Units/medievalGolem/medievalGolem.fbx" id="1_0pfqd"]
+
+[node name="medievalGolem" instance=ExtResource("1_0pfqd")]

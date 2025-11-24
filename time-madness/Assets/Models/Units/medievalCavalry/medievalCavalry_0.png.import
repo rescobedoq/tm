@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6nm7s2khjrav"
-path.s3tc="res://.godot/imported/Meshy_Merged_Animations_0.png-383f60f30fee8550dc11fc2c563d7041.s3tc.ctex"
+uid="uid://be7dhil4ng0so"
+path.s3tc="res://.godot/imported/medievalCavalry_0.png-f734c7e6c99277422d38b364823ff1e2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "7f75225627da1b1dcc9724d6214742e1"
+"md5": "4ccedb8bdcdff5b09a2b7d2f2573a3f7"
 }
 
 [deps]
 
-source_file="res://Assets/Models/Units/medievalDruid/Meshy_Merged_Animations_0.png"
-dest_files=["res://.godot/imported/Meshy_Merged_Animations_0.png-383f60f30fee8550dc11fc2c563d7041.s3tc.ctex"]
+source_file="res://Assets/Models/Units/medievalCavalry/medievalCavalry_0.png"
+dest_files=["res://.godot/imported/medievalCavalry_0.png-f734c7e6c99277422d38b364823ff1e2.s3tc.ctex"]
 
 [params]
 

@@ -1,6 +1,9 @@
-extends CharacterBody3D
+# Farm.gd
+extends Building
 class_name Farm
-const BUILDING_SCALE: int = 15
 
-func _ready():
-	scale = Vector3(BUILDING_SCALE, BUILDING_SCALE, BUILDING_SCALE)
+func get_building_scale() -> int:
+	return Building.get_building_scale_value("farm")
+	
+func get_building_portrait() -> String:
+	return Building.get_building_portrait_path("farm")

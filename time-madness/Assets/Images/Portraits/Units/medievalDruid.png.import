@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c4c4l0s75kjng"
-path.s3tc="res://.godot/imported/Animation_Walking_frame_rate_24_0.png-bed96086d30610907e3b12fcc789717b.s3tc.ctex"
+uid="uid://q4u4nwcce1rp"
+path="res://.godot/imported/medievalDruid.png-b03fd7e9aa3796ac8ec622bf41703a89.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "4ccedb8bdcdff5b09a2b7d2f2573a3f7"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Models/Units/medievalCavalry/Animation_Walking_frame_rate_24_0.png"
-dest_files=["res://.godot/imported/Animation_Walking_frame_rate_24_0.png-bed96086d30610907e3b12fcc789717b.s3tc.ctex"]
+source_file="res://Assets/Images/Portraits/Units/medievalDruid.png"
+dest_files=["res://.godot/imported/medievalDruid.png-b03fd7e9aa3796ac8ec622bf41703a89.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -27,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -41,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1

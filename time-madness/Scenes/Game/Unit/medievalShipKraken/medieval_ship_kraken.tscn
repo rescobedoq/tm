@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://ijppaiy5rt65"]
+
+[ext_resource type="PackedScene" uid="uid://muiu7tmphefc" path="res://Assets/Models/Units/medievalShipKraken/medievalShipKraken.fbx" id="1_lnmd4"]
+
+[node name="medievalShipKraken" instance=ExtResource("1_lnmd4")]

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cu6ldsgrv558d"]
+
+[ext_resource type="PackedScene" uid="uid://nj2lhwgifuju" path="res://Assets/Models/Units/medievalCavalry/medievalCavalry.fbx" id="1_achrq"]
+
+[node name="medievalCavalry" instance=ExtResource("1_achrq")]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)

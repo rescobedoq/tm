@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://nj2lhwgifuju"
-path="res://.godot/imported/Animation_Walking_frame_rate_24.fbx-fdacbb8d40f11c34feb7d6a024391aa5.scn"
+path="res://.godot/imported/medievalCavalry.fbx-c0a4a6914b6e86cd68b2b31199d0ee58.scn"
 
 [deps]
 
-source_file="res://Assets/Models/Units/medievalCavalry/Animation_Walking_frame_rate_24.fbx"
-dest_files=["res://.godot/imported/Animation_Walking_frame_rate_24.fbx-fdacbb8d40f11c34feb7d6a024391aa5.scn"]
+source_file="res://Assets/Models/Units/medievalCavalry/medievalCavalry.fbx"
+dest_files=["res://.godot/imported/medievalCavalry.fbx-c0a4a6914b6e86cd68b2b31199d0ee58.scn"]
 
 [params]
 

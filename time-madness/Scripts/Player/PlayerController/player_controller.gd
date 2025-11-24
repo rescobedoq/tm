@@ -20,6 +20,14 @@ class_name PlayerController
 @onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
 @onready var moveButton: TextureButton = $"../UnitHud/moveButton"
 
+@onready var spell1: TextureButton = $"../UnitHud/spell1"
+@onready var spell2: TextureButton = $"../UnitHud/spell2"
+@onready var spell3: TextureButton = $"../UnitHud/spell3"
+@onready var spell4: TextureButton = $"../UnitHud/spell4"
+@onready var spell5: TextureButton = $"../UnitHud/spell5"
+@onready var spell6: TextureButton = $"../UnitHud/spell6"
+@onready var spell7: TextureButton = $"../UnitHud/spell7"
+
 
 # ===== TeamHUD =====================
 @onready var upKeepLabel: Label = $"../TeamHud/maintenance"
@@ -52,9 +60,11 @@ class_name PlayerController
 @export var upkeep: int = 0
 @export var maxUpKeep: int = 10
 
-# ===== Unidades =====
+# ===== Unidades y Edificios =====
 var units: Array = []
+var buildings: Array = []  # 🔥 NUEVO: Array de edificios
 var selected_unit: Entity = null
+var selected_building: Building = null  # 🔥 NUEVO: Edificio seleccionado
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -77,6 +87,17 @@ func add_unit(unit: Entity) -> void:
 		units.append(unit)
 		unit.player_owner = self
 		print("Unidad agregada a ", player_name, ": ", unit.name)
+
+# ==============================
+# 🔥 NUEVO: Añadir edificios
+# ==============================
+func add_building(building: CharacterBody3D) -> void:
+	if building == null:
+		return
+	if building not in buildings:
+		buildings.append(building)
+		print("✅ Edificio agregado a ", player_name, ": ", building.name)
+		print("   Total de edificios: ", buildings.size())
 		
 		
 		
@@ -112,15 +133,38 @@ func _unhandled_input(event):
 # =====================================
 	if is_placing_building and build_placeholder:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		
+			if not build_placeholder.is_valid_placement:
+				print("❌ No se puede construir aquí: muy cerca de otro edificio")
+				return
+			
 			print(">>> Edificio colocado en: ", build_placeholder.global_position)
 
-			# Crear edificio real a partir del placeholder existente
+			# Crear edificio real
 			var final_build_selected = build_placeholder.get_build()
 			if final_build_selected:
 				final_build_selected.global_position = build_placeholder.global_position
+				
+				# ✅ AGREGAR PRIMERO AL ÁRBOL
 				get_tree().current_scene.add_child(final_build_selected)
-
+				
+				# ✅ LUEGO CONFIGURAR (esperar un frame si es necesario)
+				await get_tree().process_frame
+				if final_build_selected is CharacterBody3D:
+					# Configurar el CharacterBody3D
+					final_build_selected.collision_layer = 1 << 3  # Layer 4
+					final_build_selected.collision_mask = 0
+					print("✅ Edificio final configurado en Layer 4")
+					
+					# 🔥 IMPORTANTE: Configurar su Area3D hijo también
+					var area = final_build_selected.get_node_or_null("Area3D")
+					if area and area is Area3D:
+						area.collision_layer = 1 << 3  # Layer 4
+						area.collision_mask = 1 << 3   # Detecta Layer 4
+						print("✅ Area3D del edificio configurada en Layer 4")
+					
+					# 🔥 AGREGAR AL ARRAY DE EDIFICIOS
+					add_building(final_build_selected)
+			
 			# Quitar placeholder
 			build_placeholder.queue_free()
 			build_placeholder = null
@@ -178,25 +222,46 @@ func _unhandled_input(event):
 
 	else:
 		# ------------------------------
-		# Modo selección de unidades
+		# 🔥 Modo selección de unidades Y EDIFICIOS
 		# ------------------------------
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
-		var params = PhysicsRayQueryParameters3D.new()
-		params.from = from
-		params.to = to
-		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		# 🔥 ESTRATEGIA 1: Intentar seleccionar UNIDADES (Layer 2)
+		var params_units = PhysicsRayQueryParameters3D.new()
+		params_units.from = from
+		params_units.to = to
+		params_units.collision_mask = 1 << 1  # Layer 2 -> Unidades
 
-		var result = get_world_3d().direct_space_state.intersect_ray(params)
-		if result and result.collider is Entity:
-			var entity = result.collider as Entity
+		var result_units = get_world_3d().direct_space_state.intersect_ray(params_units)
+		
+		if result_units and result_units.collider is Entity:
+			var entity = result_units.collider as Entity
 			if entity.player_owner == self:
 				select_unit(entity)
 			else:
 				deselect_current_unit()
-		else:
-			deselect_current_unit()
+			return  # Encontró una unidad, terminar aquí
+		
+		# 🔥 ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (Layer 4)
+		var params_buildings = PhysicsRayQueryParameters3D.new()
+		params_buildings.from = from
+		params_buildings.to = to
+		params_buildings.collision_mask = 1 << 3  # Layer 4 -> Edificios
+
+		var result_buildings = get_world_3d().direct_space_state.intersect_ray(params_buildings)
+		
+		if result_buildings and result_buildings.collider is Building:
+			var building = result_buildings.collider as Building
+			# Verificar si es nuestro edificio
+			if building in buildings:
+				select_building(building)  # 🔥 NUEVA FUNCIÓN
+			else:
+				deselect_current_unit()
+			return
+		
+		# Si no encontró ni unidad ni edificio, deseleccionar
+		deselect_current_unit()
 	
 # ==============================
 # Seleccionar / deseleccionar
@@ -207,6 +272,9 @@ func select_unit(entity: Entity) -> void:
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
+	# Deseleccionar edificio si había uno
+	selected_building = null
+	_clear_abilities()
 	selected_unit = entity
 	selected_unit.select()
 	print("Unidad seleccionada:", entity.name)
@@ -228,11 +296,78 @@ func select_unit(entity: Entity) -> void:
 		hud_energy.value = u.current_magic
 		hud_name.text = u.unit_type
 
+func select_building(building: Building) -> void:
+	if building == null:
+		return
+	
+	# Deseleccionar unidad si había una
+	if selected_unit != null:
+		selected_unit.deselect()
+		selected_unit = null
+	
+	selected_building = building
+	print("🏰 Edificio seleccionado:", building.name)
+	
+	# Cargar retrato del edificio
+	var portrait_path = building.get_building_portrait()
+	if portrait_path != "" and hud_portrait:
+		var texture = load(portrait_path)
+		if texture:
+			hud_portrait.texture = texture
+			print("✅ Retrato cargado:", portrait_path)
+		else:
+			print("❌ No se pudo cargar el retrato:", portrait_path)
+			hud_portrait.texture = null
+	else:
+		if hud_portrait:
+			hud_portrait.texture = null
+	
+	# 🔥 Cargar iconos de habilidades en los botones
+	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+	
+	# Limpiar todos los botones primero
+	for button in spell_buttons:
+		if button:
+			button.texture_normal = null
+			button.visible = false
+			button.disabled = true
+	
+	# Cargar las habilidades del edificio
+	var abilities = building.abilities
+	for i in range(min(abilities.size(), spell_buttons.size())):
+		var ability = abilities[i]
+		var button = spell_buttons[i]
+		
+		if button and ability:
+			var icon_texture = load(ability.icon)
+			if icon_texture:
+				button.texture_normal = icon_texture
+				button.visible = true
+				button.disabled = false
+				button.tooltip_text = ability.name + "\n" + ability.description
+				print("✅ Habilidad cargada: ", ability.name)
+			else:
+				print("❌ No se pudo cargar el icono: ", ability.icon)
+	
+	# Limpiar el resto del HUD (opcional, por ahora)
+	hud_attack.text = "Attack: -"
+	hud_defense.text = "Defense: -"
+	hud_velocity.text = "Speed: -"
+	hud_health.max_value = 10000
+	hud_health.value = 0
+	hud_energy.max_value = 10000
+	hud_energy.value = 0
+	hud_name.text = building.get_class()  # Nombre del edificio
+
 func deselect_current_unit() -> void:
 	if selected_unit != null:
 		selected_unit.deselect()
 		selected_unit = null
-
+	
+	# También deseleccionar edificio
+	selected_building = null
+	_clear_abilities()
+	
 	if hud_portrait:
 		hud_portrait.texture = null
 	hud_attack.text = "Attack: -"
@@ -243,6 +378,18 @@ func deselect_current_unit() -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name.text = ""
+
+
+func _clear_abilities() -> void:
+	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+	
+	for button in spell_buttons:
+		if button:
+			button.texture_normal = null
+			button.visible = false
+			button.disabled = true
+			button.tooltip_text = ""
+
 
 # ==============================
 # Botón mover
@@ -332,27 +479,19 @@ func _start_build_mode(building_name: String) -> void:
 	
 	var controller_scene = load("res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn")
 	if controller_scene == null:
-		print("ERROR: no se pudo cargar medievalBuild_controller")
 		return
 
 	build_placeholder = controller_scene.instantiate()
-	
-	#build_placeholder.scale = Vector3(10, 10, 10)
-	
-	#notificarle al controller qué edificio va a ser
-	if build_placeholder.has_method("set_building_type"):
-		build_placeholder.set_building_type(building_name)
-
-	# desactivar colisiones y lógica mientras es fantasma
-	build_placeholder.collision_layer = 0
-	build_placeholder.collision_mask = 0
 	build_placeholder.set_physics_process(false)
 
 	get_tree().current_scene.add_child(build_placeholder)
+	
+	await get_tree().process_frame
+	
+	if build_placeholder.has_method("set_building_type"):
+		build_placeholder.set_building_type(building_name)
 
 	is_placing_building = true
-	print("Modo construcción activado para:", building_name)
-
 
 
 func _on_player_hud_barracks_pressed() -> void:
