@@ -7,7 +7,17 @@ func _ready():
 		BuildingAbility.new(
 			"res://Assets/Images/Portraits/Units/medievalSoldier.png",
 			"Entrenar Soldado",
-			"Entrena un soldado básico de infantería"
+			"Entrena un soldado básico de infantería."
+		),
+		BuildingAbility.new(
+			"res://Assets/Images/Portraits/Units/medievalArcher.png",
+			"Entrenar Arquero",
+			"Entrena un arquero de rango básico."
+		),
+		BuildingAbility.new(
+			"res://Assets/Images/Portraits/Units/medievalCavalry.png",
+			"Entrenar Caballería",
+			"Entrena una unidad de caballería ligera."
 		),
 	]
 
