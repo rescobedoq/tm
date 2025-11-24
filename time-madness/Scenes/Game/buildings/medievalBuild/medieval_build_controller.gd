@@ -1,40 +1,149 @@
 extends CharacterBody3D
-
 var building_type: String = ""
 var default_scale: Vector3 = Vector3(10, 10, 10)
+var proximity_area: Area3D
+var is_valid_placement: bool = true
+var preview_model: Node3D = null
 
 func _ready():
-	pass 
+	collision_layer = 1 << 3
+	collision_mask = 4
+	
+	await get_tree().process_frame
+	_setup_proximity_detection()
 
+func _setup_proximity_detection():
+	proximity_area = get_node_or_null("Area3D")
+	
+	if proximity_area == null:
+		print("❌ No se encontró Area3D")
+		return
+	
+	proximity_area.collision_layer = 1 << 3
+	proximity_area.collision_mask = 1 << 3
+
+	
+	var collision_shape = proximity_area.get_node_or_null("CollisionShape3D")
+	if collision_shape:
+		collision_shape.disabled = false
+	
+	_adjust_proximity_radius()
+	
+	# Señales para detectar áreas
+	proximity_area.area_entered.connect(_on_area_nearby)
+	proximity_area.area_exited.connect(_on_area_cleared)
+	
+	# Señales para detectar bodies
+	proximity_area.body_entered.connect(_on_building_nearby)
+	proximity_area.body_exited.connect(_on_building_cleared)
+
+func _get_building_scale() -> int:
+	match building_type:
+		"barracks": return Barracks.BUILDING_SCALE
+		"dragon": return Hatchery.BUILDING_SCALE
+		"farm": return Farm.BUILDING_SCALE
+		"harbor": return Harbor.BUILDING_SCALE
+		"magic": return Magic.BUILDING_SCALE
+		"shrine": return Shrine.BUILDING_SCALE
+		"smithy": return Smithy.BUILDING_SCALE
+		"tower": return Tower.BUILDING_SCALE
+		_: 
+			return 10
+
+func _adjust_proximity_radius():
+	if proximity_area == null:
+		return
+
+func _on_area_nearby(area: Area3D):
+	if area != proximity_area:  # Evita detectarse a sí mismo
+		print("⚠️ Área detectada: ", area.name)
+		is_valid_placement = false
+		_update_visual_feedback()
+
+func _on_area_cleared(area: Area3D):
+	# Verifica si no hay nada cerca (ni bodies ni áreas)
+	if proximity_area.get_overlapping_bodies().size() == 0 and \
+	   proximity_area.get_overlapping_areas().size() == 0:
+		print("✅ Área despejada")
+		is_valid_placement = true
+		_update_visual_feedback()
+
+func _on_building_nearby(body):
+	if body is CharacterBody3D and body != self:
+		is_valid_placement = false
+		_update_visual_feedback()
+
+func _on_building_cleared(body):
+	# Verifica ambos: bodies Y áreas
+	if proximity_area.get_overlapping_bodies().size() == 0 and \
+	   proximity_area.get_overlapping_areas().size() == 0:
+		is_valid_placement = true
+		_update_visual_feedback()
+
+func _update_visual_feedback():
+	if preview_model == null:
+		return
+	
+	var color = Color.GREEN if is_valid_placement else Color.RED
+	color.a = 0.6
+	
+	_apply_color_recursive(preview_model, color)
+
+func _apply_color_recursive(node: Node, color: Color):
+	if node is MeshInstance3D:
+		var mesh_instance = node as MeshInstance3D
+		for i in range(mesh_instance.get_surface_override_material_count()):
+			var mat = mesh_instance.get_active_material(i)
+			if mat:
+				var new_mat = mat.duplicate()
+				if new_mat is StandardMaterial3D:
+					new_mat.albedo_color = color
+					new_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+					mesh_instance.set_surface_override_material(i, new_mat)
+	
+	for child in node.get_children():
+		_apply_color_recursive(child, color)
 
 func set_building_type(b: String) -> void:
 	building_type = b
-	var sz: int = 1
+	
+	if proximity_area:
+		_adjust_proximity_radius()
+	
+	_create_preview_model()
 
-	match building_type:
-		"barracks": sz = Barracks.BUILDING_SCALE
-		"dragon": sz = Hatchery.BUILDING_SCALE
-		"farm": sz = Farm.BUILDING_SCALE
-		"harbor": sz = Harbor.BUILDING_SCALE
-		"magic": sz = Magic.BUILDING_SCALE
-		"shrine": sz = Shrine.BUILDING_SCALE
-		"smithy": sz = Smithy.BUILDING_SCALE
-		"tower": sz = Tower.BUILDING_SCALE
-		_:
-			print("Tipo de edificio desconocido: %s" % building_type)
-			return
+func _create_preview_model():
+	if preview_model:
+		preview_model.queue_free()
+	
+	preview_model = get_build()
+	if preview_model:
+		if preview_model is CharacterBody3D:
+			preview_model.set_physics_process(false)
+			preview_model.collision_layer = 0
+			preview_model.collision_mask = 0
+		
+		_remove_physics_recursive(preview_model)
+		
+		var sz: int = _get_building_scale()
+		preview_model.scale = Vector3(sz, sz, sz)
+		
+		add_child(preview_model)
+		_update_visual_feedback()
 
-	scale = Vector3(sz, sz, sz)
-	print("Placeholder escalado a: ", scale)
-
+func _remove_physics_recursive(node: Node):
+	var children = node.get_children()
+	for child in children:
+		if child is CollisionShape3D or child is Area3D or child is CollisionPolygon3D or child is CollisionObject3D:
+			child.queue_free()
+		else:
+			_remove_physics_recursive(child)
 
 func get_build() -> Node3D:
 	if building_type == "":
-		print("No se ha definido building_type")
 		return null
 		
 	var scene_path := ""
-
 
 	match building_type:
 		"barracks":
@@ -54,13 +163,10 @@ func get_build() -> Node3D:
 		"tower":
 			scene_path = "res://Scenes/Game/buildings/medievalTower/medievalTower_controller.tscn"
 		_:
-			print("Tipo de edificio desconocido: %s" % building_type)
 			return null
 
 	var scene = load(scene_path)
-	print("la ruta es:", scene_path)
 	if not scene:
-		push_error("No se pudo cargar la escena: %s" % scene_path)
 		return null
 
 	return scene.instantiate()

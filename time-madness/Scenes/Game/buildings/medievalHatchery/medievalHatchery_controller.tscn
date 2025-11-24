@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://d32dgtta7t5bt"]
+[gd_scene load_steps=5 format=3 uid="uid://d32dgtta7t5bt"]
 
 [ext_resource type="PackedScene" uid="uid://cyy6nir6gioo0" path="res://Assets/Models/Buildings/medievalHatchery/medievalHatchery.fbx" id="1_pmuag"]
 [ext_resource type="Script" uid="uid://w08xtxjbwaax" path="res://Scenes/Game/buildings/medievalHatchery/medieval_hatchery_controller.gd" id="1_qkqrn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qkqrn"]
 size = Vector3(1, 0.855, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y2ykt"]
 
 [node name="MedievalHatcheryController" type="CharacterBody3D"]
 script = ExtResource("1_qkqrn")
@@ -16,3 +18,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.44, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.375, 0)
 shape = SubResource("BoxShape3D_qkqrn")
 debug_fill = false
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_y2ykt")

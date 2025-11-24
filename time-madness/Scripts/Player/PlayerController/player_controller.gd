@@ -112,15 +112,35 @@ func _unhandled_input(event):
 # =====================================
 	if is_placing_building and build_placeholder:
 		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		
+			if not build_placeholder.is_valid_placement:
+				print("❌ No se puede construir aquí: muy cerca de otro edificio")
+				return
+			
 			print(">>> Edificio colocado en: ", build_placeholder.global_position)
 
-			# Crear edificio real a partir del placeholder existente
+			# Crear edificio real
 			var final_build_selected = build_placeholder.get_build()
 			if final_build_selected:
 				final_build_selected.global_position = build_placeholder.global_position
+				
+				# ✅ AGREGAR PRIMERO AL ÁRBOL
 				get_tree().current_scene.add_child(final_build_selected)
-
+				
+				# ✅ LUEGO CONFIGURAR (esperar un frame si es necesario)
+				await get_tree().process_frame
+				if final_build_selected is CharacterBody3D:
+					# Configurar el CharacterBody3D
+					final_build_selected.collision_layer = 1 << 3  # Layer 4
+					final_build_selected.collision_mask = 0
+					print("✅ Edificio final configurado en Layer 4")
+					
+					# 🔥 IMPORTANTE: Configurar su Area3D hijo también
+					var area = final_build_selected.get_node_or_null("Area3D")
+					if area and area is Area3D:
+						area.collision_layer = 1 << 3  # Layer 4
+						area.collision_mask = 1 << 3   # Detecta Layer 4
+						print("✅ Area3D del edificio configurada en Layer 4")
+			
 			# Quitar placeholder
 			build_placeholder.queue_free()
 			build_placeholder = null
@@ -332,27 +352,19 @@ func _start_build_mode(building_name: String) -> void:
 	
 	var controller_scene = load("res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn")
 	if controller_scene == null:
-		print("ERROR: no se pudo cargar medievalBuild_controller")
 		return
 
 	build_placeholder = controller_scene.instantiate()
-	
-	#build_placeholder.scale = Vector3(10, 10, 10)
-	
-	#notificarle al controller qué edificio va a ser
-	if build_placeholder.has_method("set_building_type"):
-		build_placeholder.set_building_type(building_name)
-
-	# desactivar colisiones y lógica mientras es fantasma
-	build_placeholder.collision_layer = 0
-	build_placeholder.collision_mask = 0
 	build_placeholder.set_physics_process(false)
 
 	get_tree().current_scene.add_child(build_placeholder)
+	
+	await get_tree().process_frame
+	
+	if build_placeholder.has_method("set_building_type"):
+		build_placeholder.set_building_type(building_name)
 
 	is_placing_building = true
-	print("Modo construcción activado para:", building_name)
-
 
 
 func _on_player_hud_barracks_pressed() -> void:

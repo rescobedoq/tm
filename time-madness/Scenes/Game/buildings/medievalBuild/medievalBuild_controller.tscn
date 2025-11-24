@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://bo3734rsymsm7"]
+[gd_scene load_steps=5 format=3 uid="uid://bo3734rsymsm7"]
 
 [ext_resource type="Script" uid="uid://unf1ft2uoo7p" path="res://Scenes/Game/buildings/medievalBuild/medieval_build_controller.gd" id="1_gnsyu"]
 [ext_resource type="PackedScene" uid="uid://c261j3xc2lyod" path="res://Assets/Models/Buildings/medievalBuild/medievalBuild.fbx" id="1_v7gqt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_v7gqt"]
 size = Vector3(1, 0.27, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gnsyu"]
 
 [node name="MedievalBuildController" type="CharacterBody3D"]
 script = ExtResource("1_gnsyu")
@@ -13,3 +15,9 @@ script = ExtResource("1_gnsyu")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("BoxShape3D_v7gqt")
+
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+shape = SubResource("BoxShape3D_gnsyu")
