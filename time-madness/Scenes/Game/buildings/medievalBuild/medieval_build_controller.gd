@@ -65,17 +65,7 @@ func _setup_proximity_detection():
 	proximity_area.body_exited.connect(_on_building_cleared)
 
 func _get_building_scale() -> int:
-	match building_type:
-		"barracks": return Barracks.BUILDING_SCALE
-		"dragon": return Hatchery.BUILDING_SCALE
-		"farm": return Farm.BUILDING_SCALE
-		"harbor": return Harbor.BUILDING_SCALE
-		"magic": return Magic.BUILDING_SCALE
-		"shrine": return Shrine.BUILDING_SCALE
-		"smithy": return Smithy.BUILDING_SCALE
-		"tower": return Tower.BUILDING_SCALE
-		_: 
-			return 10
+	return Building.get_building_scale_value(building_type)
 
 func _adjust_proximity_radius():
 	if proximity_area == null:

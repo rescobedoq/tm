@@ -52,8 +52,9 @@ class_name PlayerController
 @export var upkeep: int = 0
 @export var maxUpKeep: int = 10
 
-# ===== Unidades =====
+# ===== Unidades y Edificios =====
 var units: Array = []
+var buildings: Array = []  # 🔥 NUEVO: Array de edificios
 var selected_unit: Entity = null
 
 # Cursor de selección de terreno
@@ -77,6 +78,17 @@ func add_unit(unit: Entity) -> void:
 		units.append(unit)
 		unit.player_owner = self
 		print("Unidad agregada a ", player_name, ": ", unit.name)
+
+# ==============================
+# 🔥 NUEVO: Añadir edificios
+# ==============================
+func add_building(building: CharacterBody3D) -> void:
+	if building == null:
+		return
+	if building not in buildings:
+		buildings.append(building)
+		print("✅ Edificio agregado a ", player_name, ": ", building.name)
+		print("   Total de edificios: ", buildings.size())
 		
 		
 		
@@ -140,6 +152,9 @@ func _unhandled_input(event):
 						area.collision_layer = 1 << 3  # Layer 4
 						area.collision_mask = 1 << 3   # Detecta Layer 4
 						print("✅ Area3D del edificio configurada en Layer 4")
+					
+					# 🔥 AGREGAR AL ARRAY DE EDIFICIOS
+					add_building(final_build_selected)
 			
 			# Quitar placeholder
 			build_placeholder.queue_free()
@@ -198,25 +213,48 @@ func _unhandled_input(event):
 
 	else:
 		# ------------------------------
-		# Modo selección de unidades
+		# 🔥 Modo selección de unidades Y EDIFICIOS
 		# ------------------------------
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
-		var params = PhysicsRayQueryParameters3D.new()
-		params.from = from
-		params.to = to
-		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		# 🔥 ESTRATEGIA 1: Intentar seleccionar UNIDADES (Layer 2)
+		var params_units = PhysicsRayQueryParameters3D.new()
+		params_units.from = from
+		params_units.to = to
+		params_units.collision_mask = 1 << 1  # Layer 2 -> Unidades
 
-		var result = get_world_3d().direct_space_state.intersect_ray(params)
-		if result and result.collider is Entity:
-			var entity = result.collider as Entity
+		var result_units = get_world_3d().direct_space_state.intersect_ray(params_units)
+		
+		if result_units and result_units.collider is Entity:
+			var entity = result_units.collider as Entity
 			if entity.player_owner == self:
 				select_unit(entity)
 			else:
 				deselect_current_unit()
-		else:
-			deselect_current_unit()
+			return  # Encontró una unidad, terminar aquí
+		
+		# 🔥 ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (Layer 4)
+		var params_buildings = PhysicsRayQueryParameters3D.new()
+		params_buildings.from = from
+		params_buildings.to = to
+		params_buildings.collision_mask = 1 << 3  # Layer 4 -> Edificios
+
+		var result_buildings = get_world_3d().direct_space_state.intersect_ray(params_buildings)
+		
+		if result_buildings and result_buildings.collider is CharacterBody3D:
+			var building = result_buildings.collider as CharacterBody3D
+			# Verificar si es nuestro edificio
+			if building in buildings:
+				print("🏰 Se ha seleccionado un edificio bro")
+				# TODO: Aquí puedes añadir lógica para seleccionar el edificio
+				deselect_current_unit()  # Deseleccionar unidad si había alguna
+			else:
+				deselect_current_unit()
+			return
+		
+		# Si no encontró ni unidad ni edificio, deseleccionar
+		deselect_current_unit()
 	
 # ==============================
 # Seleccionar / deseleccionar

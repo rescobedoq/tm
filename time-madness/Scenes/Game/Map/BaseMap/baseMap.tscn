@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=49 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -27,7 +27,6 @@
 [ext_resource type="PackedScene" uid="uid://u35uc2yw5l4b" path="res://Scenes/Game/Map/MapModels/medium_rock_6.tscn" id="23_5n536"]
 [ext_resource type="PackedScene" uid="uid://cypeag16cydn4" path="res://Assets/Models/MapElements/walls/wallDoor/wallDoor.fbx" id="24_5n536"]
 [ext_resource type="PackedScene" uid="uid://jklhuy1a7vkc" path="res://Assets/Models/MapElements/walls/wallFlat/wallFlat.fbx" id="26_gwrvl"]
-[ext_resource type="PackedScene" uid="uid://bo3734rsymsm7" path="res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn" id="27_4vkf8"]
 [ext_resource type="PackedScene" uid="uid://prn7yngh7jse" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn" id="27_jwd7e"]
 [ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="28_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="30_q2lsj"]
@@ -412,9 +411,6 @@ offset_bottom = -1040.0
 
 [node name="medievalCastle" parent="." instance=ExtResource("31_6l0wr")]
 transform = Transform3D(35, 0, 0, 0, 35, 0, 0, 0, 35, 90.477, 17.485, -130.508)
-
-[node name="MedievalBuild" parent="." instance=ExtResource("27_4vkf8")]
-transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 110.599, 4, -87.951)
 
 [connection signal="barracks_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_barracks_pressed"]
 [connection signal="dragon_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_dragon_pressed"]
