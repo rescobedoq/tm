@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://n3vx4ankstfg"
-path="res://.godot/imported/Meshy_Merged_Animations.fbx-6d4980cf130372599f701c5bc8ffc48f.scn"
+path="res://.godot/imported/medievalDruid.fbx-89ff3308f335eb80062aa54c7541418d.scn"
 
 [deps]
 
-source_file="res://Assets/Models/Units/medievalDruid/Meshy_Merged_Animations.fbx"
-dest_files=["res://.godot/imported/Meshy_Merged_Animations.fbx-6d4980cf130372599f701c5bc8ffc48f.scn"]
+source_file="res://Assets/Models/Units/medievalDruid/medievalDruid.fbx"
+dest_files=["res://.godot/imported/medievalDruid.fbx-89ff3308f335eb80062aa54c7541418d.scn"]
 
 [params]
 

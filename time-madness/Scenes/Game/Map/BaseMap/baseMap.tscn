@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=51 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -31,6 +31,8 @@
 [ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="28_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="30_q2lsj"]
 [ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="31_6l0wr"]
+[ext_resource type="PackedScene" uid="uid://cgnndyedpwjdi" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.tscn" id="32_0m6nw"]
+[ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="33_rdoo2"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -394,15 +396,6 @@ transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230
 [node name="wallFlat15" parent="Walls" instance=ExtResource("26_gwrvl")]
 transform = Transform3D(1.788732e-08, 0, -1, 0, 2, 0, 1.5, 0, 1.1924881e-08, 230, 0, -80)
 
-[node name="MedievalSoldierControler" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 108.22387, 0, -58.9554)
-player_owner = NodePath("../PlayerController")
-move_speed = 50.0
-
-[node name="MedievalSoldierControler2" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("27_jwd7e")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 120.24521, 0, -56.22386)
-player_owner = NodePath("../PlayerController")
-
 [node name="PlayerHud" parent="." instance=ExtResource("30_q2lsj")]
 offset_left = 1918.0
 offset_top = 40.0
@@ -411,6 +404,18 @@ offset_bottom = -1040.0
 
 [node name="medievalCastle" parent="." instance=ExtResource("31_6l0wr")]
 transform = Transform3D(35, 0, 0, 0, 35, 0, 0, 0, 35, 90.477, 17.485, -130.508)
+
+[node name="MedievalSoldierControler" parent="." instance=ExtResource("27_jwd7e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.94865, 0, -52.993546)
+
+[node name="MedievalSoldierControler2" parent="." instance=ExtResource("27_jwd7e")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.69694, 0, -54.795414)
+
+[node name="medievalCavalry" parent="." instance=ExtResource("33_rdoo2")]
+transform = Transform3D(3000, 0, 0, 0, 3000, 0, 0, 0, 3000, 110.69573, 0, -67.15224)
+
+[node name="Dragon2" parent="." instance=ExtResource("32_0m6nw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.46843, 0, -60.879288)
 
 [connection signal="barracks_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_barracks_pressed"]
 [connection signal="dragon_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_dragon_pressed"]
