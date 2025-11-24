@@ -20,6 +20,14 @@ class_name PlayerController
 @onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
 @onready var moveButton: TextureButton = $"../UnitHud/moveButton"
 
+@onready var spell1: TextureButton = $"../UnitHud/spell1"
+@onready var spell2: TextureButton = $"../UnitHud/spell2"
+@onready var spell3: TextureButton = $"../UnitHud/spell3"
+@onready var spell4: TextureButton = $"../UnitHud/spell4"
+@onready var spell5: TextureButton = $"../UnitHud/spell5"
+@onready var spell6: TextureButton = $"../UnitHud/spell6"
+@onready var spell7: TextureButton = $"../UnitHud/spell7"
+
 
 # ===== TeamHUD =====================
 @onready var upKeepLabel: Label = $"../TeamHud/maintenance"
@@ -266,7 +274,7 @@ func select_unit(entity: Entity) -> void:
 
 	# Deseleccionar edificio si había uno
 	selected_building = null
-
+	_clear_abilities()
 	selected_unit = entity
 	selected_unit.select()
 	print("Unidad seleccionada:", entity.name)
@@ -288,7 +296,6 @@ func select_unit(entity: Entity) -> void:
 		hud_energy.value = u.current_magic
 		hud_name.text = u.unit_type
 
-# 🔥 NUEVA FUNCIÓN: Seleccionar edificio
 func select_building(building: Building) -> void:
 	if building == null:
 		return
@@ -315,6 +322,33 @@ func select_building(building: Building) -> void:
 		if hud_portrait:
 			hud_portrait.texture = null
 	
+	# 🔥 Cargar iconos de habilidades en los botones
+	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+	
+	# Limpiar todos los botones primero
+	for button in spell_buttons:
+		if button:
+			button.texture_normal = null
+			button.visible = false
+			button.disabled = true
+	
+	# Cargar las habilidades del edificio
+	var abilities = building.abilities
+	for i in range(min(abilities.size(), spell_buttons.size())):
+		var ability = abilities[i]
+		var button = spell_buttons[i]
+		
+		if button and ability:
+			var icon_texture = load(ability.icon)
+			if icon_texture:
+				button.texture_normal = icon_texture
+				button.visible = true
+				button.disabled = false
+				button.tooltip_text = ability.name + "\n" + ability.description
+				print("✅ Habilidad cargada: ", ability.name)
+			else:
+				print("❌ No se pudo cargar el icono: ", ability.icon)
+	
 	# Limpiar el resto del HUD (opcional, por ahora)
 	hud_attack.text = "Attack: -"
 	hud_defense.text = "Defense: -"
@@ -332,7 +366,8 @@ func deselect_current_unit() -> void:
 	
 	# También deseleccionar edificio
 	selected_building = null
-
+	_clear_abilities()
+	
 	if hud_portrait:
 		hud_portrait.texture = null
 	hud_attack.text = "Attack: -"
@@ -343,6 +378,18 @@ func deselect_current_unit() -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name.text = ""
+
+
+func _clear_abilities() -> void:
+	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+	
+	for button in spell_buttons:
+		if button:
+			button.texture_normal = null
+			button.visible = false
+			button.disabled = true
+			button.tooltip_text = ""
+
 
 # ==============================
 # Botón mover

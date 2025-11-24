@@ -2,10 +2,22 @@
 extends Entity
 class_name Building
 
-# 🔥 Diccionario de escalas (accesible sin instanciar)
+class BuildingAbility:
+	var icon: String 
+	var name: String
+	var description: String 
+	
+	func _init(p_icon: String, p_name: String, p_description: String):
+		icon = p_icon
+		name = p_name
+		description = p_description
+		
+		
+var abilities: Array[BuildingAbility] = []
+
 const BUILDING_SCALES = {
 	"barracks": 30,
-	"dragon": 35,
+	"dragon": 25,
 	"farm": 15,
 	"harbor": 20,
 	"magic": 25,
