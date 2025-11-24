@@ -12,6 +12,36 @@ func _ready():
 	await get_tree().process_frame
 	_setup_proximity_detection()
 
+func _process(_delta):
+	# 🔥 VERIFICAR EN CADA FRAME
+	_check_placement_validity()
+
+func _check_placement_validity():
+	if proximity_area == null:
+		return
+	
+	var overlapping_bodies = proximity_area.get_overlapping_bodies()
+	var overlapping_areas = proximity_area.get_overlapping_areas()
+	
+	# Filtrar para excluirse a sí mismo
+	var valid_bodies = []
+	for body in overlapping_bodies:
+		if body != self:
+			valid_bodies.append(body)
+	
+	var valid_areas = []
+	for area in overlapping_areas:
+		if area != proximity_area:
+			valid_areas.append(area)
+	
+	# Actualizar estado
+	var was_valid = is_valid_placement
+	is_valid_placement = valid_bodies.size() == 0 and valid_areas.size() == 0
+	
+	# Solo actualizar visual si cambió
+	if was_valid != is_valid_placement:
+		_update_visual_feedback()
+
 func _setup_proximity_detection():
 	proximity_area = get_node_or_null("Area3D")
 	
@@ -21,7 +51,6 @@ func _setup_proximity_detection():
 	
 	proximity_area.collision_layer = 1 << 3
 	proximity_area.collision_mask = 1 << 3
-
 	
 	var collision_shape = proximity_area.get_node_or_null("CollisionShape3D")
 	if collision_shape:
@@ -29,11 +58,9 @@ func _setup_proximity_detection():
 	
 	_adjust_proximity_radius()
 	
-	# Señales para detectar áreas
+	# Las señales siguen siendo útiles para optimización
 	proximity_area.area_entered.connect(_on_area_nearby)
 	proximity_area.area_exited.connect(_on_area_cleared)
-	
-	# Señales para detectar bodies
 	proximity_area.body_entered.connect(_on_building_nearby)
 	proximity_area.body_exited.connect(_on_building_cleared)
 
@@ -55,18 +82,13 @@ func _adjust_proximity_radius():
 		return
 
 func _on_area_nearby(area: Area3D):
-	if area != proximity_area:  # Evita detectarse a sí mismo
-		print("⚠️ Área detectada: ", area.name)
+	if area != proximity_area:
 		is_valid_placement = false
 		_update_visual_feedback()
 
 func _on_area_cleared(area: Area3D):
-	# Verifica si no hay nada cerca (ni bodies ni áreas)
-	if proximity_area.get_overlapping_bodies().size() == 0 and \
-	   proximity_area.get_overlapping_areas().size() == 0:
-		print("✅ Área despejada")
-		is_valid_placement = true
-		_update_visual_feedback()
+	# Ya no es necesario verificar aquí, _process lo hace
+	pass
 
 func _on_building_nearby(body):
 	if body is CharacterBody3D and body != self:
@@ -74,11 +96,8 @@ func _on_building_nearby(body):
 		_update_visual_feedback()
 
 func _on_building_cleared(body):
-	# Verifica ambos: bodies Y áreas
-	if proximity_area.get_overlapping_bodies().size() == 0 and \
-	   proximity_area.get_overlapping_areas().size() == 0:
-		is_valid_placement = true
-		_update_visual_feedback()
+	# Ya no es necesario verificar aquí, _process lo hace
+	pass
 
 func _update_visual_feedback():
 	if preview_model == null:
