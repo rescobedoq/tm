@@ -6,6 +6,7 @@ extends Node3D
 @onready var unit2 = $MedievalSoldierControler2
 @onready var unit3 = $MedievalArcherController
 @onready var unit4 = $MedievalCavalryController
+@onready var unit5 = $MedievalDragonController
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -14,6 +15,7 @@ func _ready() -> void:
 	player_controller.add_unit(unit2)
 	player_controller.add_unit(unit3)
 	player_controller.add_unit(unit4)
+	player_controller.add_unit(unit5)
 
 	# Opcional: puedes asignar nombres a las unidades para pruebas
 	unit1.name = "Soldado 1"
