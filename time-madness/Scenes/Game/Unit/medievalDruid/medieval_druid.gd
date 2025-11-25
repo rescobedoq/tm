@@ -8,7 +8,10 @@ class_name MedievalDruid
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalDruid.png"
 
 var selection_tween: Tween
+
 func _ready():
+	super._ready()
+	
 	unit_type = "Medieval Druid"
 	max_health = 200
 	current_health = max_health
@@ -18,9 +21,6 @@ func _ready():
 	defense = 10
 	move_speed = 20
 	attack_range = 3.0
-	
-	
-	play_idle()
 
 	var tex := load(PORTRAIT_PATH)
 	if tex:
@@ -29,23 +29,23 @@ func _ready():
 	else:
 		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
 
-# ---------------------------------------------------
-#   ANIMACIONES DEL SOLDADO
-# ---------------------------------------------------
-
 func play_idle():
-	print(">>> play_idle CALLED <<<")
-	anim_player.play("Idle_7_frame_rate_24_fbx")
-	anim_player.get_animation("Idle_7_frame_rate_24_fbx").loop = true
-
-
+	if anim_player:
+		print(">>> play_idle CALLED <<<")
+		anim_player.play("Idle_7_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Idle_7_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR
 
 func play_move():
-	print(">>> play_move CALLED <<<")
-	anim_player.play("Walking_Woman_frame_rate_24_fbx")
-	anim_player.get_animation("Walking_Woman_frame_rate_24_fbx").loop = true
-
+	if anim_player:
+		print(">>> play_move CALLED <<<")
+		anim_player.play("Walking_Woman_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Walking_Woman_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR
 
 func play_attack():
-	print(">>> play_attack CALLED <<<")
-	anim_player.play("Attack_frame_rate_24_fbx")
+	if anim_player:
+		print(">>> play_attack CALLED <<<")
+		anim_player.play("Attack_frame_rate_24_fbx")

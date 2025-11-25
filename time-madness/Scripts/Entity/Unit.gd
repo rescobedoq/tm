@@ -20,7 +20,6 @@ class_name Unit
 # ------------------------------------------
 # Movimiento
 # ------------------------------------------
-var velocity: Vector3 = Vector3.ZERO
 var move_target: Vector3 = Vector3.ZERO
 var has_move_target: bool = false
 var is_moving: bool = false
@@ -59,19 +58,15 @@ func move_to(target: Vector3, custom_radius: float = -1.0) -> void:
 
 func _physics_process(delta: float) -> void:
 	if not has_move_target:
+		velocity = Vector3.ZERO
 		return
 
 	var direction = move_target - global_position
 	direction.y = 0
 	var distance = direction.length()
 
-	# Usar arrival_radius en vez de un valor fijo
 	if distance > arrival_radius:
-
-		# ------------------------------------------
-		# ROTACIÓN SUAVE EN DIRECCIÓN DEL MOVIMIENTO
-		# ------------------------------------------
-		var target_rot = atan2(direction.x, direction.z)  # rotación Y
+		var target_rot = atan2(direction.x, direction.z)
 		rotation.y = lerp_angle(rotation.y, target_rot, rotation_speed * delta)
 
 		if not is_moving:
@@ -79,25 +74,20 @@ func _physics_process(delta: float) -> void:
 			play_move()
 
 		velocity = direction.normalized() * move_speed
-		global_translate(velocity * delta)
+		move_and_slide()  # ¡Aquí ya maneja colisiones automáticamente!
 
 	else:
-		# Llegó a la región objetivo
+		velocity = Vector3.ZERO
 		has_move_target = false
 		if is_moving:
 			is_moving = false
 			play_idle()
 
-# ------------------------------------------
-# Ataque
-# ------------------------------------------
-func attack(target: Entity) -> void:
-	if not is_alive or not target.is_alive:
-		return
-	# Aquí se puede agregar lógica de ataque
-
-# ------------------------------------------
-# Inicialización
-# ------------------------------------------
 func _ready() -> void:
+	super._ready()
+	setup_collision_layers()
 	play_idle()
+
+func setup_collision_layers() -> void:
+	collision_layer = 2  # Layer 2 (unidades)
+	collision_mask = 2 + 4  # Colisiona con layers 2 y 4
