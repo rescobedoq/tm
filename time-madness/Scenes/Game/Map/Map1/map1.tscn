@@ -1,6 +1,5 @@
-[gd_scene load_steps=56 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=60 format=3 uid="uid://7x3dhs70f2fg"]
 
-[ext_resource type="PackedScene" uid="uid://domhm87hbhbg1" path="res://demo/components/Player.tscn" id="1_ltkr0"]
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="2_8cs45"]
 [ext_resource type="Texture2D" uid="uid://jo04y7b56tm7" path="res://Assets/Textures/Grass001/Grass001_1K_normal.dds" id="2_31ip1"]
@@ -32,6 +31,11 @@
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="28_pxqre"]
 [ext_resource type="Texture2D" uid="uid://d2ragfk15sfyk" path="res://Assets/Textures/Rocks023/Rocks023.dds" id="29_ktje0"]
 [ext_resource type="Texture2D" uid="uid://bmsvjkiev2o3x" path="res://Assets/Textures/Rocks023/Rocks023_normal.dds" id="30_kotuw"]
+[ext_resource type="PackedScene" uid="uid://bdf557rqesylj" path="res://Scripts/Player/PlayerController/PlayerController.tscn" id="32_42luu"]
+[ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="33_b0elb"]
+[ext_resource type="PackedScene" uid="uid://w41fknq8gsi" path="res://Scenes/Game/HUD/teamHUD.tscn" id="34_p4f3n"]
+[ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="35_4fp00"]
+[ext_resource type="PackedScene" uid="uid://b5ed3ppcoyx82" path="res://Scenes/Game/Map/MapModels/water/waterPlane.tscn" id="36_b0elb"]
 
 [sub_resource type="Gradient" id="Gradient_806h8"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -240,8 +244,6 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 
 [node name="Map1" type="Node3D"]
 
-[node name="Player" parent="." instance=ExtResource("1_ltkr0")]
-
 [node name="RtsController" parent="." instance=ExtResource("2_8cs45")]
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
@@ -254,3 +256,92 @@ metadata/_edit_lock_ = true
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Terrain3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.185753, 83.82227, 61.336983)
 mesh = SubResource("CapsuleMesh_ws2in")
+
+[node name="PlayerController" parent="." instance=ExtResource("32_42luu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 134.00847, 0, -140.7463)
+player_name = "xdxd"
+movement_speed = 400.0
+min_zoom = 0.0
+
+[node name="UnitHud" parent="." instance=ExtResource("33_b0elb")]
+offset_left = 992.0
+offset_top = 929.99994
+offset_right = -669.4474
+offset_bottom = -90.13159
+scale = Vector2(1.52, 1.52)
+script = null
+
+[node name="TeamHud" parent="." instance=ExtResource("34_p4f3n")]
+offset_left = 969.0
+offset_top = 91.0
+offset_right = -714.4147
+offset_bottom = -954.85364
+scale = Vector2(1.64, 1.64)
+
+[node name="PlayerHud" parent="." instance=ExtResource("35_4fp00")]
+offset_left = 1918.0
+offset_top = 40.0
+offset_right = -2.0
+offset_bottom = -1040.0
+
+[node name="Node" type="Node" parent="."]
+
+[node name="WaterPlane" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 386.46454, -2.275, -7.793561)
+
+[node name="WaterPlane2" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 381.64856, -2.275, 197.32239)
+
+[node name="WaterPlane3" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 378.484, -2.275, -203.46036)
+
+[node name="WaterPlane4" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 386.97424, -2.275, 415.67694)
+
+[node name="WaterPlane5" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 375.82104, -2.275, -408.50073)
+
+[node name="WaterPlane6" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -390.4383, -2.275, -27.064644)
+
+[node name="WaterPlane7" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -395.25427, -2.275, 178.0513)
+
+[node name="WaterPlane8" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -398.41882, -2.275, -222.73145)
+
+[node name="WaterPlane9" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -389.9286, -2.275, 396.40588)
+
+[node name="WaterPlane10" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -401.0818, -2.275, -427.7718)
+
+[node name="WaterPlane11" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -41.926254, -2.275, 392.19592)
+
+[node name="WaterPlane12" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 163.21999, -2.275, 395.47595)
+
+[node name="WaterPlane13" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -237.52782, -2.275, 401.64124)
+
+[node name="WaterPlane14" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 381.52856, -2.275, 388.5155)
+
+[node name="WaterPlane15" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -442.54254, -2.275, 405.83936)
+
+[node name="WaterPlane16" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -12.597305, -2.275, -401.48474)
+
+[node name="WaterPlane17" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 192.54893, -2.275, -398.2047)
+
+[node name="WaterPlane18" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -208.19887, -2.275, -392.03943)
+
+[node name="WaterPlane19" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 410.8575, -2.275, -405.16516)
+
+[node name="WaterPlane20" parent="Node" instance=ExtResource("36_b0elb")]
+transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -413.2136, -2.275, -387.8413)
