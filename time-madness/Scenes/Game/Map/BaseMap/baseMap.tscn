@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=59 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -31,8 +31,16 @@
 [ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="28_gwrvl"]
 [ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="30_q2lsj"]
 [ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="31_6l0wr"]
-[ext_resource type="PackedScene" uid="uid://cgnndyedpwjdi" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.tscn" id="32_0m6nw"]
-[ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="33_rdoo2"]
+[ext_resource type="PackedScene" uid="uid://c635815ak6i1n" path="res://Scenes/Game/Unit/medievalDragon/medievalDragon_controller.tscn" id="33_rdoo2"]
+[ext_resource type="PackedScene" uid="uid://o84jnoqtoo4s" path="res://Scenes/Game/Unit/medievalArcher/medievalArcher_controller.tscn" id="34_rdoo2"]
+[ext_resource type="PackedScene" uid="uid://cp3vs6wvdq356" path="res://Scenes/Game/Unit/medievalDruid/medievalDruid_controller.tscn" id="35_6e2as"]
+[ext_resource type="PackedScene" uid="uid://behdh2aehcrhe" path="res://Scenes/Game/Unit/medievalCavalry/medievalCavalry_controller.tscn" id="35_cnmyu"]
+[ext_resource type="PackedScene" uid="uid://btb7xqgyxaayo" path="res://Scenes/Game/Unit/medievalGolem/medievalGolem_controller.tscn" id="36_6e2as"]
+[ext_resource type="PackedScene" uid="uid://qerhsd0duxxl" path="res://Scenes/Game/Unit/medievalMagicSoldier/medievalMagicSoldier_controller.tscn" id="37_yy7k0"]
+[ext_resource type="PackedScene" uid="uid://4ltrug4otm1j" path="res://Scenes/Game/Unit/medievalShipGhost/medievalShipGhost_controller.tscn" id="38_tw2fb"]
+[ext_resource type="PackedScene" uid="uid://cylox22e75tui" path="res://Scenes/Game/Unit/medievalShipKraken/medievalShipKraken_controller.tscn" id="39_bxlnr"]
+[ext_resource type="PackedScene" uid="uid://dui74fqii7tdj" path="res://Scenes/Game/Unit/medievalShipNormal/medievalShipNormal_controller.tscn" id="40_3t4fr"]
+[ext_resource type="PackedScene" uid="uid://dyqoy8y15k2sp" path="res://Scenes/Game/Unit/medievalSorcerer/medievalSorcerer_controller.tscn" id="41_3t4fr"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -411,11 +419,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.94865, 0, -52.993546)
 [node name="MedievalSoldierControler2" parent="." instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.69694, 0, -54.795414)
 
-[node name="medievalCavalry" parent="." instance=ExtResource("33_rdoo2")]
-transform = Transform3D(3000, 0, 0, 0, 3000, 0, 0, 0, 3000, 110.69573, 0, -67.15224)
+[node name="MedievalArcherController" parent="." instance=ExtResource("34_rdoo2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 104.69791, -7.6293945e-06, -63.581722)
+collision_layer = 3
 
-[node name="Dragon2" parent="." instance=ExtResource("32_0m6nw")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 125.46843, 0, -60.879288)
+[node name="MedievalDragonController" parent="." instance=ExtResource("33_rdoo2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110.5765, 0, -75.348236)
+collision_layer = 2
+
+[node name="MedievalCavalryController" parent="." instance=ExtResource("35_cnmyu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 121.185555, 1.9073486e-06, -70.76726)
+collision_layer = 2
+
+[node name="MedievalDruidController" parent="." instance=ExtResource("35_6e2as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 138.41925, 0, -71.15261)
+collision_layer = 2
+
+[node name="MedievalGolemController" parent="." instance=ExtResource("36_6e2as")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 134.18646, 0, -88.94528)
+collision_layer = 2
+
+[node name="MedievalMagicSoldierController" parent="." instance=ExtResource("37_yy7k0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 149.48494, 0, -99.87984)
+collision_layer = 2
+
+[node name="MedievalShipGhostController" parent="." instance=ExtResource("38_tw2fb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 162.27965, 0, -100.097046)
+collision_layer = 2
+
+[node name="MedievalShipKrakenController" parent="." instance=ExtResource("39_bxlnr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 180.8446, 0, -77.98913)
+collision_layer = 2
+
+[node name="MedievalShipNormalController" parent="." instance=ExtResource("40_3t4fr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 183.73378, 0, -103.263115)
+collision_layer = 2
+
+[node name="MedievalSorcererController" parent="." instance=ExtResource("41_3t4fr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 136.69814, 0, -122.78908)
+collision_layer = 2
 
 [connection signal="barracks_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_barracks_pressed"]
 [connection signal="dragon_pressed" from="PlayerHud" to="PlayerController" method="_on_player_hud_dragon_pressed"]
