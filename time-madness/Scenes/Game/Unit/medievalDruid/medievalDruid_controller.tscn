@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://cp3vs6wvdq356"]
+
+[ext_resource type="PackedScene" uid="uid://dhpigemc3lol0" path="res://Scenes/Game/Unit/medievalDruid/medieval_druid.tscn" id="1_bvw3h"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_tgny6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fluap"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalDruidController" type="CharacterBody3D"]
+
+[node name="medievalDruid" parent="." instance=ExtResource("1_bvw3h")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_fluap")
+
+[node name="Selection" parent="." instance=ExtResource("2_tgny6")]
+visible = false

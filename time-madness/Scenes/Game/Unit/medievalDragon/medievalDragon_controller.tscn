@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://c635815ak6i1n"]
+
+[ext_resource type="PackedScene" uid="uid://cgnndyedpwjdi" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.tscn" id="1_6tpaa"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_hmwml"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_kt2ic"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalDragonController" type="CharacterBody3D"]
+
+[node name="Dragon2" parent="." instance=ExtResource("1_6tpaa")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_kt2ic")
+
+[node name="Selection" parent="." instance=ExtResource("2_hmwml")]
+visible = false

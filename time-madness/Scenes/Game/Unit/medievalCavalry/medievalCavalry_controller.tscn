@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://behdh2aehcrhe"]
+
+[ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="1_x5dp3"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_sueet"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fct7o"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalCavalryController" type="CharacterBody3D"]
+
+[node name="medievalCavalry" parent="." instance=ExtResource("1_x5dp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_fct7o")
+
+[node name="Selection" parent="." instance=ExtResource("2_sueet")]
+visible = false

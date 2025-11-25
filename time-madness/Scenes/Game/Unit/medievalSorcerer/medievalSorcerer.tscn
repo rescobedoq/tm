@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8kgqvqcxuu1u"]
+
+[ext_resource type="PackedScene" uid="uid://dl26677raytfj" path="res://Assets/Models/Units/medievalSorcerer/medievalSorcerer.fbx" id="1_5fjl2"]
+
+[node name="medievalSorcerer" instance=ExtResource("1_5fjl2")]

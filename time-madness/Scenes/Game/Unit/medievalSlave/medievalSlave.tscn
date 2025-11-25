@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://br25ye1bv7i6h"]
+
+[ext_resource type="PackedScene" uid="uid://c1jqwwhybuy0f" path="res://Assets/Models/Units/medievalSlave/medievalSlave.fbx" id="1_m452q"]
+
+[node name="medievalSlave" instance=ExtResource("1_m452q")]

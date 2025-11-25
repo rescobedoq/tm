@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://qerhsd0duxxl"]
+
+[ext_resource type="PackedScene" uid="uid://bc5sqlapfir25" path="res://Scenes/Game/Unit/medievalMagicSoldier/medievaMagicSoldier.tscn" id="1_6lg4c"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_fic1l"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ko2hx"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalMagicSoldierController" type="CharacterBody3D"]
+
+[node name="medievalMagicSoldier" parent="." instance=ExtResource("1_6lg4c")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_ko2hx")
+
+[node name="Selection" parent="." instance=ExtResource("2_fic1l")]
+visible = false

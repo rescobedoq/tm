@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://dyqoy8y15k2sp"]
+
+[ext_resource type="PackedScene" uid="uid://c8kgqvqcxuu1u" path="res://Scenes/Game/Unit/medievalSorcerer/medievalSorcerer.tscn" id="1_u317n"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_82xms"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0jb2h"]
+radius = 1.6655273
+height = 5.296753
+
+[node name="MedievalSorcererController" type="CharacterBody3D"]
+
+[node name="medievalSorcerer" parent="." instance=ExtResource("1_u317n")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_0jb2h")
+
+[node name="Selection" parent="." instance=ExtResource("2_82xms")]
+visible = false

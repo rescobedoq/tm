@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=52 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Texture2D" uid="uid://dskm8t575smlg" path="res://Assets/Models/MapElements/bushes/textures/bush1_spring.png" id="1_emt48"]
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
@@ -33,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="31_6l0wr"]
 [ext_resource type="PackedScene" uid="uid://cgnndyedpwjdi" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.tscn" id="32_0m6nw"]
 [ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="33_rdoo2"]
+[ext_resource type="PackedScene" uid="uid://o84jnoqtoo4s" path="res://Scenes/Game/Unit/medievalArcher/medievalArcher_controller.tscn" id="34_rdoo2"]
 
 [sub_resource type="Gradient" id="Gradient_infvj"]
 offsets = PackedFloat32Array(0.2, 1)
@@ -410,6 +411,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 103.94865, 0, -52.993546)
 
 [node name="MedievalSoldierControler2" parent="." instance=ExtResource("27_jwd7e")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 113.69694, 0, -54.795414)
+
+[node name="MedievalArcherController" parent="." instance=ExtResource("34_rdoo2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 104.69791, -7.6293945e-06, -63.581722)
+collision_layer = 3
 
 [node name="medievalCavalry" parent="." instance=ExtResource("33_rdoo2")]
 transform = Transform3D(3000, 0, 0, 0, 3000, 0, 0, 0, 3000, 110.69573, 0, -67.15224)
