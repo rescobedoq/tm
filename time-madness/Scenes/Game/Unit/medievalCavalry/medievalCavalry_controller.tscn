@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://behdh2aehcrhe"]
+[gd_scene load_steps=5 format=3 uid="uid://behdh2aehcrhe"]
 
+[ext_resource type="Script" uid="uid://7y8mvw3dlr6l" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.gd" id="1_sueet"]
 [ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="1_x5dp3"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_sueet"]
 
@@ -8,11 +9,13 @@ radius = 1.6655273
 height = 5.296753
 
 [node name="MedievalCavalryController" type="CharacterBody3D"]
+script = ExtResource("1_sueet")
 
 [node name="medievalCavalry" parent="." instance=ExtResource("1_x5dp3")]
+transform = Transform3D(5000, 0, 0, 0, 5000, 0, 0, 0, 5000, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+transform = Transform3D(2.4603186, 0, -0.34936658, 0, 2.485, 0, 0.34936658, 0, 2.4603186, 0, 4.785, 0)
 shape = SubResource("CapsuleShape3D_fct7o")
 
 [node name="Selection" parent="." instance=ExtResource("2_sueet")]
