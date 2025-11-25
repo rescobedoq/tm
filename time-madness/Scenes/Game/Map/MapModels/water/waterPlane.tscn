@@ -31,7 +31,10 @@ bump_strength = 1.5
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_glkre"]
 render_priority = 0
 shader = ExtResource("1_0a8v5")
-shader_parameter/albedo = Color(0, 0.32156864, 0.43137255, 1)
+shader_parameter/shallow_color = Color(0.14957774, 0.39651692, 0.7905843, 1)
+shader_parameter/deep_color = Color(0.48130476, 0.66275245, 1, 1)
+shader_parameter/depth_strength = 1.0
+shader_parameter/albedo = Color(5.198121e-06, 0.59217185, 0.7808812, 1)
 shader_parameter/metallic = 0.0
 shader_parameter/roughness = 0.02
 shader_parameter/specular = 1.0
@@ -39,7 +42,12 @@ shader_parameter/texture_normal = SubResource("NoiseTexture2D_cw2t2")
 shader_parameter/texture_normal2 = SubResource("NoiseTexture2D_glkre")
 shader_parameter/wave_direction = Vector2(2, 0)
 shader_parameter/wave_direction2 = Vector2(2, 0)
+shader_parameter/wave_speed = 0.2
 shader_parameter/time_scale = 0.025
+shader_parameter/normal_mix = 0.5
+shader_parameter/distortion_amount = 0.02
+shader_parameter/fresnel_power = 5.0
+shader_parameter/fresnel_strength = 0.3
 
 [node name="WaterPlane" type="MeshInstance3D"]
 mesh = SubResource("QuadMesh_cw2t2")
