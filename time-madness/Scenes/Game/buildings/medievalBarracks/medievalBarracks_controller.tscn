@@ -10,11 +10,9 @@ size = Vector3(1, 0.42, 1)
 
 [node name="MedievalBarracksController" type="CharacterBody3D"]
 script = ExtResource("1_behgs")
-selected = null
 entity_name = null
 current_health = null
 max_health = null
-move_speed = null
 is_alive = null
 
 [node name="medievalBarracks" parent="." instance=ExtResource("1_7eddx")]

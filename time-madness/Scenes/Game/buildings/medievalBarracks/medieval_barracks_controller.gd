@@ -11,6 +11,7 @@ const ARCHER_COST = {"gold": 75, "resources": 25, "upkeep": 1}
 const CAVALRY_COST = {"gold": 150, "resources": 50, "upkeep": 2}
 
 func _ready():
+	super._ready() 
 	abilities = [
 		BuildingAbility.new(
 			"res://Assets/Images/Portraits/Units/medievalSoldier.png",
@@ -31,8 +32,6 @@ func _ready():
 			"train_cavalry"
 		),
 	]
-
-	super._ready()
 
 
 func get_building_scale() -> int:

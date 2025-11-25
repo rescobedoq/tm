@@ -12,6 +12,7 @@ height = 5.296753
 script = ExtResource("1_hmwml")
 
 [node name="Dragon2" parent="." instance=ExtResource("1_6tpaa")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(2.04, 0, 0, 0, 2.04, 0, 0, 0, 2.04, 0, 3.855, 0)

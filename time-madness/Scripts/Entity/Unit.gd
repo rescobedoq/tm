@@ -89,5 +89,6 @@ func _ready() -> void:
 	play_idle()
 
 func setup_collision_layers() -> void:
-	collision_layer = 2  # Layer 2 (unidades)
-	collision_mask = 2 + 4  # Colisiona con layers 2 y 4
+	collision_layer = 1 << 1              
+	collision_mask = (1 << 1) | (1 << 3) 
+	
