@@ -20,12 +20,16 @@ class_name Unit
 # ------------------------------------------
 # Movimiento
 # ------------------------------------------
-var velocity: Vector3 = Vector3.ZERO
 var move_target: Vector3 = Vector3.ZERO
 var has_move_target: bool = false
 var is_moving: bool = false
+
 # Velocidad de rotación 
 @export var rotation_speed: float = 6.0
+
+# Radio de llegada: la unidad se detiene cuando está dentro de este radio
+@export var arrival_radius: float = 2.0
+
 # ------------------------------------------
 # Animaciones (cada unidad puede sobreescribir)
 # ------------------------------------------
@@ -41,26 +45,28 @@ func play_attack() -> void:
 # ------------------------------------------
 # Movimiento hacia un punto
 # ------------------------------------------
-func move_to(target: Vector3) -> void:
+func move_to(target: Vector3, custom_radius: float = -1.0) -> void:
 	if not is_alive:
 		return
 
 	move_target = target
 	has_move_target = true
+	
+	# Si se pasa un radio personalizado, usarlo
+	if custom_radius > 0:
+		arrival_radius = custom_radius
 
 func _physics_process(delta: float) -> void:
 	if not has_move_target:
+		velocity = Vector3.ZERO
 		return
 
 	var direction = move_target - global_position
 	direction.y = 0
+	var distance = direction.length()
 
-	if direction.length() > 0.1:
-
-		# ------------------------------------------
-		# ROTACIÓN SUAVE EN DIRECCIÓN DEL MOVIMIENTO
-		# ------------------------------------------
-		var target_rot = atan2(direction.x, direction.z)  # rotación Y
+	if distance > arrival_radius:
+		var target_rot = atan2(direction.x, direction.z)
 		rotation.y = lerp_angle(rotation.y, target_rot, rotation_speed * delta)
 
 		if not is_moving:
@@ -68,24 +74,21 @@ func _physics_process(delta: float) -> void:
 			play_move()
 
 		velocity = direction.normalized() * move_speed
-		global_translate(velocity * delta)
+		move_and_slide()  # ¡Aquí ya maneja colisiones automáticamente!
 
 	else:
+		velocity = Vector3.ZERO
 		has_move_target = false
 		if is_moving:
 			is_moving = false
 			play_idle()
 
-# ------------------------------------------
-# Ataque
-# ------------------------------------------
-func attack(target: Entity) -> void:
-	if not is_alive or not target.is_alive:
-		return
-	# Aquí se puede agregar lógica de ataque
-
-# ------------------------------------------
-# Inicialización
-# ------------------------------------------
 func _ready() -> void:
+	super._ready()
+	setup_collision_layers()
 	play_idle()
+
+func setup_collision_layers() -> void:
+	collision_layer = 1 << 1              
+	collision_mask = (1 << 1) | (1 << 3) 
+	

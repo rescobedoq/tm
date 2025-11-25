@@ -1,4 +1,4 @@
-extends Node3D
+extends CharacterBody3D
 class_name Entity
 
 # En Unit.gd o Entity.gd
@@ -10,7 +10,6 @@ class_name Entity
 #   RETRATO / PORTRAIT
 # ---------------------------------------------------------
 @export var portrait: Texture2D
-
 
 # ---------------------------------------------------------
 #   SELECCIÓN
@@ -37,13 +36,11 @@ func _ready():
 	set_process_input(true)
 	_update_selection_visual()
 
-
 func _update_selection_visual():
 	if selection:
 		selection.visible = selected
 	else:
 		print("[%s] No tiene nodo Selection." % name)
-
 
 func select():
 	if $Selection:
@@ -52,8 +49,6 @@ func select():
 func deselect():
 	if $Selection:
 		$Selection.visible = false
-
-
 
 # ---------------------------------------------------------
 #   VIDA / DAÑO

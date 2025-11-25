@@ -10,6 +10,10 @@ size = Vector3(1, 0.42, 1)
 
 [node name="MedievalBarracksController" type="CharacterBody3D"]
 script = ExtResource("1_behgs")
+entity_name = null
+current_health = null
+max_health = null
+is_alive = null
 
 [node name="medievalBarracks" parent="." instance=ExtResource("1_7eddx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)

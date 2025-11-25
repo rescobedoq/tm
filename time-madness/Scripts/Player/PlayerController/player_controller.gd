@@ -149,21 +149,18 @@ func _unhandled_input(event):
 				
 				# ✅ LUEGO CONFIGURAR (esperar un frame si es necesario)
 				await get_tree().process_frame
-				if final_build_selected is CharacterBody3D:
-					# Configurar el CharacterBody3D
-					final_build_selected.collision_layer = 1 << 3  # Layer 4
-					final_build_selected.collision_mask = 0
-					print("✅ Edificio final configurado en Layer 4")
-					
-					# 🔥 IMPORTANTE: Configurar su Area3D hijo también
-					var area = final_build_selected.get_node_or_null("Area3D")
-					if area and area is Area3D:
-						area.collision_layer = 1 << 3  # Layer 4
-						area.collision_mask = 1 << 3   # Detecta Layer 4
-						print("✅ Area3D del edificio configurada en Layer 4")
-					
-					# 🔥 AGREGAR AL ARRAY DE EDIFICIOS
-					add_building(final_build_selected)
+			if final_build_selected:
+						final_build_selected.global_position = build_placeholder.global_position
+						
+						get_tree().current_scene.add_child(final_build_selected)
+						
+						await get_tree().process_frame
+						
+						# 🔥 YA NO NECESITAS CONFIGURAR AQUÍ
+						# Building._setup_building() ya lo hace automáticamente
+						
+						# Solo agregar al array
+						add_building(final_build_selected)
 			
 			# Quitar placeholder
 			build_placeholder.queue_free()
@@ -346,6 +343,14 @@ func select_building(building: Building) -> void:
 				button.disabled = false
 				button.tooltip_text = ability.name + "\n" + ability.description
 				print("✅ Habilidad cargada: ", ability.name)
+				# 🔥 Conectar el botón a una función del HUD
+				# 🔥 Desconectar señales previas
+				for connection in button.pressed.get_connections():
+					button.pressed.disconnect(connection["callable"])
+				
+				# 🔥 Conectar con lambda
+				button.pressed.connect(func(): _on_ability_pressed(building, ability))
+
 			else:
 				print("❌ No se pudo cargar el icono: ", ability.icon)
 	
@@ -358,6 +363,14 @@ func select_building(building: Building) -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name.text = building.get_class()  # Nombre del edificio
+
+func _on_ability_pressed(building, ability):
+	print("Ejecutando habilidad:", ability.name, " del edificio: ", building)
+
+	if building.has_method("use_ability"):
+		building.use_ability(ability)
+	else:
+		print("⚠️ El edificio no tiene el método use_ability()")
 
 func deselect_current_unit() -> void:
 	if selected_unit != null:
@@ -492,6 +505,21 @@ func _start_build_mode(building_name: String) -> void:
 		build_placeholder.set_building_type(building_name)
 
 	is_placing_building = true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 func _on_player_hud_barracks_pressed() -> void:
