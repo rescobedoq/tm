@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://btb7xqgyxaayo"]
+[gd_scene load_steps=5 format=3 uid="uid://btb7xqgyxaayo"]
 
+[ext_resource type="Script" uid="uid://c2m7tvo6nb6lo" path="res://Scenes/Game/Unit/medievalGolem/medieval_golem.gd" id="1_a6tx3"]
 [ext_resource type="PackedScene" uid="uid://dgurbwkkso1gy" path="res://Scenes/Game/Unit/medievalGolem/medieval_golem.tscn" id="1_ntibq"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_a6tx3"]
 
@@ -8,12 +9,15 @@ radius = 1.6655273
 height = 5.296753
 
 [node name="MedievalGolemController" type="CharacterBody3D"]
+script = ExtResource("1_a6tx3")
 
 [node name="medievalGolem" parent="." instance=ExtResource("1_ntibq")]
+transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+transform = Transform3D(3.75, 0, 0, 0, 3.75, 0, 0, 0, 3.75, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_slwsl")
 
 [node name="Selection" parent="." instance=ExtResource("2_a6tx3")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 visible = false

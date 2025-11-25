@@ -1,22 +1,22 @@
 extends Unit
-class_name MedievalArcher
+class_name MedievalGolem
 
-@onready var anim_player = $medievalArcher/AnimationPlayer
+@onready var anim_player = $medievalGolem/AnimationPlayer
 @onready var collision_shape = $CollisionShape3D
 @onready var selection_circle = $Selection
 
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalArcher.png"
+const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalGolem.png"
 
 var selection_tween: Tween
 func _ready():
-	unit_type = "Medieval Archer"
+	unit_type = "Medieval Golem"
 	max_health = 200
 	current_health = max_health
 	max_magic = 30
 	current_magic = max_magic
 	attack_damage = 25
 	defense = 10
-	move_speed = 15
+	move_speed = 7
 	attack_range = 3.0
 	
 	
@@ -35,14 +35,13 @@ func _ready():
 
 func play_idle():
 	print(">>> play_idle CALLED <<<")
-	anim_player.play("Idle_6_frame_rate_24_fbx")
-	anim_player.get_animation("Idle_6_frame_rate_24_fbx").loop = true
+
 
 
 func play_move():
 	print(">>> play_move CALLED <<<")
-	anim_player.play("RunFast_frame_rate_24_fbx")
-	anim_player.get_animation("RunFast_frame_rate_24_fbx").loop = true
+	anim_player.play("Walking_frame_rate_24_fbx")
+	anim_player.get_animation("Walking_frame_rate_24_fbx").loop = true
 
 
 func play_attack():

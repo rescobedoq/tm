@@ -20,3 +20,4 @@ shape = SubResource("CapsuleShape3D_kt2ic")
 
 [node name="Selection" parent="." instance=ExtResource("2_hmwml")]
 transform = Transform3D(4.555, 0, 0, 0, 4.555, 0, 0, 0, 4.555, 0, 10, 0)
+visible = false
