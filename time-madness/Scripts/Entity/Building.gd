@@ -5,12 +5,14 @@ class_name Building
 class BuildingAbility:
 	var icon: String 
 	var name: String
-	var description: String 
+	var description: String
+	var ability_id: String  
 	
-	func _init(p_icon: String, p_name: String, p_description: String):
+	func _init(p_icon: String, p_name: String, p_description: String, p_ability_id: String = ""):
 		icon = p_icon
 		name = p_name
 		description = p_description
+		ability_id = p_ability_id
 		
 		
 var abilities: Array[BuildingAbility] = []
@@ -69,3 +71,85 @@ func _setup_proximity_area():
 	area.collision_mask = 1 << 3   # Detecta Layer 4
 	
 	print("✅ Area3D configurada en Layer 4 para ", get_class())
+
+func use_ability(ability: BuildingAbility) -> void:
+	print("🏰 Usando habilidad:", ability.name, "en edificio:", get_class())
+	
+	# Buscar si existe un método con el nombre del ability_id
+	var method_name = "_" + ability.ability_id
+	
+	if has_method(method_name):
+		call(method_name)
+	else:
+		print("⚠️ Habilidad no implementada:", ability.ability_id, "- Método esperado:", method_name)
+
+
+# ==============================
+# 🔥 FUNCIÓN GENÉRICA DE ENTRENAMIENTO
+# ==============================
+# ==============================
+# 🔥 FUNCIÓN GENÉRICA DE ENTRENAMIENTO
+# ==============================
+func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -> void:
+	if unit_scene == null:
+		print("❌ Escena de unidad no encontrada para:", unit_name)
+		return
+	
+	var player = _get_player_owner()
+	if player == null:
+		print("❌ No se encontró PlayerController para el edificio")
+		return
+	
+	if not _check_resources(player, cost):
+		print("⚠️ Recursos insuficientes para entrenar", unit_name)
+		return
+	
+	# Deducir recursos
+	player.gold -= cost.gold
+	player.resources -= cost.resources
+	player.upkeep += cost.upkeep
+	player.update_team_hud()
+	
+	# Instanciar unidad
+	var new_unit = unit_scene.instantiate()
+	get_tree().current_scene.add_child(new_unit)
+	
+	# 🔥 Esperar un frame para que la unidad esté en el árbol
+	await get_tree().process_frame
+	
+	# Posicionar la unidad cerca del edificio
+	var spawn_offset = Vector3(5, 0, 5)
+	new_unit.global_position = global_position + spawn_offset
+	
+	# 🔥 CONFIGURAR LAYER 2 PARA UNIDADES
+	if new_unit is CharacterBody3D:
+		new_unit.collision_layer = 1 << 1  # Layer 2
+		new_unit.collision_mask = 1       # Colisiona con Layer 1 (terreno)
+		print("✅ Unidad configurada en Layer 2:", unit_name)
+	
+	# Agregar al jugador
+	if new_unit is Entity:
+		player.add_unit(new_unit)
+	
+	print("✅", unit_name, "entrenado exitosamente en", global_position)
+
+# ==============================
+# 🔥 FUNCIONES AUXILIARES
+# ==============================
+func _get_player_owner() -> Node:
+	var root = get_tree().current_scene
+	for child in root.get_children():
+		if child.has_method("add_building"):
+			if self in child.buildings:
+				return child
+	return null
+
+func _check_resources(player: Node, cost: Dictionary) -> bool:
+	if player.gold < cost.gold:
+		return false
+	if player.resources < cost.resources:
+		return false
+	if player.upkeep + cost.upkeep > player.maxUpKeep:
+		print("⚠️ Límite de mantenimiento alcanzado")
+		return false
+	return true

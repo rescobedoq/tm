@@ -346,6 +346,14 @@ func select_building(building: Building) -> void:
 				button.disabled = false
 				button.tooltip_text = ability.name + "\n" + ability.description
 				print("✅ Habilidad cargada: ", ability.name)
+				# 🔥 Conectar el botón a una función del HUD
+				# 🔥 Desconectar señales previas
+				for connection in button.pressed.get_connections():
+					button.pressed.disconnect(connection["callable"])
+				
+				# 🔥 Conectar con lambda
+				button.pressed.connect(func(): _on_ability_pressed(building, ability))
+
 			else:
 				print("❌ No se pudo cargar el icono: ", ability.icon)
 	
@@ -358,6 +366,14 @@ func select_building(building: Building) -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name.text = building.get_class()  # Nombre del edificio
+
+func _on_ability_pressed(building, ability):
+	print("Ejecutando habilidad:", ability.name, " del edificio: ", building)
+
+	if building.has_method("use_ability"):
+		building.use_ability(ability)
+	else:
+		print("⚠️ El edificio no tiene el método use_ability()")
 
 func deselect_current_unit() -> void:
 	if selected_unit != null:
@@ -492,6 +508,21 @@ func _start_build_mode(building_name: String) -> void:
 		build_placeholder.set_building_type(building_name)
 
 	is_placing_building = true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 func _on_player_hud_barracks_pressed() -> void:
