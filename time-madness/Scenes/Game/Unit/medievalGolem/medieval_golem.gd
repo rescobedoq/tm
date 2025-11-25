@@ -35,7 +35,9 @@ func _ready():
 
 func play_idle():
 	print(">>> play_idle CALLED <<<")
-
+	# Detener cualquier animación en curso
+	if anim_player.is_playing():
+		anim_player.stop()
 
 
 func play_move():

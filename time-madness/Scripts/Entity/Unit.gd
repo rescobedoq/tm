@@ -24,8 +24,13 @@ var velocity: Vector3 = Vector3.ZERO
 var move_target: Vector3 = Vector3.ZERO
 var has_move_target: bool = false
 var is_moving: bool = false
+
 # Velocidad de rotación 
 @export var rotation_speed: float = 6.0
+
+# Radio de llegada: la unidad se detiene cuando está dentro de este radio
+@export var arrival_radius: float = 2.0
+
 # ------------------------------------------
 # Animaciones (cada unidad puede sobreescribir)
 # ------------------------------------------
@@ -41,12 +46,16 @@ func play_attack() -> void:
 # ------------------------------------------
 # Movimiento hacia un punto
 # ------------------------------------------
-func move_to(target: Vector3) -> void:
+func move_to(target: Vector3, custom_radius: float = -1.0) -> void:
 	if not is_alive:
 		return
 
 	move_target = target
 	has_move_target = true
+	
+	# Si se pasa un radio personalizado, usarlo
+	if custom_radius > 0:
+		arrival_radius = custom_radius
 
 func _physics_process(delta: float) -> void:
 	if not has_move_target:
@@ -54,8 +63,10 @@ func _physics_process(delta: float) -> void:
 
 	var direction = move_target - global_position
 	direction.y = 0
+	var distance = direction.length()
 
-	if direction.length() > 0.1:
+	# Usar arrival_radius en vez de un valor fijo
+	if distance > arrival_radius:
 
 		# ------------------------------------------
 		# ROTACIÓN SUAVE EN DIRECCIÓN DEL MOVIMIENTO
@@ -71,6 +82,7 @@ func _physics_process(delta: float) -> void:
 		global_translate(velocity * delta)
 
 	else:
+		# Llegó a la región objetivo
 		has_move_target = false
 		if is_moving:
 			is_moving = false

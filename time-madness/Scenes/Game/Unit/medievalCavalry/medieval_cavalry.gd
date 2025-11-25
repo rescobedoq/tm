@@ -35,6 +35,8 @@ func _ready():
 
 func play_idle():
 	print(">>> play_idle CALLED <<<")
+	if anim_player.is_playing():
+		anim_player.stop()
 
 
 func play_move():
