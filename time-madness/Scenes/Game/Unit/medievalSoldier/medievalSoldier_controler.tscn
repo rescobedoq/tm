@@ -13,10 +13,12 @@ collision_layer = 2
 script = ExtResource("1_onu1i")
 
 [node name="medievalSoldier" parent="." instance=ExtResource("2_peahs")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+transform = Transform3D(2.365, 0, 0, 0, 2.365, 0, 0, 0, 2.365, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_onu1i")
 
 [node name="Selection" parent="." instance=ExtResource("3_peahs")]
+transform = Transform3D(1.485, 0, 0, 0, 1.485, 0, 0, 0, 1.485, 0, 0, 0)
 visible = false

@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://cylox22e75tui"]
+[gd_scene load_steps=5 format=3 uid="uid://cylox22e75tui"]
 
+[ext_resource type="Script" uid="uid://gugpv3vdudf8" path="res://Scenes/Game/Unit/medievalShipKraken/medieval_ship_kraken.gd" id="1_86c5y"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="1_f41li"]
 [ext_resource type="PackedScene" uid="uid://b5cf60w4g0b7k" path="res://Scenes/Game/Unit/medievalShipKraken/medievalShipKraken.tscn" id="1_sjqgh"]
 
@@ -8,12 +9,15 @@ radius = 1.6655273
 height = 5.296753
 
 [node name="MedievalShipKrakenController" type="CharacterBody3D"]
+script = ExtResource("1_86c5y")
 
 [node name="medievalShipKraken" parent="." instance=ExtResource("1_sjqgh")]
+transform = Transform3D(-5.68248e-07, 0, 13, 0, 13, 0, -13, 0, -5.68248e-07, 0, 9.55, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+transform = Transform3D(-3.059797e-07, 0, 7, 0, 7, 0, -7, 0, -3.059797e-07, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_sjqgh")
 
 [node name="Selection" parent="." instance=ExtResource("1_f41li")]
+transform = Transform3D(2.24, 0, 0, 0, 2.24, 0, 0, 0, 2.24, 0, 0, 0)
 visible = false

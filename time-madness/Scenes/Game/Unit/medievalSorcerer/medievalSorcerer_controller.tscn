@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dyqoy8y15k2sp"]
+[gd_scene load_steps=5 format=3 uid="uid://dyqoy8y15k2sp"]
 
+[ext_resource type="Script" uid="uid://hjpa1y1ks0cn" path="res://Scenes/Game/Unit/medievalSorcerer/medieval_sorcerer.gd" id="1_82xms"]
 [ext_resource type="PackedScene" uid="uid://c8kgqvqcxuu1u" path="res://Scenes/Game/Unit/medievalSorcerer/medievalSorcerer.tscn" id="1_u317n"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_82xms"]
 
@@ -8,12 +9,15 @@ radius = 1.6655273
 height = 5.296753
 
 [node name="MedievalSorcererController" type="CharacterBody3D"]
+script = ExtResource("1_82xms")
 
 [node name="medievalSorcerer" parent="." instance=ExtResource("1_u317n")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(0.375, 0, 0, 0, 0.375, 0, 0, 0, 0.375, 0, 1, 0)
+transform = Transform3D(1.865, 0, 0, 0, 1.865, 0, 0, 0, 1.865, 0, 3.4, 0)
 shape = SubResource("CapsuleShape3D_0jb2h")
 
 [node name="Selection" parent="." instance=ExtResource("2_82xms")]
+transform = Transform3D(1.585, 0, 0, 0, 1.585, 0, 0, 0, 1.585, 0, 0, 0)
 visible = false
