@@ -1,3 +1,4 @@
+# GameManager.gd
 extends Node
 class_name GameManager
 
@@ -27,12 +28,11 @@ var color_nodes: Array = []
 
 @onready var battle_log_node = $Node
 
-# 🔥 Variable de tiempo (stage actual)
+# (sincronizada con GameStarter)
 var time: int = 1 
 
-# Variables para el parpadeo
 var blink_timer: float = 0.0
-var blink_interval: float = 0.5  # Parpadea cada 0.5 segundos
+var blink_interval: float = 0.5
 var blink_state: bool = true
 
 func _ready() -> void:
@@ -43,6 +43,9 @@ func _ready() -> void:
 	
 	for color in color_nodes:
 		color.visible = false
+	
+	# 🔥 Conectar señal de cambio de stage
+	GameStarter.stage_changed.connect(_on_stage_changed)
 	
 	video_player.play()
 	video_player.finished.connect(_on_video_finished)
@@ -83,15 +86,15 @@ func _setup_players() -> void:
 			player_node. get_node("Faction").text = player_data.race
 			
 			var color_rect = player_node.get_node("ColorRect")
-			color_rect.color = _get_team_color(player_data.team)
+			color_rect. color = _get_team_color(player_data.team)
 			
 			var status_node = player_node.get_node("Status")
 			if status_node is Label:
-				status_node. text = "-"
+				status_node.text = "-"
 			
 			player_node.visible = true
 			
-			print("✅ Jugador %d: %s | Facción: %s | Equipo: %d" % [i+1, player_data.player_name, player_data.race, player_data.team])
+			print("✅ Jugador %d: %s | Facción: %s | Equipo: %d" % [i+1, player_data.player_name, player_data.race, player_data. team])
 		else:
 			player_nodes[i].visible = false
 
@@ -106,18 +109,17 @@ func _get_team_color(team_id: int) -> Color:
 		_: return Color.WHITE
 
 func _on_video_finished() -> void:
-	video_player.visible = false
+	video_player. visible = false
 	_setup_players()
 	
-	# 🔥 Actualizar colores según el stage inicial
+	time = GameStarter.get_current_stage()
 	_update_colors()
 	
 	battle_log_node.visible = true
 	
 	print("🎮 Listo para iniciar la partida - Stage: %d" % time)
 
-func set_stage(new_stage: int) -> void:
-	if new_stage >= 1 and new_stage <= 10:
-		time = new_stage
-		_update_colors()
-		print("⏱️ Stage cambiado a: %d" % time)
+func _on_stage_changed(new_stage: int) -> void:
+	time = new_stage
+	_update_colors()
+	print("🎨 Visual actualizado a stage: %d" % time)
