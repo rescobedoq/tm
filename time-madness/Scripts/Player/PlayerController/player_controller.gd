@@ -492,13 +492,13 @@ func _ready() -> void:
 		rts.max_x = max_x
 		rts.min_z = min_z
 		rts.max_z = max_z
-		update_team_hud() 
 		camera.make_current() 
 		moveButton.pressed.connect(_on_move_button_pressed)
+		update_team_hud() 
+
 	else:
 		camera.current = false
 		rts.set_process(false)
-		update_team_hud() 
 
 var building_to_build: String = ""
 

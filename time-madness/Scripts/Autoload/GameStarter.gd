@@ -75,11 +75,7 @@ func _create_player_controllers() -> void:
 		controller.gold = 500
 		controller.resources = 500
 		
-		# 🔥 Crear BaseMap y agregarlo como HIJO del controller
-		var base_map = base_map_scene.instantiate()
-		base_map.name = "BaseMap"
-		controller.add_child(base_map)
-		
+
 		# Posicionar el controller
 		controller.position = Vector3(i * 300, 0, 0)
 		

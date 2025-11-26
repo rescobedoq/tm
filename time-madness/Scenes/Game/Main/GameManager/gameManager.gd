@@ -118,8 +118,31 @@ func _on_video_finished() -> void:
 	battle_log_node.visible = true
 	
 	print("🎮 Listo para iniciar la partida - Stage: %d" % time)
+	print("⏳ Esperando 7 segundos antes de iniciar la siguiente fase...")
+	await get_tree().create_timer(7.0).timeout
+	_start_game()
 
 func _on_stage_changed(new_stage: int) -> void:
 	time = new_stage
 	_update_colors()
 	print("🎨 Visual actualizado a stage: %d" % time)
+	
+func _start_game() -> void:
+	print("🚀 Iniciando partida...")
+	var active_controller = GameStarter.get_active_player_controller()
+	if active_controller == null:
+		print("❌ Error: No se encontró PlayerController activo")
+		return
+		
+	for controller in GameStarter.get_player_controllers():
+		add_child(controller)
+		if not controller.is_active_player:
+			controller.get_node("RtsController").visible = false
+			controller.get_node("UnitHud").visible = false
+			controller.get_node("TeamHud").visible = false
+			controller.get_node("PlayerHud").visible = false
+			controller.get_node("BaseMap").visible = false
+		print("✅ PlayerController añadido: %s | Visible: %s" % [controller. player_name, controller.is_active_player])	
+	
+	battle_log_node.visible = false
+	print("🎮 ¡Juego iniciado!  Controlando a: %s" % active_controller. player_name)
