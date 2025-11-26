@@ -1,9 +1,42 @@
-[gd_scene load_steps=3 format=3 uid="uid://bdf557rqesylj"]
+[gd_scene load_steps=6 format=3 uid="uid://bdf557rqesylj"]
 
 [ext_resource type="Script" uid="uid://dvury3h1prli" path="res://Scripts/Player/PlayerController/player_controller.gd" id="1_ailik"]
 [ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="2_lpwxd"]
+[ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="3_8qovw"]
+[ext_resource type="PackedScene" uid="uid://w41fknq8gsi" path="res://Scenes/Game/HUD/teamHUD.tscn" id="4_f0pu7"]
+[ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="5_4g4ik"]
 
 [node name="PlayerController" type="Node3D"]
 script = ExtResource("1_ailik")
 
 [node name="RtsController" parent="." instance=ExtResource("2_lpwxd")]
+
+[node name="UnitHud" parent="." instance=ExtResource("3_8qovw")]
+offset_left = 992.0
+offset_top = 929.99994
+offset_right = -669.4474
+offset_bottom = -90.13159
+scale = Vector2(1.52, 1.52)
+script = null
+
+[node name="TeamHud" parent="." instance=ExtResource("4_f0pu7")]
+offset_left = 969.0
+offset_top = 91.0
+offset_right = -714.4147
+offset_bottom = -954.85364
+scale = Vector2(1.64, 1.64)
+
+[node name="PlayerHud" parent="." instance=ExtResource("5_4g4ik")]
+offset_left = 1918.0
+offset_top = 40.0
+offset_right = -2.0
+offset_bottom = -1040.0
+
+[connection signal="barracks_pressed" from="PlayerHud" to="." method="_on_player_hud_barracks_pressed"]
+[connection signal="dragon_pressed" from="PlayerHud" to="." method="_on_player_hud_dragon_pressed"]
+[connection signal="farm_pressed" from="PlayerHud" to="." method="_on_player_hud_farm_pressed"]
+[connection signal="harbor_pressed" from="PlayerHud" to="." method="_on_player_hud_harbor_pressed"]
+[connection signal="magic_pressed" from="PlayerHud" to="." method="_on_player_hud_magic_pressed"]
+[connection signal="shrine_pressed" from="PlayerHud" to="." method="_on_player_hud_shrine_pressed"]
+[connection signal="smithy_pressed" from="PlayerHud" to="." method="_on_player_hud_smithy_pressed"]
+[connection signal="tower_pressed" from="PlayerHud" to="." method="_on_player_hud_tower_pressed"]
