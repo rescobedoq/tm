@@ -48,6 +48,10 @@ shader_parameter/normal_mix = 0.5
 shader_parameter/distortion_amount = 0.02
 shader_parameter/fresnel_power = 5.0
 shader_parameter/fresnel_strength = 0.3
+shader_parameter/edge_wave_scale = 2.0
+shader_parameter/edge_wave_amount = 0.12
+shader_parameter/edge_threshold = 0.85
+shader_parameter/edge_softness = 0.15
 
 [node name="WaterPlane" type="MeshInstance3D"]
 mesh = SubResource("QuadMesh_cw2t2")
