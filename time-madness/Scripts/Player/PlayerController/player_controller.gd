@@ -62,9 +62,9 @@ class_name PlayerController
 
 # ===== Unidades y Edificios =====
 var units: Array = []
-var buildings: Array = []  # 🔥 NUEVO: Array de edificios
+var buildings: Array = []  
 var selected_unit: Entity = null
-var selected_building: Building = null  # 🔥 NUEVO: Edificio seleccionado
+var selected_building: Building = null 
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -96,6 +96,7 @@ func add_building(building: CharacterBody3D) -> void:
 		return
 	if building not in buildings:
 		buildings.append(building)
+		building.player_owner = self 
 		print("✅ Edificio agregado a ", player_name, ": ", building.name)
 		print("   Total de edificios: ", buildings.size())
 		

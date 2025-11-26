@@ -1,42 +1,8 @@
 extends Node3D
 
-# Referencias a nodos
-@onready var player_controller = $PlayerController
-@onready var unit1 = $MedievalSoldierControler
-@onready var unit2 = $MedievalSoldierControler2
-@onready var unit3 = $MedievalArcherController
-@onready var unit4 = $MedievalCavalryController
-@onready var unit5 = $MedievalDragonController
-@onready var unit6 = $MedievalDruidController
-@onready var unit7 = $MedievalGolemController
-@onready var unit8 = $MedievalMagicSoldierController
-@onready var unit9 = $MedievalShipGhostController
-@onready var unit10 = $MedievalShipKrakenController
-@onready var unit11 = $MedievalShipNormalController
-@onready var unit12 = $MedievalSorcererController
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# Registrar las unidades existentes en el PlayerController
-	player_controller.add_unit(unit1)
-	player_controller.add_unit(unit2)
-	player_controller.add_unit(unit3)
-	player_controller.add_unit(unit4)
-	player_controller.add_unit(unit5)
-	player_controller.add_unit(unit6)
-	player_controller.add_unit(unit7)
-	player_controller.add_unit(unit8)
-	player_controller.add_unit(unit9)
-	player_controller.add_unit(unit10)
-	player_controller.add_unit(unit11)
-	player_controller.add_unit(unit12)
-
-	# Opcional: puedes asignar nombres a las unidades para pruebas
-	unit1.name = "Soldado 1"
-	unit2.name = "Soldado 2"
-
-	print("Unidades del jugador registradas:", player_controller.units.size())
-
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
