@@ -1,0 +1,12 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://bsr17naa8nfge"]
+
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="1_1rjw6"]
+
+[resource]
+font = ExtResource("1_1rjw6")
+font_size = 43
+font_color = Color(0.57254905, 0, 0.019607844, 1)
+outline_size = 6
+shadow_size = 16
+shadow_color = Color(0, 0, 0, 1)
+shadow_offset = Vector2(2.105, 2.76)

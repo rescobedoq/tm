@@ -142,7 +142,6 @@ func _on_start_button_pressed() -> void:
 		print("❌ Algunos jugadores no tienen todos los campos completados.")
 		return
 
-	# 🔥 Preparar datos de jugadores usando PlayerData
 	var players_data: Array = []
 	
 	print("--- JUGADORES ACTIVOS ---")
@@ -167,7 +166,7 @@ func _on_start_button_pressed() -> void:
 	GameStarter.start_game(players_data)
 	
 	# 🔥 TODO: Cambiar a la escena del juego (comentado por ahora)
-	# FadeLayer.fade_to_scene("res://Scenes/Game/YourGameScene. tscn")
+	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameManager/GameManager.tscn")
 
 func _process(delta: float) -> void:
 	pass
