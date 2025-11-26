@@ -6,6 +6,9 @@ class_name PlayerController
 # ==============================
 @export var player_name: String = "Jugador"
 @export var is_active_player: bool = true
+@export var difficult_bot: bool = true
+@export var faction: String = "default"
+
 # ===== HUD =====================
 @onready var hud_portrait: TextureRect = $"UnitHud/Portrait"
 @onready var hud_attack: Label = $"UnitHud/Attack"
