@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=57 format=3 uid="uid://7x3dhs70f2fg"]
 
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="2_8cs45"]
@@ -32,9 +32,6 @@
 [ext_resource type="Texture2D" uid="uid://d2ragfk15sfyk" path="res://Assets/Textures/Rocks023/Rocks023.dds" id="29_ktje0"]
 [ext_resource type="Texture2D" uid="uid://bmsvjkiev2o3x" path="res://Assets/Textures/Rocks023/Rocks023_normal.dds" id="30_kotuw"]
 [ext_resource type="PackedScene" uid="uid://bdf557rqesylj" path="res://Scripts/Player/PlayerController/PlayerController.tscn" id="32_42luu"]
-[ext_resource type="PackedScene" uid="uid://bd32dmikxffxd" path="res://Scenes/Game/HUD/unitHUD.tscn" id="33_b0elb"]
-[ext_resource type="PackedScene" uid="uid://w41fknq8gsi" path="res://Scenes/Game/HUD/teamHUD.tscn" id="34_p4f3n"]
-[ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="35_4fp00"]
 [ext_resource type="PackedScene" uid="uid://b5ed3ppcoyx82" path="res://Scenes/Game/Map/MapModels/water/waterPlane.tscn" id="36_b0elb"]
 
 [sub_resource type="Gradient" id="Gradient_806h8"]
@@ -263,27 +260,6 @@ player_name = "xdxd"
 movement_speed = 400.0
 min_zoom = 0.0
 
-[node name="UnitHud" parent="." instance=ExtResource("33_b0elb")]
-offset_left = 992.0
-offset_top = 929.99994
-offset_right = -669.4474
-offset_bottom = -90.13159
-scale = Vector2(1.52, 1.52)
-script = null
-
-[node name="TeamHud" parent="." instance=ExtResource("34_p4f3n")]
-offset_left = 969.0
-offset_top = 91.0
-offset_right = -714.4147
-offset_bottom = -954.85364
-scale = Vector2(1.64, 1.64)
-
-[node name="PlayerHud" parent="." instance=ExtResource("35_4fp00")]
-offset_left = 1918.0
-offset_top = 40.0
-offset_right = -2.0
-offset_bottom = -1040.0
-
 [node name="Node" type="Node" parent="."]
 
 [node name="WaterPlane" parent="Node" instance=ExtResource("36_b0elb")]
@@ -345,3 +321,8 @@ transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172,
 
 [node name="WaterPlane20" parent="Node" instance=ExtResource("36_b0elb")]
 transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -413.2136, -2.275, -387.8413)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 1000, 0)
+light_energy = 1.5
+sky_mode = 1

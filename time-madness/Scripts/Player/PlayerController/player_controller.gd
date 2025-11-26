@@ -5,36 +5,39 @@ class_name PlayerController
 # Nombre del jugador
 # ==============================
 @export var player_name: String = "Jugador"
+@export var is_active_player: bool = true
+@export var difficult_bot: bool = true
+@export var faction: String = "default"
 
 # ===== HUD =====================
-@onready var hud_portrait: TextureRect = $"../UnitHud/Portrait"
-@onready var hud_attack: Label = $"../UnitHud/Attack"
-@onready var hud_defense: Label = $"../UnitHud/Defense"
-@onready var hud_velocity: Label = $"../UnitHud/Velocity"
-@onready var hud_health: TextureProgressBar = $"../UnitHud/healthBar"
-@onready var hud_energy: TextureProgressBar = $"../UnitHud/energyBar"
-@onready var hud_name: Label = $"../UnitHud/UnitType"
+@onready var hud_portrait: TextureRect = $"UnitHud/Portrait"
+@onready var hud_attack: Label = $"UnitHud/Attack"
+@onready var hud_defense: Label = $"UnitHud/Defense"
+@onready var hud_velocity: Label = $"UnitHud/Velocity"
+@onready var hud_health: TextureProgressBar = $"UnitHud/healthBar"
+@onready var hud_energy: TextureProgressBar = $"UnitHud/energyBar"
+@onready var hud_name: Label = $"UnitHud/UnitType"
 
-@onready var attackButton: TextureButton = $"../UnitHud/attackButton"
-@onready var stopButton: TextureButton = $"../UnitHud/stopButton"
-@onready var keepPosButton: TextureButton = $"../UnitHud/keepPosButton"
-@onready var moveButton: TextureButton = $"../UnitHud/moveButton"
+@onready var attackButton: TextureButton = $"UnitHud/attackButton"
+@onready var stopButton: TextureButton = $"UnitHud/stopButton"
+@onready var keepPosButton: TextureButton = $"UnitHud/keepPosButton"
+@onready var moveButton: TextureButton = $"UnitHud/moveButton"
 
-@onready var spell1: TextureButton = $"../UnitHud/spell1"
-@onready var spell2: TextureButton = $"../UnitHud/spell2"
-@onready var spell3: TextureButton = $"../UnitHud/spell3"
-@onready var spell4: TextureButton = $"../UnitHud/spell4"
-@onready var spell5: TextureButton = $"../UnitHud/spell5"
-@onready var spell6: TextureButton = $"../UnitHud/spell6"
-@onready var spell7: TextureButton = $"../UnitHud/spell7"
+@onready var spell1: TextureButton = $"UnitHud/spell1"
+@onready var spell2: TextureButton = $"UnitHud/spell2"
+@onready var spell3: TextureButton = $"UnitHud/spell3"
+@onready var spell4: TextureButton = $"UnitHud/spell4"
+@onready var spell5: TextureButton = $"UnitHud/spell5"
+@onready var spell6: TextureButton = $"UnitHud/spell6"
+@onready var spell7: TextureButton = $"UnitHud/spell7"
 
 
 # ===== TeamHUD =====================
-@onready var upKeepLabel: Label = $"../TeamHud/maintenance"
-@onready var resourcesLabel: Label = $"../TeamHud/prime"
-@onready var goldLabel: Label = $"../TeamHud/money"
+@onready var upKeepLabel: Label = $"TeamHud/maintenance"
+@onready var resourcesLabel: Label = $"TeamHud/prime"
+@onready var goldLabel: Label = $"TeamHud/money"
 
-@onready var menu_hud: Control = $"../PlayerHud";
+@onready var menu_hud: Control = $"PlayerHud";
 
 # ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
@@ -62,9 +65,9 @@ class_name PlayerController
 
 # ===== Unidades y Edificios =====
 var units: Array = []
-var buildings: Array = []  # 🔥 NUEVO: Array de edificios
+var buildings: Array = []  
 var selected_unit: Entity = null
-var selected_building: Building = null  # 🔥 NUEVO: Edificio seleccionado
+var selected_building: Building = null 
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -96,6 +99,7 @@ func add_building(building: CharacterBody3D) -> void:
 		return
 	if building not in buildings:
 		buildings.append(building)
+		building.player_owner = self 
 		print("✅ Edificio agregado a ", player_name, ": ", building.name)
 		print("   Total de edificios: ", buildings.size())
 		
@@ -119,6 +123,9 @@ func update_team_hud() -> void:
 # Manejo de input (clicks)
 # ==============================
 func _unhandled_input(event):
+	if not is_active_player: 
+		return 
+	
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 		return
 	print("CLICK!!!!")
@@ -428,6 +435,8 @@ func _on_move_button_pressed() -> void:
 # Cursor de selección
 # ==============================
 func _process(delta: float) -> void:
+	if not is_active_player: 
+		return
 	if is_selecting_terrain and select_cursor_instance:
 		var mouse_pos = get_viewport().get_mouse_position()
 		select_cursor_instance.position = mouse_pos
@@ -467,24 +476,30 @@ func _update_build_placeholder_position() -> void:
 # ==============================
 func _ready() -> void:
 	var rts = $RtsController
-	rts.movement_speed = movement_speed
-	rts.rotation_speed = rotation_speed
-	rts.zoom_speed = zoom_speed
-	rts.min_zoom = min_zoom
-	rts.max_zoom = max_zoom
-	rts.min_elevation_angle = min_elevation_angle
-	rts.max_elevation_angle = max_elevation_angle
-	rts.edge_margin = edge_margin
-	rts.allow_rotation = allow_rotation
-	rts.allow_zoom = allow_zoom
-	rts.allow_pan = allow_pan
-	rts.min_x = min_x
-	rts.max_x = max_x
-	rts.min_z = min_z
-	rts.max_z = max_z
-	update_team_hud() 
-	moveButton.pressed.connect(_on_move_button_pressed)
-	
+	if is_active_player:
+		rts.movement_speed = movement_speed
+		rts.rotation_speed = rotation_speed
+		rts.zoom_speed = zoom_speed
+		rts.min_zoom = min_zoom
+		rts.max_zoom = max_zoom
+		rts.min_elevation_angle = min_elevation_angle
+		rts.max_elevation_angle = max_elevation_angle
+		rts.edge_margin = edge_margin
+		rts.allow_rotation = allow_rotation
+		rts.allow_zoom = allow_zoom
+		rts.allow_pan = allow_pan
+		rts.min_x = min_x
+		rts.max_x = max_x
+		rts.min_z = min_z
+		rts.max_z = max_z
+		camera.make_current() 
+		moveButton.pressed.connect(_on_move_button_pressed)
+		update_team_hud() 
+
+	else:
+		camera.current = false
+		rts.set_process(false)
+
 var building_to_build: String = ""
 
 func _start_build_mode(building_name: String) -> void:

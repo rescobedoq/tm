@@ -147,13 +147,18 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	print("✅", unit_name, "entrenado exitosamente en", global_position)
 
 func _get_player_owner() -> Node:
-	var root = get_tree().current_scene
-	for child in root.get_children():
-		if child.has_method("add_building"):
-			if self in child.buildings:
-				return child
+	if player_owner != null:
+		return player_owner
+	var base_map = get_parent()
+	if base_map:
+		var player_controller = base_map.get_parent()
+		if player_controller and player_controller.has_method("add_building"):
+			player_owner = player_controller 
+			return player_controller
+	
+	print("❌ No se pudo encontrar PlayerController para:", name)
 	return null
-
+	
 func _check_resources(player: Node, cost: Dictionary) -> bool:
 	if player.gold < cost.gold:
 		return false

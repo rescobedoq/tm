@@ -27,17 +27,31 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1889.0
+offset_bottom = -1039.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ilu23")
 
+[node name="OptionButton" type="OptionButton" parent="."]
+layout_mode = 0
+offset_left = 1261.0
+offset_top = 232.0
+offset_right = 1543.0
+offset_bottom = 490.0
+scale = Vector2(2, 2)
+selected = 0
+item_count = 1
+popup/item_0/icon = ExtResource("3_lnkrm")
+popup/item_0/id = 0
+
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
 z_index = -6
 layout_mode = 0
-offset_left = -15.0
-offset_top = -33.0
-offset_right = 1174.0
-offset_bottom = 661.0
+offset_left = -139.0
+offset_top = -118.0
+offset_right = 1950.0
+offset_bottom = 1138.0
 mouse_filter = 2
 stream = ExtResource("7_s0olb")
 volume_db = -80.0
@@ -46,27 +60,18 @@ autoplay = true
 expand = true
 loop = true
 
-[node name="OptionButton" type="OptionButton" parent="VideoStreamPlayer"]
-layout_mode = 0
-offset_left = 770.0
-offset_top = 231.0
-offset_right = 1052.0
-offset_bottom = 489.0
-selected = 0
-item_count = 1
-popup/item_0/icon = ExtResource("3_lnkrm")
-popup/item_0/id = 0
-
 [node name="StartingOptionsLabel" type="Sprite2D" parent="."]
-position = Vector2(250, 77)
+position = Vector2(509.00003, 81.00001)
+scale = Vector2(2.075, 2.075)
 texture = ExtResource("2_3mdws")
 
 [node name="startButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 359.0
-offset_top = 546.0
-offset_right = 607.00354
-offset_bottom = 630.3811
+offset_left = 739.0
+offset_top = 882.0
+offset_right = 987.00354
+offset_bottom = 966.3811
+scale = Vector2(2, 2)
 texture_normal = ExtResource("3_yaek1")
 texture_pressed = ExtResource("4_s0olb")
 texture_hover = ExtResource("5_ilu23")
@@ -75,19 +80,21 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="startButton"]
 layout_mode = 0
-offset_left = 70.999985
-offset_top = 30.00003
-offset_right = 195.99998
-offset_bottom = 57.00003
+offset_left = 68.999985
+offset_top = 28.0
+offset_right = 193.99998
+offset_bottom = 55.0
+scale = Vector2(1.2, 1.2)
 text = "Start Game"
 label_settings = SubResource("LabelSettings_jbqt5")
 
 [node name="backButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 97.0
-offset_top = 546.0
-offset_right = 345.00354
-offset_bottom = 630.3811
+offset_left = 223.0
+offset_top = 879.0
+offset_right = 471.00354
+offset_bottom = 963.3811
+scale = Vector2(2, 2)
 texture_normal = ExtResource("3_yaek1")
 texture_pressed = ExtResource("4_s0olb")
 texture_hover = ExtResource("5_ilu23")
@@ -96,60 +103,72 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="backButton"]
 layout_mode = 0
-offset_left = 59.590927
-offset_top = 30.763947
-offset_right = 184.59093
-offset_bottom = 57.763947
+offset_left = 56.0
+offset_top = 26.5
+offset_right = 181.0
+offset_bottom = 53.5
+scale = Vector2(1.2, 1.2)
 text = "Back to menu"
 label_settings = SubResource("LabelSettings_jbqt5")
 
 [node name="UserPlayerBox" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(180, 235)
+position = Vector2(300.99997, 343)
+scale = Vector2(1.7, 1.7)
 
 [node name="PlayerBox3" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(177, 474)
+position = Vector2(300.99997, 728)
+scale = Vector2(1.7, 1.7)
 
 [node name="PlayerBox2" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(176, 350)
+position = Vector2(302, 540)
+scale = Vector2(1.7, 1.7)
 
 [node name="PlayerBox4" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(524, 238)
+position = Vector2(893, 342)
+scale = Vector2(1.7, 1.7)
 
 [node name="PlayerBox6" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(521, 476)
+position = Vector2(893.00006, 733)
+scale = Vector2(1.7, 1.7)
 
 [node name="PlayerBox5" parent="." instance=ExtResource("7_ilu23")]
-position = Vector2(520, 353)
+position = Vector2(893.99994, 542)
+scale = Vector2(1.7, 1.7)
 
-[node name="Label" type="Label" parent="."]
+[node name="Label2" type="Label" parent="."]
 layout_mode = 0
-offset_left = 54.0
-offset_top = 152.0
-offset_right = 153.0
-offset_bottom = 175.0
-theme = SubResource("Theme_jbqt5")
-theme_override_colors/font_color = Color(0.5882353, 0, 0.05490196, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 30
-text = "Configure players"
-
-[node name="Label" type="Label" parent="Label"]
-layout_mode = 0
-offset_left = 666.0
-offset_top = -1.0
-offset_right = 847.0
-offset_bottom = 29.0
+offset_left = 1372.0
+offset_top = 169.0
+offset_right = 1553.0
+offset_bottom = 199.0
+scale = Vector2(1.5, 1.5)
 theme = SubResource("Theme_jbqt5")
 theme_override_colors/font_color = Color(0.5882353, 0, 0.05490196, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 30
 text = "Select a map"
 
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_left = 469.0
+offset_top = 200.0
+offset_right = 650.0
+offset_bottom = 230.0
+scale = Vector2(1.5, 1.5)
+theme = SubResource("Theme_jbqt5")
+theme_override_colors/font_color = Color(0.5882353, 0, 0.05490196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "Configure players"
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(395, 175)
+scale = Vector2(1.06, 1.06)
 
 [node name="Label" type="Label" parent="Sprite2D"]
-offset_left = 819.0
-offset_top = 480.0
-offset_right = 952.0
-offset_bottom = 503.0
+offset_left = 943.39624
+offset_top = 591.50946
+offset_right = 1076.3962
+offset_bottom = 614.50946
+scale = Vector2(2, 2)
 text = "Map size: 300 Km"

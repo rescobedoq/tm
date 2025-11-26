@@ -24,13 +24,22 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -101.0
-offset_top = 96.0
-offset_right = -101.0
-offset_bottom = 96.0
+offset_left = 284.0
+offset_top = 295.0
+offset_right = 284.0
+offset_bottom = 295.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_nqssn")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -120
+layout_mode = 0
+offset_left = -477.0
+offset_top = -426.0
+offset_right = 1861.0
+offset_bottom = 980.0
+color = Color(0, 0, 0, 1)
 
 [node name="MovilImage" type="Node2D" parent="."]
 position = Vector2(518, 144)

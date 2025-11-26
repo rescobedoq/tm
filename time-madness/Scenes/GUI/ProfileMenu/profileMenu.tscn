@@ -39,27 +39,37 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6dnna")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -670
+layout_mode = 0
+offset_left = -91.0
+offset_top = -29.0
+offset_right = 2047.0
+offset_bottom = 1125.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
 [node name="ProfileMenu" type="Sprite2D" parent="."]
-position = Vector2(578.00006, 414)
+position = Vector2(958, 514.5)
 scale = Vector2(1.1411132, 1.1376953)
 texture = ExtResource("1_glmnp")
 
 [node name="ProfileLabel" type="Sprite2D" parent="."]
-position = Vector2(222, 100)
+position = Vector2(602, 200.5)
 texture = ExtResource("2_7wxih")
 
 [node name="NameLineEdit" type="LineEdit" parent="."]
 layout_mode = 0
-offset_left = 35.0
-offset_top = 201.0
-offset_right = 243.0
-offset_bottom = 242.0
+offset_left = 415.0
+offset_top = 301.5
+offset_right = 623.0
+offset_bottom = 342.5
 placeholder_text = "....."
 alignment = 1
 
 [node name="ProfileName" type="Sprite2D" parent="."]
-position = Vector2(787.00006, 95)
-scale = Vector2(0.7239885, 0.2972973)
+position = Vector2(1171.0001, 198)
+scale = Vector2(0.4515896, 0.2972973)
 texture = ExtResource("7_wnvrs")
 
 [node name="UserNameSelected" type="Label" parent="ProfileName"]
@@ -77,10 +87,10 @@ justification_flags = 171
 
 [node name="quitProfileButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 950.0
-offset_top = 71.0
-offset_right = 1082.3269
-offset_bottom = 113.19057
+offset_left = 1330.0
+offset_top = 171.5
+offset_right = 1462.3269
+offset_bottom = 213.69057
 texture_normal = ExtResource("2_6q3p3")
 texture_pressed = ExtResource("3_wnvrs")
 texture_hover = ExtResource("4_kbfpx")
@@ -98,10 +108,10 @@ label_settings = SubResource("LabelSettings_rqqtr")
 
 [node name="backButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 789.0
-offset_top = 520.0
-offset_right = 1037.0035
-offset_bottom = 604.3811
+offset_left = 1169.0
+offset_top = 620.5
+offset_right = 1417.0035
+offset_bottom = 704.8811
 texture_normal = ExtResource("2_6q3p3")
 texture_pressed = ExtResource("3_wnvrs")
 texture_hover = ExtResource("4_kbfpx")
@@ -119,10 +129,10 @@ label_settings = SubResource("LabelSettings_rqqtr")
 
 [node name="createButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 246.0
-offset_top = 197.0
-offset_right = 378.3269
-offset_bottom = 239.19057
+offset_left = 626.0
+offset_top = 297.5
+offset_right = 758.3269
+offset_bottom = 339.69055
 texture_normal = ExtResource("2_6q3p3")
 texture_pressed = ExtResource("3_wnvrs")
 texture_hover = ExtResource("4_kbfpx")
@@ -140,20 +150,20 @@ label_settings = SubResource("LabelSettings_rqqtr")
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
 layout_mode = 0
-offset_left = 40.0
-offset_top = 270.0
-offset_right = 367.0
-offset_bottom = 605.0
+offset_left = 420.0
+offset_top = 370.5
+offset_right = 747.0
+offset_bottom = 705.5
 
 [node name="ProfilesList" type="VBoxContainer" parent="ScrollContainer"]
 layout_mode = 2
 
 [node name="deleteProfileButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 720.0
-offset_top = 146.0
-offset_right = 852.3269
-offset_bottom = 188.19057
+offset_left = 1100.0
+offset_top = 246.5
+offset_right = 1232.3269
+offset_bottom = 288.69055
 texture_normal = ExtResource("2_6q3p3")
 texture_pressed = ExtResource("3_wnvrs")
 texture_hover = ExtResource("4_kbfpx")
@@ -171,10 +181,10 @@ label_settings = SubResource("LabelSettings_rqqtr")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 42.0
-offset_top = 266.0
-offset_right = 378.0
-offset_bottom = 599.0
+offset_left = 422.0
+offset_top = 366.5
+offset_right = 758.0
+offset_bottom = 699.5
 mouse_filter = 2
 theme = SubResource("Theme_v8cs8")
 color = Color(0.20932834, 0.15104471, 0.2606381, 0.32500002)
