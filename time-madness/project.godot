@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
 GlobalUser="*res://GlobalUser.gd"
+NetworkManager="*res://Scripts/Autoload/networkManager.gd"
 
 [display]
 

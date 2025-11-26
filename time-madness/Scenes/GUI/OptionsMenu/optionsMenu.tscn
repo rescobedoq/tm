@@ -66,26 +66,40 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 0.06994629
+offset_left = 11.0
+offset_top = -8.0
+offset_right = 11.069946
+offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_6s3l0")
 
+[node name="ColorRect2" type="ColorRect" parent="."]
+z_index = -670
+layout_mode = 0
+offset_left = -47.0
+offset_right = 1936.0
+offset_bottom = 1108.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
 [node name="OptionsMenu" type="Sprite2D" parent="."]
-position = Vector2(570, 392)
-scale = Vector2(1.1508789, 1.0288086)
+position = Vector2(943.5, 545.5)
+scale = Vector2(1.07, 1.07)
 texture = ExtResource("1_q7d6m")
 
 [node name="OptionsLabel" type="Sprite2D" parent="."]
-position = Vector2(250, 100)
+position = Vector2(696, 184.00002)
+scale = Vector2(1.07, 1.07)
 texture = ExtResource("2_6s3l0")
 
 [node name="backButton" type="TextureButton" parent="."]
 layout_mode = 0
-offset_left = 789.0
-offset_top = 520.0
-offset_right = 1037.0035
-offset_bottom = 604.3811
+offset_left = 1162.5
+offset_top = 673.5
+offset_right = 1410.5035
+offset_bottom = 757.8811
+scale = Vector2(1.07, 1.07)
 texture_normal = ExtResource("3_aapos")
 texture_pressed = ExtResource("4_ace60")
 texture_hover = ExtResource("5_tl3bd")
@@ -98,51 +112,57 @@ offset_left = 59.590927
 offset_top = 30.763947
 offset_right = 184.59093
 offset_bottom = 57.763947
+scale = Vector2(1.07, 1.07)
 text = "Back to menu"
 label_settings = SubResource("LabelSettings_amxod")
 
 [node name="Label3" type="Label" parent="."]
 layout_mode = 0
-offset_left = 277.0
-offset_top = 395.0
-offset_right = 454.0
-offset_bottom = 446.0
+offset_left = 650.5
+offset_top = 548.5
+offset_right = 827.5
+offset_bottom = 599.5
+scale = Vector2(1.07, 1.07)
 text = "Font size"
 label_settings = SubResource("LabelSettings_3bcp2")
 
 [node name="Label2" type="Label" parent="."]
 layout_mode = 0
-offset_left = 278.0
-offset_top = 327.0
-offset_right = 455.0
-offset_bottom = 378.0
+offset_left = 651.5
+offset_top = 480.5
+offset_right = 828.5
+offset_bottom = 531.5
+scale = Vector2(1.07, 1.07)
 text = "Brightness"
 label_settings = SubResource("LabelSettings_3bcp2")
 
 [node name="Label4" type="Label" parent="."]
 layout_mode = 0
-offset_left = 279.0
-offset_top = 259.0
-offset_right = 521.0
-offset_bottom = 310.0
+offset_left = 652.5
+offset_top = 412.5
+offset_right = 894.5
+offset_bottom = 463.5
+scale = Vector2(1.07, 1.07)
 text = "Mouse sensibility"
 label_settings = SubResource("LabelSettings_3bcp2")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
-offset_left = 280.0
-offset_top = 191.0
-offset_right = 457.0
-offset_bottom = 242.0
+offset_left = 653.5
+offset_top = 344.5
+offset_right = 830.5
+offset_bottom = 395.5
+scale = Vector2(1.07, 1.07)
 text = "Language"
 label_settings = SubResource("LabelSettings_3bcp2")
 
 [node name="OptionsButton" type="OptionButton" parent="."]
 layout_mode = 0
-offset_left = 608.0
-offset_top = 183.0
-offset_right = 871.0
-offset_bottom = 236.0
+offset_left = 981.5
+offset_top = 336.5
+offset_right = 1244.5
+offset_bottom = 389.5
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_3bcp2")
 selected = 0
 item_count = 4
@@ -162,10 +182,11 @@ script = ExtResource("12_qgrql")
 
 [node name="brightnessSlider" type="HSlider" parent="."]
 layout_mode = 0
-offset_left = 613.0
-offset_top = 330.0
-offset_right = 867.0
-offset_bottom = 346.0
+offset_left = 986.5
+offset_top = 483.5
+offset_right = 1240.5
+offset_bottom = 499.5
+scale = Vector2(1.07, 1.07)
 script = ExtResource("12_aapos")
 
 [node name="Label" type="Label" parent="brightnessSlider"]
@@ -174,16 +195,18 @@ offset_left = 112.0
 offset_top = 12.0
 offset_right = 152.0
 offset_bottom = 35.0
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_lyspy")
 text = "0"
 horizontal_alignment = 1
 
 [node name="mouseSensibilitySlider" type="HSlider" parent="."]
 layout_mode = 0
-offset_left = 611.0
-offset_top = 261.0
-offset_right = 869.0
-offset_bottom = 277.0
+offset_left = 984.5
+offset_top = 414.5
+offset_right = 1242.5
+offset_bottom = 430.5
+scale = Vector2(1.07, 1.07)
 script = ExtResource("13_ace60")
 
 [node name="Label" type="Label" parent="mouseSensibilitySlider"]
@@ -192,6 +215,7 @@ offset_left = 114.0
 offset_top = 12.0
 offset_right = 154.0
 offset_bottom = 35.0
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_lyspy")
 text = "0"
 horizontal_alignment = 1
@@ -200,10 +224,11 @@ horizontal_alignment = 1
 script = ExtResource("14_tl3bd")
 
 [node name="medium" type="CheckBox" parent="fontCheckGroup"]
-offset_left = 725.0
-offset_top = 386.0
-offset_right = 769.0
-offset_bottom = 410.0
+offset_left = 1119.5
+offset_top = 531.5
+offset_right = 1163.5
+offset_bottom = 555.5
+scale = Vector2(1.07, 1.07)
 
 [node name="Label" type="Label" parent="fontCheckGroup/medium"]
 layout_mode = 0
@@ -211,15 +236,17 @@ offset_left = -21.0
 offset_top = 24.0
 offset_right = 47.0
 offset_bottom = 49.0
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_lyspy")
 text = "Medium"
 horizontal_alignment = 1
 
 [node name="small" type="CheckBox" parent="fontCheckGroup"]
-offset_left = 636.0
-offset_top = 386.0
-offset_right = 668.0
-offset_bottom = 410.0
+offset_left = 1030.5
+offset_top = 531.5
+offset_right = 1062.5
+offset_bottom = 555.5
+scale = Vector2(1.07, 1.07)
 
 [node name="Label" type="Label" parent="fontCheckGroup/small"]
 layout_mode = 0
@@ -227,15 +254,17 @@ offset_left = -21.0
 offset_top = 24.0
 offset_right = 47.0
 offset_bottom = 49.0
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_lyspy")
 text = "Small"
 horizontal_alignment = 1
 
 [node name="large" type="CheckBox" parent="fontCheckGroup"]
-offset_left = 812.0
-offset_top = 387.0
-offset_right = 856.0
-offset_bottom = 411.0
+offset_left = 1206.5
+offset_top = 532.5
+offset_right = 1250.5
+offset_bottom = 556.5
+scale = Vector2(1.07, 1.07)
 
 [node name="Label" type="Label" parent="fontCheckGroup/large"]
 layout_mode = 0
@@ -243,15 +272,17 @@ offset_left = -21.0
 offset_top = 24.0
 offset_right = 47.0
 offset_bottom = 49.0
+scale = Vector2(1.07, 1.07)
 theme = SubResource("Theme_lyspy")
 text = "Large"
 horizontal_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 255.0
-offset_top = 174.0
-offset_right = 912.0
-offset_bottom = 461.0
+offset_left = 628.5
+offset_top = 327.5
+offset_right = 1285.5
+offset_bottom = 614.5
+scale = Vector2(1.07, 1.07)
 mouse_filter = 2
 color = Color(0, 0, 0, 0.20392157)
