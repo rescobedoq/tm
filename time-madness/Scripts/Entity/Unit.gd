@@ -96,4 +96,7 @@ func _ready() -> void:
 func setup_collision_layers() -> void:
 	collision_layer = 1 << 1              
 	collision_mask = (1 << 1) | (1 << 3) 
-	
+
+	if unit_category == "ground":
+		print("LA UNIDAD ES GROUND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		collision_mask |= 1 << 4  # Añadir Layer 5 a la máscara
