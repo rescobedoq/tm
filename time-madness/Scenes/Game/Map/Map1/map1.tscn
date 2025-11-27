@@ -256,6 +256,7 @@ mesh = SubResource("CapsuleMesh_ws2in")
 
 [node name="PlayerController" parent="." instance=ExtResource("32_42luu")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 134.00847, 0, -140.7463)
+visible = false
 player_name = "xdxd"
 movement_speed = 400.0
 min_zoom = 0.0
@@ -263,64 +264,64 @@ min_zoom = 0.0
 [node name="Node" type="Node" parent="."]
 
 [node name="WaterPlane" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 386.46454, -2.275, -7.793561)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, 386.46454, -2.275, -7.793561)
 
 [node name="WaterPlane2" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 381.64856, -2.275, 197.32239)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, 381.64856, -2.275, 197.32239)
 
 [node name="WaterPlane3" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 378.484, -2.275, -203.46036)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, 378.484, -2.275, -203.46036)
 
 [node name="WaterPlane4" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 386.97424, -2.275, 415.67694)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, 386.97424, -2.275, 415.67694)
 
 [node name="WaterPlane5" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, 375.82104, -2.275, -408.50073)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, 375.82104, -2.275, -408.50073)
 
 [node name="WaterPlane6" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -390.4383, -2.275, -27.064644)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, -390.4383, -2.275, -27.064644)
 
 [node name="WaterPlane7" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -395.25427, -2.275, 178.0513)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, -395.25427, -2.275, 178.0513)
 
 [node name="WaterPlane8" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -398.41882, -2.275, -222.73145)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, -398.41882, -2.275, -222.73145)
 
 [node name="WaterPlane9" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -389.9286, -2.275, 396.40588)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, -389.9286, -2.275, 396.40588)
 
 [node name="WaterPlane10" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(242.94, 0, 0, 0, 242.78528, 8.66917, 0, -8.66917, 242.78528, -401.0818, -2.275, -427.7718)
+transform = Transform3D(300, 0, 0, 0, 299.80893, 10.705323, 0, -10.705323, 299.80893, -401.0818, -2.275, -427.7718)
 
 [node name="WaterPlane11" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -41.926254, -2.275, 392.19592)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -41.926254, -2.275, 392.19592)
 
 [node name="WaterPlane12" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 163.21999, -2.275, 395.47595)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, 163.21999, -2.275, 395.47595)
 
 [node name="WaterPlane13" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -237.52782, -2.275, 401.64124)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -237.52782, -2.275, 401.64124)
 
 [node name="WaterPlane14" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 381.52856, -2.275, 388.5155)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, 381.52856, -2.275, 388.5155)
 
 [node name="WaterPlane15" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -442.54254, -2.275, 405.83936)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -442.54254, -2.275, 405.83936)
 
 [node name="WaterPlane16" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -12.597305, -2.275, -401.48474)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -12.597305, -2.275, -401.48474)
 
 [node name="WaterPlane17" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 192.54893, -2.275, -398.2047)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, 192.54893, -2.275, -398.2047)
 
 [node name="WaterPlane18" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -208.19887, -2.275, -392.03943)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -208.19887, -2.275, -392.03943)
 
 [node name="WaterPlane19" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, 410.8575, -2.275, -405.16516)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, 410.8575, -2.275, -405.16516)
 
 [node name="WaterPlane20" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(-1.8189865, -8.66893, 242.77847, 0, 242.78528, 8.669172, -242.9332, 0.06490948, -1.8178282, -413.2136, -2.275, -387.8413)
+transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -413.2136, -2.275, -387.8413)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 1000, 0)
