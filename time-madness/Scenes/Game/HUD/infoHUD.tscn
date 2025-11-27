@@ -10,7 +10,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="unitsDefense" type="Label" parent="."]
+[node name="workers" type="Label" parent="."]
 layout_mode = 0
 offset_left = 95.0
 offset_top = 9.0
@@ -19,7 +19,7 @@ offset_bottom = 53.0
 text = "Workers: 0"
 label_settings = ExtResource("1_yovt4")
 
-[node name="workers" type="Label" parent="."]
+[node name="unitsDefense" type="Label" parent="."]
 layout_mode = 0
 offset_left = 5.0
 offset_top = 99.0

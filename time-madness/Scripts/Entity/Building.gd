@@ -118,7 +118,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	if not _check_resources(player, cost):
 		print("⚠️ Recursos insuficientes para entrenar", unit_name)
-		return
+		return  
 	
 	# Deducir recursos
 	player.gold -= cost.gold

@@ -485,7 +485,18 @@ func _on_second_tick(time_left: int):
 # ==============================
 # _ready: inicializar RTS
 # ==============================
+
 @onready var castle_controller = $BaseMap/MedievalCastleController
+var workers: int = 0
+@onready var workers_label = $InfoHud/workers   
+func add_worker():
+	workers += 1
+	_update_workers_label()
+	
+func _update_workers_label():
+	workers_label.text = "Workers: " + str(workers)
+	
+	
 func _ready() -> void:
 	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
