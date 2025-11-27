@@ -106,6 +106,8 @@ func use_ability(ability: BuildingAbility) -> void:
 # ==============================
 # 🔥 FUNCIÓN GENÉRICA DE ENTRENAMIENTO
 # ==============================
+@onready var col_shape: CollisionShape3D = get_node("CollisionShape3D")
+
 func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -> void:
 	if unit_scene == null:
 		print("❌ Escena de unidad no encontrada para:", unit_name)
@@ -132,9 +134,20 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	await get_tree().process_frame
 	
-	# Posicionar la unidad cerca del edificio
-	var spawn_offset = Vector3(5, 0, 5)
+	# Distancia mínima y máxima donde puede aparecer la unidad
+	var min_dist := 15.0
+	var max_dist := 20.0
+
+	# Dirección aleatoria en círculo (solo X y Z)
+	var angle := randf() * TAU
+	var direction := Vector3(cos(angle), 0, sin(angle))
+
+	# Distancia aleatoria entre min y max
+	var distance := randf_range(min_dist, max_dist)
+
+	var spawn_offset := direction * distance
 	new_unit.global_position = global_position + spawn_offset
+
 	
 	# 🔥 NO TOCAR AQUÍ - La configuración ya está en Unit.setup_collision_layers()
 	# Las unidades YA tienen:

@@ -142,6 +142,8 @@ func _start_game() -> void:
 			controller.get_node("TeamHud").visible = false
 			controller.get_node("PlayerHud").visible = false
 			controller.get_node("BaseMap").visible = false
+			controller.get_node("InfoHud").visible = false
+
 		print("✅ PlayerController añadido: %s | Visible: %s" % [controller. player_name, controller.is_active_player])	
 	
 	battle_log_node.visible = false
