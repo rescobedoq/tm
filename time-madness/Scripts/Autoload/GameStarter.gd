@@ -5,6 +5,14 @@ signal game_starting(players_data: Array)
 signal stage_changed(new_stage: int)
 signal player_controllers_ready(controllers: Array)  # 🔥 Nueva señal
 
+signal second_tick(time_left: int)
+signal stage_time_over(stage: int)
+
+var stage_duration := 300  # 5 minutos
+var stage_time_left := stage_duration
+var _timer := Timer.new()
+
+
 var configured_players: Array = []
 
 # 🔥 Variable de stage global
@@ -20,6 +28,8 @@ var base_map_scene = preload("res://Scenes/Game/Map/BaseMap/baseMap.tscn")
 var player_controllers: Array = []
 
 func start_game(players: Array) -> void:
+	_setup_stage_timer()
+
 	configured_players = players
 	current_stage = 1
 	
@@ -107,3 +117,33 @@ func get_active_player_controller():
 		if controller.is_active_player:
 			return controller
 	return null
+	
+func _setup_stage_timer():
+	stage_time_left = stage_duration
+	
+	# Configurar timer
+	_timer.one_shot = false
+	_timer.wait_time = 1.0  # cada segundo
+	add_child(_timer)
+
+	if not _timer.timeout.is_connected(_on_timer_tick):
+		_timer.timeout.connect(_on_timer_tick)
+	
+	_timer.start()
+
+func _on_timer_tick():
+	stage_time_left -= 1
+	
+	emit_signal("second_tick", stage_time_left)
+
+	print("⏱️ Tiempo restante del stage %d: %ds" % [current_stage, stage_time_left])
+
+	if stage_time_left <= 0:
+		emit_signal("stage_time_over", current_stage)
+		print("⏳ Stage %d terminado automáticamente" % current_stage)
+		
+		_timer.stop()
+		next_stage()  # avanzar al siguiente stage
+		
+		# reiniciar tiempo del nuevo stage
+		_setup_stage_timer()
