@@ -1,7 +1,6 @@
 # Barracks.gd
 extends Building
 class_name Barracks
-
 const SOLDIER_SCENE = preload("res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn")
 const ARCHER_SCENE = preload("res://Scenes/Game/Unit/medievalArcher/medievalArcher_controller.tscn")
 const CAVALRY_SCENE = preload("res://Scenes/Game/Unit/medievalCavalry/medievalCavalry_controller.tscn")

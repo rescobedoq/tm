@@ -10,8 +10,8 @@ const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSoldier.png"
 var selection_tween: Tween
 
 func _ready():
+	unit_category = "ground"
 	super._ready()
-	
 	unit_type = "Medieval Soldier"
 	max_health = 200
 	current_health = max_health

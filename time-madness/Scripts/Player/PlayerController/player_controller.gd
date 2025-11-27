@@ -480,12 +480,43 @@ func _update_build_placeholder_position() -> void:
 
 func _on_second_tick(time_left: int):
 	hour.text = format_hms(time_left)
+	# Producción por trabajador
+	var gold_generated := workers * 1    
+	var resources_generated := workers * 0.5 
+	
+	# Sumar al jugador
+	gold += gold_generated
+	resources += resources_generated
+	
+	# Actualizar HUD
+	_update_gold_label()
+	_update_resources_label()
+	
+	# Solo para debug
+	print("⏱ Tick: +" + str(gold_generated) + " oro, +" + str(resources_generated) + " recursos")
+
+func _update_gold_label():
+	goldLabel.text = str(gold)
+
+func _update_resources_label():
+	resourcesLabel.text = str(resources)
+
 
 
 # ==============================
 # _ready: inicializar RTS
 # ==============================
 @onready var castle_controller = $BaseMap/MedievalCastleController
+var workers: int = 0
+@onready var workers_label = $InfoHud/workers   
+func add_worker():
+	workers += 1
+	_update_workers_label()
+	
+func _update_workers_label():
+	workers_label.text = "Workers: " + str(workers)
+	
+	
 func _ready() -> void:
 	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
