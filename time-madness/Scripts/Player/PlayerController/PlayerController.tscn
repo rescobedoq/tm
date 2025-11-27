@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bdf557rqesylj"]
+[gd_scene load_steps=8 format=3 uid="uid://bdf557rqesylj"]
 
 [ext_resource type="Script" uid="uid://dvury3h1prli" path="res://Scripts/Player/PlayerController/player_controller.gd" id="1_ailik"]
 [ext_resource type="PackedScene" uid="uid://c7fajxufogyxw" path="res://Scenes/Game/RTSController/RTSController.tscn" id="2_lpwxd"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://w41fknq8gsi" path="res://Scenes/Game/HUD/teamHUD.tscn" id="4_f0pu7"]
 [ext_resource type="PackedScene" uid="uid://dfsqt0imxcvg6" path="res://Scenes/Game/HUD/playerHUD.tscn" id="5_4g4ik"]
 [ext_resource type="PackedScene" uid="uid://bx6q380fh4ngu" path="res://Scenes/Game/Map/BaseMap/baseMap.tscn" id="6_f0pu7"]
+[ext_resource type="PackedScene" uid="uid://d1pg7csxktvwe" path="res://Scenes/Game/HUD/infoHUD.tscn" id="7_4g4ik"]
 
 [node name="PlayerController" type="Node3D"]
 script = ExtResource("1_ailik")
@@ -35,6 +36,12 @@ offset_bottom = -1040.0
 
 [node name="BaseMap" parent="." instance=ExtResource("6_f0pu7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22032166, 0.2578125, -0.70599365)
+
+[node name="InfoHud" parent="." instance=ExtResource("7_4g4ik")]
+offset_left = 9.0
+offset_top = 8.0
+offset_right = -1734.0
+offset_bottom = -919.0
 
 [connection signal="barracks_pressed" from="PlayerHud" to="." method="_on_player_hud_barracks_pressed"]
 [connection signal="dragon_pressed" from="PlayerHud" to="." method="_on_player_hud_dragon_pressed"]
