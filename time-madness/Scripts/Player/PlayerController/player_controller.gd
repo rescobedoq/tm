@@ -36,6 +36,8 @@ class_name PlayerController
 @onready var upKeepLabel: Label = $"TeamHud/maintenance"
 @onready var resourcesLabel: Label = $"TeamHud/prime"
 @onready var goldLabel: Label = $"TeamHud/money"
+@onready var hour: Label = $"TeamHud/hour"
+
 
 @onready var menu_hud: Control = $"PlayerHud";
 
@@ -79,6 +81,13 @@ var build_placeholder: Node3D = null
 
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
+
+func format_hms(seconds: int) -> String:
+	var m = (seconds % 3600) / 60
+	var s = seconds % 60
+
+	return "%02d:%02d" % [m, s]
+
 
 # ==============================
 # Añadir unidades
@@ -469,12 +478,16 @@ func _update_build_placeholder_position() -> void:
 	build_placeholder.global_position = target_pos + Vector3(0, offset_y, 0)
 
 
+func _on_second_tick(time_left: int):
+	hour.text = format_hms(time_left)
+
 
 # ==============================
 # _ready: inicializar RTS
 # ==============================
 @onready var castle_controller = $BaseMap/MedievalCastleController
 func _ready() -> void:
+	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
 	var rts = $RtsController
 	if is_active_player:
