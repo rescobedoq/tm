@@ -10,8 +10,8 @@ const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalShipGhost.pn
 var selection_tween: Tween
 
 func _ready():
-	super._ready()
 	unit_category = "aquatic"
+	super._ready()
 
 	unit_type = "Medieval Ship Ghost"
 	max_health = 200
