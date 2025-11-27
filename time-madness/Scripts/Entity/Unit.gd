@@ -2,6 +2,11 @@ extends Entity
 class_name Unit
 
 # ------------------------------------------
+# Tipo de unidad para lógica de terreno, ataques y pathfinding
+# ------------------------------------------
+@export var unit_category: String = "ground" # Valores: "ground", "aquatic", "flying"
+
+# ------------------------------------------
 # Atributos base de la unidad
 # ------------------------------------------
 @export var unit_type: String = "Default"

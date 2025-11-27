@@ -11,7 +11,7 @@ var selection_tween: Tween
 
 func _ready():
 	super._ready()
-	
+	unit_category = "flying"
 	unit_type = "Medieval Dragon"
 	max_health = 200
 	current_health = max_health
