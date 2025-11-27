@@ -470,11 +470,12 @@ func _update_build_placeholder_position() -> void:
 
 
 
-
 # ==============================
 # _ready: inicializar RTS
 # ==============================
+@onready var castle_controller = $BaseMap/MedievalCastleController
 func _ready() -> void:
+	add_building(castle_controller)
 	var rts = $RtsController
 	if is_active_player:
 		rts.movement_speed = movement_speed

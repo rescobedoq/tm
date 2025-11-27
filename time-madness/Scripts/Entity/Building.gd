@@ -27,6 +27,7 @@ const BUILDING_SCALES = {
 	"tower": 25
 }
 const BUILDING_PORTRAITS = {
+	"castle": "res://Assets/Images/Portraits/Buildings/medievalCasle.jpg",
 	"barracks": "res://Assets/Images/Portraits/Buildings/medievalBarracks.jpg",
 	"dragon": "res://Assets/Images/Portraits/Buildings/medievalHatchery.jpg",
 	"farm": "res://Assets/Images/Portraits/Buildings/medievalFarm.jpg",
