@@ -40,8 +40,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22032166, 0.2578125, -0.70
 [node name="InfoHud" parent="." instance=ExtResource("7_4g4ik")]
 offset_left = 9.0
 offset_top = 8.0
-offset_right = -1734.0
+offset_right = -1624.0
 offset_bottom = -919.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 100, 0)
+light_energy = 1.5
+sky_mode = 1
 
 [connection signal="barracks_pressed" from="PlayerHud" to="." method="_on_player_hud_barracks_pressed"]
 [connection signal="dragon_pressed" from="PlayerHud" to="." method="_on_player_hud_dragon_pressed"]

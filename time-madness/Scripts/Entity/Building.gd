@@ -109,6 +109,7 @@ func use_ability(ability: BuildingAbility) -> void:
 @onready var col_shape: CollisionShape3D = get_node("CollisionShape3D")
 
 func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -> void:
+	
 	if unit_scene == null:
 		print("❌ Escena de unidad no encontrada para:", unit_name)
 		return
@@ -134,19 +135,20 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	await get_tree().process_frame
 	
-	# Distancia mínima y máxima donde puede aparecer la unidad
-	var min_dist := 15.0
-	var max_dist := 20.0
+	if new_unit.unit_category == "aquatic":
+		# 🌊 Unidades acuáticas: spawn en área de agua
+		var spawn_pos = _get_random_water_position()
+		new_unit.global_position = _get_random_water_position()
 
-	# Dirección aleatoria en círculo (solo X y Z)
-	var angle := randf() * TAU
-	var direction := Vector3(cos(angle), 0, sin(angle))
-
-	# Distancia aleatoria entre min y max
-	var distance := randf_range(min_dist, max_dist)
-
-	var spawn_offset := direction * distance
-	new_unit.global_position = global_position + spawn_offset
+	else:
+		# 🚶 Unidades terrestres/voladoras: spawn cerca del edificio
+		var min_dist := 15.0
+		var max_dist := 20.0
+		var angle := randf() * TAU
+		var direction := Vector3(cos(angle), 0, sin(angle))
+		var distance := randf_range(min_dist, max_dist)
+		var spawn_offset := direction * distance
+		new_unit.global_position = global_position + spawn_offset
 
 	
 	# 🔥 NO TOCAR AQUÍ - La configuración ya está en Unit.setup_collision_layers()
@@ -158,7 +160,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	if new_unit is Entity:
 		player.add_unit(new_unit)
 	
-	print("✅", unit_name, "entrenado exitosamente en", global_position)
+	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)  # ✅ POSICIÓN DE LA UNIDAD
 
 func _get_player_owner() -> Node:
 	if player_owner != null:
@@ -182,3 +184,28 @@ func _check_resources(player: Node, cost: Dictionary) -> bool:
 		print("⚠️ Límite de mantenimiento alcanzado")
 		return false
 	return true
+	
+func _get_random_water_position() -> Vector3:
+	var player = _get_player_owner()
+	var collision_shape = player.get_node_or_null("BaseMap/Water/Area3D/CollisionShape3D")
+	
+	var shape = collision_shape.shape
+	var center = collision_shape.global_position
+	
+	var margin = 10.0
+	var half_x = (shape.size.x / 2.0) - margin
+	var half_z = (shape.size.z / 2.0) - margin
+	
+	var xmin = center.x - half_x
+	var xmax = center.x + half_x
+	var zmin = center.z - half_z
+	var zmax = center.z + half_z
+	
+	print("X range: ", xmin, " to ", xmax)
+	print("Z range: ", zmin, " to ", zmax)
+	
+	return Vector3(
+		center.x + randf_range(-half_x, half_x),
+		-1.0,
+		center.z + randf_range(-half_z, half_z)
+	)

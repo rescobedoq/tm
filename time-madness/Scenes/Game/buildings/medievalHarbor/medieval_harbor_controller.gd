@@ -2,7 +2,7 @@ extends Building
 class_name Harbor
 
 const SHIP_SCENE = preload("res://Scenes/Game/Unit/medievalShipNormal/medievalShipNormal_controller.tscn")
-const SHIP_COST = {"gold": 200, "resources": 100, "upkeep": 2}
+const SHIP_COST = {"gold": 1, "resources": 1, "upkeep": 2}
 
 func _ready():
 	abilities = [

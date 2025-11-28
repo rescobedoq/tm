@@ -5,8 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_aiu8r"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7l0s1"]
-radius = 1.6655273
-height = 5.296753
+radius = 1.3835
+height = 3.782
 
 [node name="MedievalShipNormalController" type="CharacterBody3D"]
 script = ExtResource("1_aiu8r")
@@ -15,7 +15,7 @@ script = ExtResource("1_aiu8r")
 transform = Transform3D(-5.68248e-07, 0, 13, 0, 13, 0, -13, 0, -5.68248e-07, 0, 9.455, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(4.785, 0, 0, 0, 4.785, 0, 0, 0, 4.785, 0, 1, 0)
+transform = Transform3D(3.27, 0, 0, 0, 3.27, 0, 0, 0, 3.27, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_7l0s1")
 
 [node name="Selection" parent="." instance=ExtResource("2_aiu8r")]
