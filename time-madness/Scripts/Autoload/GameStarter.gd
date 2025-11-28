@@ -1,16 +1,17 @@
-# GameStarter.gd (Autoload)
+# GameStarter. gd (Autoload)
 extends Node
 
 signal game_starting(players_data: Array)
 signal stage_changed(new_stage: int)
-signal player_controllers_ready(controllers: Array)  # 🔥 Nueva señal
+signal player_controllers_ready(controllers: Array)
 
 signal second_tick(time_left: int)
 signal stage_time_over(stage: int)
 
-var stage_duration := 300  # 5 minutos
+var stage_duration := 30 #FOR TESTING
 var stage_time_left := stage_duration
 var _timer := Timer.new()
+var _timer_is_running := false  # 🔥 Nueva bandera
 
 
 var configured_players: Array = []
@@ -27,9 +28,15 @@ var base_map_scene = preload("res://Scenes/Game/Map/BaseMap/baseMap.tscn")
 # 🔥 PlayerControllers creados
 var player_controllers: Array = []
 
-func start_game(players: Array) -> void:
-	_setup_stage_timer()
+func _ready():
+	# Configurar el timer PERO NO INICIARLO
+	_timer.one_shot = false
+	_timer.wait_time = 1.0
+	add_child(_timer)
+	_timer.timeout.connect(_on_timer_tick)
+	print("⏱️ Timer configurado (pero NO iniciado)")
 
+func start_game(players: Array) -> void:
 	configured_players = players
 	current_stage = 1
 	
@@ -39,6 +46,24 @@ func start_game(players: Array) -> void:
 	emit_signal("game_starting", players)
 	print("🎮 Señal game_starting emitida con %d jugadores" % players.size())
 	print("⏱️ Stage inicial: %d" % current_stage)
+
+# 🔥 NUEVO: Iniciar el timer del stage
+func start_stage_timer() -> void:
+	if _timer_is_running:
+		print("⚠️ El timer ya estaba corriendo, reiniciando...")
+		_timer.stop()
+	
+	stage_time_left = stage_duration
+	_timer_is_running = true
+	_timer.start()
+	print("⏱️ ✅ TIMER INICIADO - Stage %d comenzará a contar %d segundos" % [current_stage, stage_duration])
+
+# 🔥 NUEVO: Detener el timer
+func stop_stage_timer() -> void:
+	if _timer_is_running:
+		_timer.stop()
+		_timer_is_running = false
+		print("⏱️ ⏸️ TIMER DETENIDO")
 
 # 🔥 Avanzar al siguiente stage
 func next_stage() -> void:
@@ -65,20 +90,20 @@ func _create_player_controllers() -> void:
 	# Limpiar controllers previos
 	for controller in player_controllers:
 		if is_instance_valid(controller):
-			controller.  queue_free()
+			controller.queue_free()
 	player_controllers.clear()
 	
 	print("\n" + "=".repeat(60))
 	print("🎮 SE HAN CREADO A LOS JUGADORES")
 	print("=".repeat(60))
 	
-	for i in range(configured_players. size()):
+	for i in range(configured_players.size()):
 		var player_data = configured_players[i]
 		
 		# 🔥 Crear PlayerController
 		var controller = player_controller_scene.instantiate()
 		controller.name = "Player%d" % (i + 1)
-		controller. player_name = player_data. player_name
+		controller.player_name = player_data.player_name
 		controller.is_active_player = not player_data.is_bot
 		controller.faction = player_data.race
 		controller.difficult_bot = player_data.is_bot
@@ -117,21 +142,11 @@ func get_active_player_controller():
 		if controller.is_active_player:
 			return controller
 	return null
-	
-func _setup_stage_timer():
-	stage_time_left = stage_duration
-	
-	# Configurar timer
-	_timer.one_shot = false
-	_timer.wait_time = 1.0  # cada segundo
-	add_child(_timer)
-
-	if not _timer.timeout.is_connected(_on_timer_tick):
-		_timer.timeout.connect(_on_timer_tick)
-	
-	_timer.start()
 
 func _on_timer_tick():
+	if not _timer_is_running:
+		return
+	
 	stage_time_left -= 1
 	
 	emit_signal("second_tick", stage_time_left)
@@ -139,11 +154,8 @@ func _on_timer_tick():
 	print("⏱️ Tiempo restante del stage %d: %ds" % [current_stage, stage_time_left])
 
 	if stage_time_left <= 0:
+		stop_stage_timer()  # 🔥 Detener el timer
 		emit_signal("stage_time_over", current_stage)
 		print("⏳ Stage %d terminado automáticamente" % current_stage)
 		
-		_timer.stop()
 		next_stage()  # avanzar al siguiente stage
-		
-		# reiniciar tiempo del nuevo stage
-		_setup_stage_timer()
