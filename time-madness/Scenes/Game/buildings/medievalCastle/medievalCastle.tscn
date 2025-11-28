@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqor8fb2hcvur"]
+
+[ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="1_xqlwp"]
+
+[node name="medievalCastle" instance=ExtResource("1_xqlwp")]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0, 0)

@@ -51,10 +51,10 @@ func _ready() -> void:
 	# Ocultar todo inicialmente
 	battle_log_node.visible = false
 	for color in color_nodes:
-		color. visible = false
+		color.visible = false
 	
 	# Conectar señales de GameStarter
-	GameStarter. stage_changed.connect(_on_stage_changed)
+	GameStarter.stage_changed.connect(_on_stage_changed)
 	GameStarter.stage_time_over.connect(_on_stage_time_over)
 	
 	# Iniciar video intro
@@ -64,19 +64,19 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	match current_game_state:
 		GameState.INTRO_VIDEO:
-			pass # El video se maneja solo
+			pass
 			
 		GameState.STAGE_PREPARATION:
 			_update_color_blink(delta)
 			
 		GameState.STAGE_PLAYING:
-			pass # Los controllers manejan el gameplay
+			pass
 
 # === INTRO VIDEO ===
 func _start_intro_video() -> void:
 	current_game_state = GameState. INTRO_VIDEO
 	video_player.visible = true
-	video_player. play()
+	video_player.play()
 	video_player.finished.connect(_on_video_finished)
 	print("🎬 Reproduciendo video de introducción...")
 
@@ -88,6 +88,9 @@ func _on_video_finished() -> void:
 	_setup_players()
 	current_stage = GameStarter.get_current_stage()
 	_update_stage_colors()
+	
+	# 🔥 Instanciar los PlayerControllers UNA SOLA VEZ al inicio
+	_spawn_player_controllers()
 	
 	# Iniciar primera preparación
 	_start_stage_preparation()
@@ -104,10 +107,9 @@ func _setup_players() -> void:
 			var player_data = players_data[i]
 			var player_node = player_nodes[i]
 			
-			# Configurar información del jugador
 			player_node.get_node("Name").text = player_data.player_name
-			player_node. get_node("Faction").text = player_data.race
-			player_node.get_node("ColorRect").color = _get_team_color(player_data.team)
+			player_node. get_node("Faction").text = player_data. race
+			player_node.get_node("ColorRect"). color = _get_team_color(player_data.team)
 			
 			var status_node = player_node.get_node("Status")
 			if status_node is Label:
@@ -133,6 +135,19 @@ func _get_team_color(team_id: int) -> Color:
 		5: return Color. ORANGE
 		_: return Color.WHITE
 
+# 🔥 INSTANCIAR CONTROLLERS UNA SOLA VEZ
+func _spawn_player_controllers() -> void:
+	print("\n🎮 Instanciando PlayerControllers (UNA SOLA VEZ)...")
+	
+	for controller in GameStarter.get_player_controllers():
+		add_child(controller)
+		_hide_player_ui(controller)
+		print("  ✅ %s instanciado" % controller.player_name)
+	if GameStarter.battle_map_instance != null:
+		GameStarter.battle_map_instance.visible = false
+	
+	print("✅ Todos los PlayerControllers listos\n")
+
 # === GESTIÓN DE STAGES ===
 func _start_stage_preparation() -> void:
 	current_game_state = GameState. STAGE_PREPARATION
@@ -140,13 +155,12 @@ func _start_stage_preparation() -> void:
 	
 	print("\n" + "━".repeat(60))
 	print("🛡️  PREPARACIÓN PARA STAGE %d" % current_stage)
-	print("━".repeat(60))
+	print("━". repeat(60))
 	
-	# 🔥 Mostrar resumen del stage que acaba de terminar (si no es el primero)
+	# Mostrar resumen del stage anterior
 	if current_stage > 1:
 		_show_stage_summary(current_stage - 1)
 	
-	# Esperar 7 segundos antes de iniciar el stage
 	print("⏳ Esperando 7 segundos antes de iniciar...")
 	await get_tree().create_timer(7.0).timeout
 	
@@ -160,52 +174,72 @@ func _start_stage_playing() -> void:
 	print("⚔️  INICIANDO STAGE %d" % current_stage)
 	print("⚔".repeat(30))
 	
-	# Solo en el primer stage, instanciar los PlayerControllers
-	if current_stage == 1:
-		_spawn_player_controllers()
+	# 🔥 ALTERNAR ENTRE BASE MAP Y BATTLE MAP
+	if GameStarter.is_battle_stage:
+		_show_battle_map()
 	else:
-		# En stages posteriores, solo reactivar los HUDs del jugador activo
-		_reactivate_active_player_ui()
+		_show_base_maps()
 	
-	# 🔥 INICIAR EL TIMER AQUÍ
+	# 🔥 INICIAR EL TIMER
 	GameStarter.start_stage_timer()
 	
 	print("🎮 ¡Stage en progreso!")
 
-func _spawn_player_controllers() -> void:
-	print("\n🎮 Instanciando PlayerControllers...")
+# 🔥 MOSTRAR BATTLE MAP (stages pares)
+func _show_battle_map() -> void:
+	print("⚔️ Stage PAR → Mostrando Battle Map compartido")
 	
-	var active_controller = GameStarter.get_active_player_controller()
-	if active_controller == null:
-		print("❌ Error: No se encontró PlayerController activo")
-		return
-	
+	# Ocultar todos los BaseMaps de los jugadores
 	for controller in GameStarter.get_player_controllers():
-		add_child(controller)
-		
-		# Solo el jugador activo ve su UI
-		if controller. is_active_player:
-			print("  ✅ %s (ACTIVO) - UI visible" % controller.player_name)
-		else:
-			controller.get_node("RtsController").visible = false
-			controller. get_node("UnitHud"). visible = false
-			controller.get_node("TeamHud").visible = false
-			controller.get_node("PlayerHud").visible = false
-			controller.get_node("BaseMap").visible = false
-			controller.get_node("InfoHud").visible = false
-			print("  🤖 %s (BOT/OTRO) - UI oculta" % controller.player_name)
+		if is_instance_valid(controller):
+			_hide_player_ui(controller)
 	
-	print("✅ Todos los PlayerControllers instanciados\n")
+	# Mostrar el BattleMap persistente
+	if GameStarter.battle_map_instance != null:
+		GameStarter. battle_map_instance.visible = true
+		print("✅ Battle Map visible")
 
-func _reactivate_active_player_ui() -> void:
+# 🔥 MOSTRAR BASE MAPS (stages impares)
+func _show_base_maps() -> void:
+	print("🏠 Stage IMPAR → Mostrando BaseMap individual")
+	
+	# Ocultar BattleMap
+	if GameStarter.battle_map_instance != null:
+		GameStarter.battle_map_instance. visible = false
+	
+	# Mostrar solo el UI del jugador activo
 	var active_controller = GameStarter. get_active_player_controller()
 	if active_controller and is_instance_valid(active_controller):
-		active_controller. get_node("RtsController"). visible = true
-		active_controller.get_node("UnitHud").visible = true
-		active_controller.get_node("TeamHud").visible = true
-		active_controller.get_node("PlayerHud").visible = true
-		active_controller.get_node("BaseMap").visible = true
-		active_controller.get_node("InfoHud").visible = true
+		_show_player_ui(active_controller)
+		print("✅ UI del jugador activo visible")
+	
+	# Ocultar UI de los demás
+	for controller in GameStarter. get_player_controllers():
+		if controller != active_controller:
+			_hide_player_ui(controller)
+
+# 🔥 MOSTRAR UI DEL JUGADOR
+func _show_player_ui(controller) -> void:
+	if not is_instance_valid(controller):
+		return
+		
+	controller.get_node("RtsController").visible = true
+	controller.get_node("UnitHud").visible = true
+	controller. get_node("TeamHud"). visible = true
+	controller.get_node("PlayerHud").visible = true
+	controller.get_node("BaseMap").visible = true
+	controller.get_node("InfoHud").visible = true
+
+# 🔥 OCULTAR UI DEL JUGADOR
+func _hide_player_ui(controller) -> void:
+	if not is_instance_valid(controller):
+		return
+	controller.get_node("RtsController").visible = false
+	controller.get_node("UnitHud").visible = false
+	controller.get_node("TeamHud").visible = false
+	controller.get_node("PlayerHud").visible = false
+	controller.get_node("BaseMap").visible = false
+	controller.get_node("InfoHud").visible = false
 
 # === SEÑALES DE GAMESTARTER ===
 func _on_stage_changed(new_stage: int) -> void:
@@ -216,18 +250,16 @@ func _on_stage_changed(new_stage: int) -> void:
 func _on_stage_time_over(finished_stage: int) -> void:
 	print("\n⏰ TIEMPO DEL STAGE %d AGOTADO" % finished_stage)
 	
-	# 🔥 Mostrar resumen DEL STAGE QUE ACABA DE TERMINAR
+	# Mostrar resumen
 	_show_stage_summary(finished_stage)
 	
-	# Ocultar UI del jugador activo
-	var active_controller = GameStarter. get_active_player_controller()
-	if active_controller and is_instance_valid(active_controller):
-		active_controller.get_node("RtsController").visible = false
-		active_controller. get_node("UnitHud"). visible = false
-		active_controller.get_node("TeamHud").visible = false
-		active_controller.get_node("PlayerHud").visible = false
-		active_controller.get_node("BaseMap").visible = false
-		active_controller.get_node("InfoHud").visible = false
+	# Ocultar todo (se mostrará en el siguiente stage según tipo)
+	if GameStarter.battle_map_instance != null:
+		GameStarter.battle_map_instance.visible = false
+	
+	for controller in GameStarter.get_player_controllers():
+		if is_instance_valid(controller):
+			_hide_player_ui(controller)
 	
 	# Iniciar preparación del siguiente stage
 	_start_stage_preparation()
@@ -256,17 +288,14 @@ func _show_stage_summary(stage_number: int) -> void:
 	
 	print("=".repeat(60))
 
-# === SISTEMA DE COLORES (INDICADORES DE STAGE) ===
+# === SISTEMA DE COLORES ===
 func _update_stage_colors() -> void:
-	for i in range(color_nodes. size()):
+	for i in range(color_nodes.size()):
 		if i < current_stage - 1:
-			# Stages completados: siempre visibles
-			color_nodes[i].visible = true
+			color_nodes[i]. visible = true
 		elif i == current_stage - 1:
-			# Stage actual: parpadeará en STAGE_PREPARATION
 			pass
 		else:
-			# Stages futuros: ocultos
 			color_nodes[i].visible = false
 
 func _update_color_blink(delta: float) -> void:
@@ -275,7 +304,6 @@ func _update_color_blink(delta: float) -> void:
 		blink_timer = 0.0
 		blink_state = not blink_state
 		
-		# Solo parpadea el color del stage actual
 		var current_color_index = current_stage - 1
 		if current_color_index >= 0 and current_color_index < color_nodes.size():
 			color_nodes[current_color_index]. visible = blink_state

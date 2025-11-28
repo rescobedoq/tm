@@ -8,11 +8,10 @@ signal player_controllers_ready(controllers: Array)
 signal second_tick(time_left: int)
 signal stage_time_over(stage: int)
 
-var stage_duration := 30 #FOR TESTING
+var stage_duration := 10
 var stage_time_left := stage_duration
 var _timer := Timer.new()
-var _timer_is_running := false  # 🔥 Nueva bandera
-
+var _timer_is_running := false
 
 var configured_players: Array = []
 
@@ -20,13 +19,16 @@ var configured_players: Array = []
 var current_stage: int = 1
 var max_stages: int = 10
 
+var is_base_stage: bool = true   # impar
+var is_battle_stage: bool = false # par
+
 # 🔥 Escenas
 var player_controller_scene = preload("res://Scripts/Player/PlayerController/PlayerController.tscn")
-var base_map_scene = preload("res://Scenes/Game/Map/BaseMap/baseMap.tscn")
+var battle_map_scene = preload("res://Scenes/Game/Map/Map1/map1.tscn")
 
-
-# 🔥 PlayerControllers creados
+# 🔥 Instancias persistentes
 var player_controllers: Array = []
+var battle_map_instance: Node = null
 
 func _ready():
 	# Configurar el timer PERO NO INICIARLO
@@ -36,16 +38,59 @@ func _ready():
 	_timer.timeout.connect(_on_timer_tick)
 	print("⏱️ Timer configurado (pero NO iniciado)")
 
+func update_stage_type():
+	if current_stage % 2 != 0:
+		# IMPAR → BASE
+		is_base_stage = true
+		is_battle_stage = false
+		print("🏠 Stage %d = BASE STAGE" % current_stage)
+	else:
+		# PAR → BATALLA
+		is_base_stage = false
+		is_battle_stage = true
+		print("⚔️ Stage %d = BATTLE STAGE" % current_stage)
+
 func start_game(players: Array) -> void:
 	configured_players = players
 	current_stage = 1
-	
-	# 🔥 Crear los PlayerControllers con sus mapas
+	update_stage_type()
+
+	# 🔥 Crear PlayerControllers y BattleMap
 	_create_player_controllers()
-	
+	_create_battle_map()
+
 	emit_signal("game_starting", players)
 	print("🎮 Señal game_starting emitida con %d jugadores" % players.size())
 	print("⏱️ Stage inicial: %d" % current_stage)
+
+func _create_battle_map():
+	print("\n🏰 Creando Battle Map persistente...")
+	
+	battle_map_instance = battle_map_scene.instantiate()
+	battle_map_instance.name = "BattleMap"
+	battle_map_instance.visible = false  # Oculto por defecto
+	add_child(battle_map_instance)
+	
+	# Colocar castillos en las bases
+	var castle_scene = preload("res://Scenes/Game/buildings/medievalCastle/medievalCastle.tscn")
+	var bases = battle_map_instance.get_node("PlayerBases")
+
+	for i in range(configured_players.size()):
+		var marker_name = "player%d" % (i + 1)
+
+		if bases.has_node(marker_name):
+			var marker = bases.get_node(marker_name)
+
+			var castle = castle_scene.instantiate()
+			castle.name = "Castle_Player%d" % (i + 1)
+			var height_offset = 22  
+			castle.position = marker.position + Vector3(0, height_offset, 0)
+			castle.visible = true
+
+			battle_map_instance.add_child(castle)
+			print("  ✅ Castillo colocado para jugador %d" % (i + 1))
+
+	print("✅ Battle Map creado y listo (oculto inicialmente)\n")
 
 # 🔥 NUEVO: Iniciar el timer del stage
 func start_stage_timer() -> void:
@@ -69,6 +114,7 @@ func stop_stage_timer() -> void:
 func next_stage() -> void:
 	if current_stage < max_stages:
 		current_stage += 1
+		update_stage_type()
 		emit_signal("stage_changed", current_stage)
 		print("⏱️ Stage avanzado a: %d" % current_stage)
 	else:
@@ -78,6 +124,7 @@ func next_stage() -> void:
 func set_stage(stage: int) -> void:
 	if stage >= 1 and stage <= max_stages:
 		current_stage = stage
+		update_stage_type()
 		emit_signal("stage_changed", current_stage)
 		print("⏱️ Stage establecido a: %d" % current_stage)
 
@@ -85,7 +132,7 @@ func set_stage(stage: int) -> void:
 func get_current_stage() -> int:
 	return current_stage
 
-# 🔥 Crear PlayerControllers con BaseMap como hijo
+# 🔥 Crear PlayerControllers
 func _create_player_controllers() -> void:
 	# Limpiar controllers previos
 	for controller in player_controllers:
@@ -94,10 +141,10 @@ func _create_player_controllers() -> void:
 	player_controllers.clear()
 	
 	print("\n" + "=".repeat(60))
-	print("🎮 SE HAN CREADO A LOS JUGADORES")
+	print("🎮 CREANDO PLAYER CONTROLLERS")
 	print("=".repeat(60))
 	
-	for i in range(configured_players.size()):
+	for i in range(configured_players. size()):
 		var player_data = configured_players[i]
 		
 		# 🔥 Crear PlayerController
@@ -109,7 +156,6 @@ func _create_player_controllers() -> void:
 		controller.difficult_bot = player_data.is_bot
 		controller.gold = 500
 		controller.resources = 500
-		
 
 		# Posicionar el controller
 		controller.position = Vector3(i * 300, 0, 0)
@@ -154,8 +200,8 @@ func _on_timer_tick():
 	print("⏱️ Tiempo restante del stage %d: %ds" % [current_stage, stage_time_left])
 
 	if stage_time_left <= 0:
-		stop_stage_timer()  # 🔥 Detener el timer
+		stop_stage_timer()
 		emit_signal("stage_time_over", current_stage)
 		print("⏳ Stage %d terminado automáticamente" % current_stage)
 		
-		next_stage()  # avanzar al siguiente stage
+		next_stage()
