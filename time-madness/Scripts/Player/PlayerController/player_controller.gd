@@ -556,6 +556,7 @@ func _ready() -> void:
 	else:
 		camera.current = false
 		rts.set_process(false)
+	disable_node_3d_recursive($BaseMap)
 
 var building_to_build: String = ""
 
@@ -668,3 +669,67 @@ func _update_units_labels() -> void:
 		attackUnits_label.text = "Attack units: " + str(attack_units. size())
 	if defenseUnits_label:
 		defenseUnits_label.text = "Defense units: " + str(defense_units.size())
+		
+		
+func disable_node_3d_recursive(node: Node) -> void:
+	if node == null:
+		return
+
+	# =========================
+	# Nodo 3D: no renderizar
+	# =========================
+	if node is Node3D:
+		node.visible = false
+
+	# =========================
+	# Detener procesos
+	# =========================
+	node.set_process(false)
+	node.set_physics_process(false)
+	node.set_process_input(false)
+
+	# =========================
+	# Desactivar colisiones / áreas
+	# =========================
+	if node is CollisionShape3D:
+		node.disabled = true
+	elif node is Area3D:
+		node.monitoring = false
+
+	# =========================
+	# Recursión sobre hijos
+	# =========================
+	for child in node.get_children():
+		disable_node_3d_recursive(child)
+
+
+func enable_node_3d_recursive(node: Node) -> void:
+	if node == null:
+		return
+
+	# =========================
+	# Nodo 3D: visible
+	# =========================
+	if node is Node3D:
+		node.visible = true
+
+	# =========================
+	# Reactivar procesos
+	# =========================
+	node.set_process(true)
+	node.set_physics_process(true)
+	node.set_process_input(true)
+
+	# =========================
+	# Reactivar colisiones / áreas
+	# =========================
+	if node is CollisionShape3D:
+		node.disabled = false
+	elif node is Area3D:
+		node.monitoring = true
+
+	# =========================
+	# Recursión sobre hijos
+	# =========================
+	for child in node.get_children():
+		enable_node_3d_recursive(child)

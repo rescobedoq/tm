@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=58 format=3 uid="uid://7x3dhs70f2fg"]
 
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="Texture2D" uid="uid://jo04y7b56tm7" path="res://Assets/Textures/Grass001/Grass001_1K_normal.dds" id="2_31ip1"]
@@ -30,7 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="28_pxqre"]
 [ext_resource type="Texture2D" uid="uid://d2ragfk15sfyk" path="res://Assets/Textures/Rocks023/Rocks023.dds" id="29_ktje0"]
 [ext_resource type="Texture2D" uid="uid://bmsvjkiev2o3x" path="res://Assets/Textures/Rocks023/Rocks023_normal.dds" id="30_kotuw"]
-[ext_resource type="PackedScene" uid="uid://6o2u00q4dqxy" path="res://Scenes/Game/buildings/medievalCastle/medievalCastle_controller.tscn" id="33_2vshx"]
+[ext_resource type="PackedScene" uid="uid://bdf557rqesylj" path="res://Scripts/Player/PlayerController/PlayerController.tscn" id="32_42luu"]
 [ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="33_q241q"]
 [ext_resource type="PackedScene" uid="uid://b5ed3ppcoyx82" path="res://Scenes/Game/Map/MapModels/water/waterPlane.tscn" id="36_b0elb"]
 
@@ -239,6 +239,9 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ws2in"]
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_8cs45"]
+size = Vector3(50, 1, 50)
+
 [node name="Map1" type="Node3D"]
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
@@ -315,7 +318,7 @@ transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.70532
 transform = Transform3D(-2.246217, -10.705026, 299.80054, 0, 299.80893, 10.705325, -299.9916, 0.080154955, -2.2447865, -413.2136, -2.275, -387.8413)
 
 [node name="WaterPlane21" parent="Node" instance=ExtResource("36_b0elb")]
-transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, -98.793, -2, -213.052)
+transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, -98.793, -2, -213.43599)
 
 [node name="WaterPlane22" parent="Node" instance=ExtResource("36_b0elb")]
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, -164.74042, -2, -18.945343)
@@ -364,6 +367,107 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.53032, 0, 2.949854)
 transform = Transform3D(37.875, 0, 0, 0, 37.875, 0, 0, 0, 37.875, 118.641, 19.14, -213.845)
 visible = false
 
-[node name="MedievalCastleController" parent="." instance=ExtResource("33_2vshx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 118.641, 0, -213.845)
-visible = false
+[node name="Node3D" type="Node3D" parent="."]
+
+[node name="Player1Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -137.888, 0, -179.92598)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player1Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player2Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 137.57094, 0, -182.45705)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player2Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player3Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 176.77322, 0, -27.874546)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player3Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player4Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 137.78278, 0, 154.86404)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player4Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player5Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65.636406, 0, 156.62534)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player5Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player6Area3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -170.74551, 0, 31.235641)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player6Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player1WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -136.22998, 0, -300.13446)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player1WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.166687, 0, -30.040527)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player2WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 142.35292, 0, -340.2616)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player2WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player3WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 313.39505, 0, -14.862942)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player3WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player4WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 75.782776, 0, 319.86404)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player4WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player5WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65.636406, 0, 306.62534)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player5WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="Player6WArea3D" type="Area3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -326.7455, 0, 41.23564)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D/Player6WArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
+shape = SubResource("BoxShape3D_8cs45")
+debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
+
+[node name="PlayerController" parent="." instance=ExtResource("32_42luu")]
+movement_speed = 256.0
+min_x = -1000.0
+max_x = 1000.0
+min_z = -1000.0
+max_z = 1000.0
