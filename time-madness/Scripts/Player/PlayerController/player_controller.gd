@@ -31,15 +31,13 @@ class_name PlayerController
 @onready var spell6: TextureButton = $"UnitHud/spell6"
 @onready var spell7: TextureButton = $"UnitHud/spell7"
 
-
 # ===== TeamHUD =====================
 @onready var upKeepLabel: Label = $"TeamHud/maintenance"
 @onready var resourcesLabel: Label = $"TeamHud/prime"
 @onready var goldLabel: Label = $"TeamHud/money"
 @onready var hour: Label = $"TeamHud/hour"
 
-
-@onready var menu_hud: Control = $"PlayerHud";
+@onready var menu_hud: Control = $"PlayerHud"
 
 # ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
@@ -77,12 +75,13 @@ var defense_units: Array = []
 var select_cursor_instance: Node2D = null
 var is_selecting_terrain: bool = false
 
+# 🔥 Cursor de selección de objetivo (ATAQUE)
+var is_selecting_objective: bool = false
+
 var is_placing_building: bool = false
 var build_placeholder: Node3D = null
 
 var is_battle_mode: bool = false
-
-
 
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
@@ -90,9 +89,7 @@ var is_battle_mode: bool = false
 func format_hms(seconds: int) -> String:
 	var m = (seconds % 3600) / 60
 	var s = seconds % 60
-
 	return "%02d:%02d" % [m, s]
-
 
 # ==============================
 # Añadir unidades
@@ -120,9 +117,7 @@ func add_building(building: CharacterBody3D) -> void:
 		building.player_owner = self 
 		print("✅ Edificio agregado a ", player_name, ": ", building.name)
 		print("   Total de edificios: ", buildings.size())
-		
-		
-		
+
 func update_team_hud() -> void:
 	if upKeepLabel:
 		upKeepLabel.text = str(upkeep) + " / " + str(maxUpKeep)
@@ -130,8 +125,6 @@ func update_team_hud() -> void:
 		resourcesLabel.text = str(resources)
 	if goldLabel:
 		goldLabel.text = str(gold)
-
-
 
 # ==============================
 # Manejo de input (clicks)
@@ -142,114 +135,121 @@ func _unhandled_input(event):
 	
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 		return
-	print("CLICK!!!!")
 	
 	if camera == null:
 		print("ERROR: No hay cámara asignada en PlayerController")
 		return
 
 	var mouse_pos = event.position
-# =====================================
-#     MODO DE COLOCAR EDIFICIO
-# =====================================
+
+	# =====================================
+	#     MODO DE COLOCAR EDIFICIO
+	# =====================================
 	if is_placing_building and build_placeholder:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			if not build_placeholder.is_valid_placement:
-				print("❌ No se puede construir aquí: muy cerca de otro edificio")
-				return
-			
-			print(">>> Edificio colocado en: ", build_placeholder.global_position)
-
-			# Crear edificio real
-			var final_build_selected = build_placeholder.get_build()
-			if final_build_selected:
-				final_build_selected.global_position = build_placeholder.global_position
-				
-				# ✅ AGREGAR PRIMERO AL ÁRBOL
-				get_tree().current_scene.add_child(final_build_selected)
-				
-				# ✅ LUEGO CONFIGURAR (esperar un frame si es necesario)
-				await get_tree().process_frame
-			if final_build_selected:
-						final_build_selected.global_position = build_placeholder.global_position
-						
-						get_tree().current_scene.add_child(final_build_selected)
-						
-						await get_tree().process_frame
-						
-						# 🔥 YA NO NECESITAS CONFIGURAR AQUÍ
-						# Building._setup_building() ya lo hace automáticamente
-						
-						# Solo agregar al array
-						add_building(final_build_selected)
-			
-			# Quitar placeholder
-			build_placeholder.queue_free()
-			build_placeholder = null
-			is_placing_building = false
-
+		if not build_placeholder.is_valid_placement:
+			print("❌ No se puede construir aquí: muy cerca de otro edificio")
 			return
-	# ------------------------------
-# MODO DE SELECCIÓN DE TERRENO
-# ------------------------------
+		
+		print(">>> Edificio colocado en: ", build_placeholder.global_position)
+
+		var final_build_selected = build_placeholder.get_build()
+		if final_build_selected:
+			final_build_selected.global_position = build_placeholder.global_position
+			get_tree().current_scene.add_child(final_build_selected)
+			await get_tree().process_frame
+			add_building(final_build_selected)
+		
+		build_placeholder. queue_free()
+		build_placeholder = null
+		is_placing_building = false
+		return
+
+	# =====================================
+	# 🔥 MODO DE SELECCIÓN DE OBJETIVO (ATAQUE)
+	# =====================================
+	if is_selecting_objective:
+		print(">>> Entramos en MODO SELECCIÓN DE OBJETIVO")
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+
+		# 🔥 Detectar UNIDADES ENEMIGAS (Layer 2)
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result and result.collider is Entity:
+			var target_entity = result.collider as Entity
+			
+			# 🔥 Verificar que NO sea nuestra unidad
+			if target_entity.player_owner != self:
+				print("🎯 ENEMIGO DETECTADO -> ", target_entity.name)
+				
+				# 🔥 Ordenar ataque a la unidad seleccionada
+				if selected_unit and selected_unit is Unit:
+					var attacking_unit = selected_unit as Unit
+					attacking_unit.attack_target(target_entity)
+					print("⚔️ %s persiguiendo a %s" % [attacking_unit.name, target_entity.name])
+			else:
+				print("⚠️ No puedes atacar a tus propias unidades")
+		else:
+			print("❌ No se detectó ningún enemigo")
+		
+		# Limpiar cursor
+		is_selecting_objective = false
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
+
+	# =====================================
+	# MODO DE SELECCIÓN DE TERRENO
+	# =====================================
 	if is_selecting_terrain:
 		print(">>> Entramos en MODO SELECCIÓN DE TERRENO")
 		
-		# Obtener posición del mouse en viewport
 		mouse_pos = get_viewport().get_mouse_position()
-		print("Mouse position en viewport:", mouse_pos)
-		
-		# Obtener rayo desde cámara
 		var from = camera.project_ray_origin(mouse_pos)
 		var dir = camera.project_ray_normal(mouse_pos)
-		print("Ray desde cámara (origen):", from, " - dirección:", dir)
 		
-		# Intersectar con plano horizontal del terreno (Y=0)
-		var plane_y = 0.0  # altura del terreno
-		var target_pos: Vector3  # declarar aquí para todo el scope
+		var plane_y = 0.0
+		var target_pos: Vector3
 
 		if dir.y == 0:
-			print("Dirección del raycast paralela al plano, no se puede calcular intersección")
 			target_pos = from
 		else:
 			var t = (plane_y - from.y) / dir.y
 			target_pos = from + dir * t
-
 		
-		print("Posición objetivo en plano del terreno:", target_pos)
-		
-		# Mover la unidad si hay una seleccionada
 		if selected_unit:
-			print("Unidad seleccionada:", selected_unit.name)
 			selected_unit.move_to(target_pos)
 			print("Moviendo unidad a:", target_pos)
-		else:
-			print("No hay unidad seleccionada, no se mueve nada")
 		
-		# Restaurar estado del cursor
 		is_selecting_terrain = false
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		if select_cursor_instance:
-			print("Eliminando cursor de selección")
 			select_cursor_instance.queue_free()
 			select_cursor_instance = null
 		
-		print(">>> Fin del modo selección de terreno")
-		return  # Evita seleccionar unidades mientras estamos en modo terreno
+		return
 
-
+	# =====================================
+	# Modo selección de unidades Y EDIFICIOS
+	# =====================================
 	else:
-		# ------------------------------
-		# 🔥 Modo selección de unidades Y EDIFICIOS
-		# ------------------------------
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
-		# 🔥 ESTRATEGIA 1: Intentar seleccionar UNIDADES (Layer 2)
+		# ESTRATEGIA 1: Intentar seleccionar UNIDADES (Layer 2)
 		var params_units = PhysicsRayQueryParameters3D.new()
 		params_units.from = from
 		params_units.to = to
-		params_units.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		params_units.collision_mask = 1 << 1
 
 		var result_units = get_world_3d().direct_space_state.intersect_ray(params_units)
 		
@@ -259,28 +259,26 @@ func _unhandled_input(event):
 				select_unit(entity)
 			else:
 				deselect_current_unit()
-			return  # Encontró una unidad, terminar aquí
+			return
 		
-		# 🔥 ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (Layer 4)
+		# ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (Layer 4)
 		var params_buildings = PhysicsRayQueryParameters3D.new()
 		params_buildings.from = from
 		params_buildings.to = to
-		params_buildings.collision_mask = 1 << 3  # Layer 4 -> Edificios
+		params_buildings. collision_mask = 1 << 3
 
 		var result_buildings = get_world_3d().direct_space_state.intersect_ray(params_buildings)
 		
 		if result_buildings and result_buildings.collider is Building:
 			var building = result_buildings.collider as Building
-			# Verificar si es nuestro edificio
 			if building in buildings:
-				select_building(building)  # 🔥 NUEVA FUNCIÓN
+				select_building(building)
 			else:
 				deselect_current_unit()
 			return
 		
-		# Si no encontró ni unidad ni edificio, deseleccionar
 		deselect_current_unit()
-	
+
 # ==============================
 # Seleccionar / deseleccionar
 # ==============================
@@ -290,18 +288,16 @@ func select_unit(entity: Entity) -> void:
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
-	# Deseleccionar edificio si había uno
 	selected_building = null
 	_clear_abilities()
 	selected_unit = entity
 	selected_unit.select()
 	print("Unidad seleccionada:", entity.name)
 
-	# Actualizar HUD
-	if selected_unit.portrait and hud_portrait:
+	if selected_unit. portrait and hud_portrait:
 		hud_portrait.texture = selected_unit.portrait
 	else:
-		hud_portrait.texture = null
+		hud_portrait. texture = null
 
 	if entity is Unit:
 		var u := entity as Unit
@@ -318,7 +314,6 @@ func select_building(building: Building) -> void:
 	if building == null:
 		return
 	
-	# Deseleccionar unidad si había una
 	if selected_unit != null:
 		selected_unit.deselect()
 		selected_unit = null
@@ -326,31 +321,25 @@ func select_building(building: Building) -> void:
 	selected_building = building
 	print("🏰 Edificio seleccionado:", building.name)
 	
-	# Cargar retrato del edificio
 	var portrait_path = building.get_building_portrait()
 	if portrait_path != "" and hud_portrait:
 		var texture = load(portrait_path)
 		if texture:
 			hud_portrait.texture = texture
-			print("✅ Retrato cargado:", portrait_path)
 		else:
-			print("❌ No se pudo cargar el retrato:", portrait_path)
 			hud_portrait.texture = null
 	else:
 		if hud_portrait:
 			hud_portrait.texture = null
 	
-	# 🔥 Cargar iconos de habilidades en los botones
 	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
 	
-	# Limpiar todos los botones primero
 	for button in spell_buttons:
 		if button:
 			button.texture_normal = null
 			button.visible = false
 			button.disabled = true
 	
-	# Cargar las habilidades del edificio
 	var abilities = building.abilities
 	for i in range(min(abilities.size(), spell_buttons.size())):
 		var ability = abilities[i]
@@ -363,27 +352,20 @@ func select_building(building: Building) -> void:
 				button.visible = true
 				button.disabled = false
 				button.tooltip_text = ability.name + "\n" + ability.description
-				print("✅ Habilidad cargada: ", ability.name)
-				# 🔥 Conectar el botón a una función del HUD
-				# 🔥 Desconectar señales previas
+				
 				for connection in button.pressed.get_connections():
 					button.pressed.disconnect(connection["callable"])
 				
-				# 🔥 Conectar con lambda
 				button.pressed.connect(func(): _on_ability_pressed(building, ability))
-
-			else:
-				print("❌ No se pudo cargar el icono: ", ability.icon)
 	
-	# Limpiar el resto del HUD (opcional, por ahora)
 	hud_attack.text = "Attack: -"
-	hud_defense.text = "Defense: -"
+	hud_defense. text = "Defense: -"
 	hud_velocity.text = "Speed: -"
 	hud_health.max_value = 10000
 	hud_health.value = 0
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
-	hud_name.text = building.get_class()  # Nombre del edificio
+	hud_name. text = building.get_class()
 
 func _on_ability_pressed(building, ability):
 	print("Ejecutando habilidad:", ability.name, " del edificio: ", building)
@@ -395,10 +377,9 @@ func _on_ability_pressed(building, ability):
 
 func deselect_current_unit() -> void:
 	if selected_unit != null:
-		selected_unit.deselect()
+		selected_unit. deselect()
 		selected_unit = null
 	
-	# También deseleccionar edificio
 	selected_building = null
 	_clear_abilities()
 	
@@ -413,7 +394,6 @@ func deselect_current_unit() -> void:
 	hud_energy.value = 0
 	hud_name.text = ""
 
-
 func _clear_abilities() -> void:
 	var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
 	
@@ -424,14 +404,12 @@ func _clear_abilities() -> void:
 			button.disabled = true
 			button.tooltip_text = ""
 
-
 # ==============================
 # Botón mover
 # ==============================
-
 func _on_move_button_pressed() -> void:
 	if is_selecting_terrain:
-		return  # Ya está en modo selección
+		return
 
 	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
 	if select_scene == null:
@@ -442,8 +420,31 @@ func _on_move_button_pressed() -> void:
 	get_tree().current_scene.add_child(select_cursor_instance)
 
 	is_selecting_terrain = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)  # Usamos cursor visible
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	print("Modo selección de terreno activado")
+
+# ==============================
+# 🔥 Botón atacar
+# ==============================
+func _on_attack_button_pressed() -> void:
+	if is_selecting_objective:
+		return
+
+	if selected_unit == null or not selected_unit is Unit:
+		print("⚠️ Debes seleccionar una unidad primero")
+		return
+
+	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar TargetObjetive.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_objective = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de objetivo activado")
 
 # ==============================
 # Cursor de selección
@@ -451,7 +452,8 @@ func _on_move_button_pressed() -> void:
 func _process(delta: float) -> void:
 	if not is_active_player: 
 		return
-	if is_selecting_terrain and select_cursor_instance:
+	
+	if (is_selecting_terrain or is_selecting_objective) and select_cursor_instance:
 		var mouse_pos = get_viewport().get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 
@@ -459,7 +461,6 @@ func _process(delta: float) -> void:
 		if animated_sprite and not animated_sprite.is_playing():
 			animated_sprite.play("default")
 
-	# ----------- CURSOR DE CONSTRUCCIÓN
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
 
@@ -476,29 +477,19 @@ func _update_build_placeholder_position() -> void:
 	var t = (plane_y - from.y) / dir.y
 	var target_pos = from + dir * t
 
-	# ----------------------------
-	# OFFSET PARA ELEVAR EL MODELO
-	# ----------------------------
 	var offset_y := 2
 	build_placeholder.global_position = target_pos + Vector3(0, offset_y, 0)
 
-
 func _on_second_tick(time_left: int):
-	hour.text = format_hms(time_left)
-	# Producción por trabajador
+	hour. text = format_hms(time_left)
 	var gold_generated := workers * 1    
 	var resources_generated := workers * 0.5 
 	
-	# Sumar al jugador
 	gold += gold_generated
 	resources += resources_generated
 	
-	# Actualizar HUD
 	_update_gold_label()
 	_update_resources_label()
-	
-	# Solo para debug
-	print("⏱ Tick: +" + str(gold_generated) + " oro, +" + str(resources_generated) + " recursos")
 
 func _update_gold_label():
 	goldLabel.text = str(gold)
@@ -506,18 +497,11 @@ func _update_gold_label():
 func _update_resources_label():
 	resourcesLabel.text = str(resources)
 
-
-
-# ==============================
-# _ready: inicializar RTS
-# ==============================
 @onready var castle_controller = $BaseMap/MedievalCastleController
 var workers: int = 0
 @onready var workers_label = $InfoHud/workers   
 @onready var attackUnits_label = $InfoHud/unitsAttack   
 @onready var defenseUnits_label = $InfoHud/unitsDefense   
-
-
 
 func add_worker():
 	workers += 1
@@ -525,16 +509,13 @@ func add_worker():
 	
 func _update_workers_label():
 	workers_label.text = "Workers: " + str(workers)
-	
-
 
 func _ready() -> void:
-	# Conectar señal del GameManager
 	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
 	var rts = $RtsController
 	if is_active_player:
-		rts.movement_speed = movement_speed
+		rts. movement_speed = movement_speed
 		rts.rotation_speed = rotation_speed
 		rts.zoom_speed = zoom_speed
 		rts.min_zoom = min_zoom
@@ -542,15 +523,17 @@ func _ready() -> void:
 		rts.min_elevation_angle = min_elevation_angle
 		rts.max_elevation_angle = max_elevation_angle
 		rts.edge_margin = edge_margin
-		rts.allow_rotation = allow_rotation
+		rts. allow_rotation = allow_rotation
 		rts.allow_zoom = allow_zoom
 		rts.allow_pan = allow_pan
 		rts.min_x = min_x
 		rts.max_x = max_x
 		rts.min_z = min_z
 		rts.max_z = max_z
-		camera.make_current() 
+		camera. make_current() 
 		moveButton.pressed.connect(_on_move_button_pressed)
+		attackButton.pressed.connect(_on_attack_button_pressed)
+
 		update_team_hud() 
 		_update_units_labels()
 		_update_workers_label()
@@ -559,6 +542,7 @@ func _ready() -> void:
 		rts.set_process(false)
 
 	disable_node_3d_recursive($BaseMap)
+
 var building_to_build: String = ""
 
 func _start_build_mode(building_name: String) -> void:
@@ -580,70 +564,37 @@ func _start_build_mode(building_name: String) -> void:
 
 	is_placing_building = true
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 func _on_player_hud_barracks_pressed() -> void:
 	_start_build_mode("barracks")
-	pass
-
 
 func _on_player_hud_dragon_pressed() -> void:
 	_start_build_mode("dragon")
-	pass
-
 
 func _on_player_hud_farm_pressed() -> void:
 	_start_build_mode("farm")
-	pass
 
 func _on_player_hud_harbor_pressed() -> void:
 	_start_build_mode("harbor")
-	pass
-
 
 func _on_player_hud_magic_pressed() -> void:
 	_start_build_mode("magic")
-	pass
-
 
 func _on_player_hud_shrine_pressed() -> void:
 	_start_build_mode("shrine")
-	pass
-
 
 func _on_player_hud_smithy_pressed() -> void:
 	_start_build_mode("smithy")
-	pass 
-
 
 func _on_player_hud_tower_pressed() -> void:
 	_start_build_mode("tower")
-	pass
-	
 
 func move_unit_to_attack(unit: Entity) -> void:
 	if unit == null or unit not in units:
 		return
 	
-	# Remover de defensa si está ahí
 	if unit in defense_units:
-		defense_units. erase(unit)
+		defense_units.erase(unit)
 	
-	# Agregar a ataque si no está
 	if unit not in attack_units:
 		attack_units.append(unit)
 	
@@ -654,83 +605,79 @@ func move_unit_to_defense(unit: Entity) -> void:
 	if unit == null or unit not in units:
 		return
 	
-	# Remover de ataque si está ahí
 	if unit in attack_units:
 		attack_units.erase(unit)
 	
-	# Agregar a defensa si no está
 	if unit not in defense_units:
 		defense_units.append(unit)
 	
 	_update_units_labels()
-	print("🛡️ Unidad movida a DEFENSA:", unit.name)
+	print("🛡️ Unidad movida a DEFENSA:", unit. name)
 
 func _update_units_labels() -> void:
 	if attackUnits_label:
-		attackUnits_label.text = "Attack units: " + str(attack_units. size())
+		attackUnits_label.text = "Attack units: " + str(attack_units.size())
 	if defenseUnits_label:
 		defenseUnits_label.text = "Defense units: " + str(defense_units.size())
-		
-		
+
 func disable_node_3d_recursive(node: Node) -> void:
 	if node == null:
 		return
 
-	# =========================
-	# Nodo 3D: no renderizar
-	# =========================
 	if node is Node3D:
 		node.visible = false
 
-	# =========================
-	# Detener procesos
-	# =========================
 	node.set_process(false)
 	node.set_physics_process(false)
 	node.set_process_input(false)
 
-	# =========================
-	# Desactivar colisiones / áreas
-	# =========================
 	if node is CollisionShape3D:
 		node.disabled = true
 	elif node is Area3D:
 		node.monitoring = false
 
-	# =========================
-	# Recursión sobre hijos
-	# =========================
 	for child in node.get_children():
 		disable_node_3d_recursive(child)
-
 
 func enable_node_3d_recursive(node: Node) -> void:
 	if node == null:
 		return
 
-	# =========================
-	# Nodo 3D: visible
-	# =========================
 	if node is Node3D:
 		node.visible = true
 
-	# =========================
-	# Reactivar procesos
-	# =========================
 	node.set_process(true)
 	node.set_physics_process(true)
 	node.set_process_input(true)
 
-	# =========================
-	# Reactivar colisiones / áreas
-	# =========================
 	if node is CollisionShape3D:
-		node.disabled = false
+		node. disabled = false
 	elif node is Area3D:
-		node.monitoring = true
+		node. monitoring = true
 
-	# =========================
-	# Recursión sobre hijos
-	# =========================
 	for child in node.get_children():
 		enable_node_3d_recursive(child)
+		
+		
+		# ==============================
+# 💀 Callback cuando una unidad muere
+# ==============================
+func _on_unit_died(unit: Entity) -> void:
+	print("💀 Unidad muerta detectada: %s" % unit. name)
+	
+	# Remover de arrays
+	if unit in units:
+		units.erase(unit)
+	if unit in attack_units:
+		attack_units.erase(unit)
+	if unit in defense_units:
+		defense_units.erase(unit)
+	
+	# Actualizar HUD
+	_update_units_labels()
+	
+	# Si era la unidad seleccionada, deseleccionar
+	if selected_unit == unit:
+		deselect_current_unit()
+	
+	print("📊 Unidades restantes: %d" % units.size())

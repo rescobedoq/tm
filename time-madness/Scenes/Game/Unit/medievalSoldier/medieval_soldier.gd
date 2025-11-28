@@ -17,10 +17,10 @@ func _ready():
 	current_health = max_health
 	max_magic = 30
 	current_magic = max_magic
-	attack_damage = 25
+	attack_damage = 100
 	defense = 10
 	move_speed = 10
-	attack_range = 3.0
+	attack_range = 10.0
 	
 	# --- CARGAR RETRATO AUTOMÁTICAMENTE ---
 	var tex := load(PORTRAIT_PATH)
@@ -55,5 +55,13 @@ func play_attack():
 		print(">>> play_attack CALLED <<<")
 		anim_player.play("Attack_frame_rate_24_fbx")
 		var anim = anim_player.get_animation("Attack_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_NONE
+			
+func play_death():
+	if anim_player:
+		print(">>> play_death CALLED <<<")
+		anim_player.play("Dead_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Dead_frame_rate_24_fbx")
 		if anim:
 			anim.loop_mode = Animation.LOOP_NONE

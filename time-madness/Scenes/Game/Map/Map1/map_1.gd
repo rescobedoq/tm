@@ -1,9 +1,13 @@
 extends Node3D
 
+#poner una unidad enemiga
+
+
 func _ready():
 	var player1 = $PlayerController
 	var player2 = $PlayerController2
-	
+	player1.add_unit($MedievalSoldierControler)
+	player2.add_unit($MedievalSoldierControler2)
 	hide_node_recursive(player2)
 
 # Función recursiva para ocultar un nodo y todos sus hijos
