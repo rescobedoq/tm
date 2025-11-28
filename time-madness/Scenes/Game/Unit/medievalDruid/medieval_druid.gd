@@ -29,6 +29,22 @@ func _ready():
 	else:
 		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
 
+	abilities = [
+		UnitAbility.new(
+			"res://Assets/Images/HUD/icons/rootIcon.png",
+			"Root unit",
+			"....\nCosto: 50 energia",
+			"rootUnit_ability" 
+		),
+		UnitAbility.new(
+			"res://Assets/Images/HUD/icons/stealcon.jpg",
+			"Steal life",
+			"....\nCosto: 50 energia",
+			"stealLife_ability" 
+		),
+	]
+
+
 func play_idle():
 	if anim_player:
 		print(">>> play_idle CALLED <<<")

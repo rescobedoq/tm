@@ -61,6 +61,22 @@ func play_attack() -> void:
 func play_death() -> void:
 	pass
 
+
+class UnitAbility:
+	var icon: String 
+	var name: String
+	var description: String
+	var ability_id: String  
+	
+	func _init(p_icon: String, p_name: String, p_description: String, p_ability_id: String = ""):
+		icon = p_icon
+		name = p_name
+		description = p_description
+		ability_id = p_ability_id
+		
+var abilities: Array[UnitAbility] = []
+
+
 # ------------------------------------------
 # 🔥 Ordenar ataque a un objetivo
 # ------------------------------------------
@@ -272,3 +288,7 @@ func setup_collision_layers() -> void:
 	elif unit_category == "aquatic":
 		print("AQUATIC UNIT")
 		collision_mask |= 1 << 9
+
+
+func use_ability(ability):
+	print("Ejecutando habilidad de UNIDAD:", ability.name)

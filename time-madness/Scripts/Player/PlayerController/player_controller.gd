@@ -285,22 +285,32 @@ func _unhandled_input(event):
 func select_unit(entity: Entity) -> void:
 	if entity == null:
 		return
+
+	# Si había otra unidad seleccionada, deseleccionarla
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
+	# Limpia selección de edificio
 	selected_building = null
 	_clear_abilities()
+
 	selected_unit = entity
 	selected_unit.select()
 	print("Unidad seleccionada:", entity.name)
 
-	if selected_unit. portrait and hud_portrait:
+	# Portrait
+	if selected_unit.portrait and hud_portrait:
 		hud_portrait.texture = selected_unit.portrait
 	else:
-		hud_portrait. texture = null
+		hud_portrait.texture = null
 
+	# ===============================
+	# 📌 Si es unidad, cargar HUD y habilidades
+	# ===============================
 	if entity is Unit:
 		var u := entity as Unit
+
+		# 📊 Estadísticas
 		hud_attack.text = "Attack: " + str(u.attack_damage)
 		hud_defense.text = "Defense: " + str(u.defense)
 		hud_velocity.text = "Speed: " + str(u.move_speed)
@@ -309,6 +319,42 @@ func select_unit(entity: Entity) -> void:
 		hud_energy.max_value = u.max_magic
 		hud_energy.value = u.current_magic
 		hud_name.text = u.unit_type
+
+		# ===============================
+		# 🔥 Cargar habilidades de UNIDAD
+		# ===============================
+		var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+
+		# Limpiar botones antes
+		for button in spell_buttons:
+			if button:
+				button.texture_normal = null
+				button.visible = false
+				button.disabled = true
+				button.tooltip_text = ""
+
+		# Verificar habilidades
+		if u.abilities and u.abilities.size() > 0:
+			for i in range(min(u.abilities.size(), spell_buttons.size())):
+				var ability = u.abilities[i]
+				var button = spell_buttons[i]
+
+				if button and ability:
+					var icon_texture = load(ability.icon)
+					if icon_texture:
+						button.texture_normal = icon_texture
+						button.visible = true
+						button.disabled = false
+						button.tooltip_text = ability.name + "\n" + ability.description
+
+						# Eliminar conexiones anteriores
+						for connection in button.pressed.get_connections():
+							button.pressed.disconnect(connection["callable"])
+
+						# Conectar nueva habilidad
+						button.pressed.connect(func():
+							_on_unit_ability_pressed(u, ability))
+
 
 func select_building(building: Building) -> void:
 	if building == null:
@@ -366,6 +412,15 @@ func select_building(building: Building) -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name. text = building.get_class()
+
+func _on_unit_ability_pressed(unit: Unit, ability):
+	print("🔥 Activando habilidad de unidad:", ability.name)
+
+	if unit.has_method("use_ability"):
+		unit.use_ability(ability)
+	else:
+		print("⚠️ La unidad no implementa use_ability()")
+
 
 func _on_ability_pressed(building, ability):
 	print("Ejecutando habilidad:", ability.name, " del edificio: ", building)

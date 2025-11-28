@@ -29,7 +29,15 @@ func _ready():
 		print("Retrato cargado correctamente:", PORTRAIT_PATH)
 	else:
 		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
-
+	
+	abilities = [
+		UnitAbility.new(
+			"res://Assets/Images/HUD/icons/chageIcon.png",
+			"Charge",
+			"Charge against an objetive.\nCosto: 50 energia",
+			"charge_ability" 
+		),
+	]
 # ---------------------------------------------------
 #   ANIMACIONES DEL SOLDADO
 # ---------------------------------------------------

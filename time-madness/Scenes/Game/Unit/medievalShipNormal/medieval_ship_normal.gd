@@ -28,7 +28,20 @@ func _ready():
 		print("Retrato cargado correctamente:", PORTRAIT_PATH)
 	else:
 		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
-
+	abilities = [
+		UnitAbility.new(
+			"res://Assets/Images/HUD/icons/ghostIcon.jpg",
+			"Ghost Ship",
+			"....\nCosto: 50 energia",
+			"ghostShip_ability" 
+		),
+		UnitAbility.new(
+			"res://Assets/Images/HUD/icons/krakenIcon.png",
+			"Kraken Ship",
+			"....\nCosto: 50 energia",
+			"krakenShip_ability" 
+		),
+	]
 func play_idle():
 	print(">>> play_idle CALLED <<<")
 	# No tiene animación
