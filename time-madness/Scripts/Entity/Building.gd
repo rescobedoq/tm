@@ -138,12 +138,8 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	if new_unit.unit_category == "aquatic":
 		# 🌊 Unidades acuáticas: spawn en área de agua
 		var spawn_pos = _get_random_water_position()
-		if spawn_pos != Vector3.ZERO:
-			new_unit.global_position = spawn_pos
-			print("🚢 Unidad acuática generada en agua:", spawn_pos)
-		else:
-			print("❌ No se encontró área de agua, spawn en posición del edificio")
-			new_unit.global_position = global_position
+		new_unit.global_position = _get_random_water_position()
+
 	else:
 		# 🚶 Unidades terrestres/voladoras: spawn cerca del edificio
 		var min_dist := 15.0
@@ -164,7 +160,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	if new_unit is Entity:
 		player.add_unit(new_unit)
 	
-	print("✅", unit_name, "entrenado exitosamente en", global_position)
+	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)  # ✅ POSICIÓN DE LA UNIDAD
 
 func _get_player_owner() -> Node:
 	if player_owner != null:
@@ -188,64 +184,28 @@ func _check_resources(player: Node, cost: Dictionary) -> bool:
 		print("⚠️ Límite de mantenimiento alcanzado")
 		return false
 	return true
-
-
-# 🔥 Obtener una posición aleatoria dentro del área de agua
+	
 func _get_random_water_position() -> Vector3:
 	var player = _get_player_owner()
-	if player == null:
-		return Vector3. ZERO
-	
-	# Buscar BaseMap → Water → Area3D
-	var base_map = player.get_node_or_null("BaseMap")
-	if base_map == null:
-		print("❌ No se encontró BaseMap")
-		return Vector3.ZERO
-	
-	var water = base_map.get_node_or_null("Water")
-	if water == null:
-		print("❌ No se encontró Water en BaseMap")
-		return Vector3.ZERO
-	
-	var water_area = water.get_node_or_null("Area3D")
-	if water_area == null:
-		print("❌ No se encontró Area3D en Water")
-		return Vector3.ZERO
-	
-	# Obtener el CollisionShape3D del área
-	var collision_shape = water_area.get_node_or_null("CollisionShape3D")
-	if collision_shape == null:
-		print("❌ No se encontró CollisionShape3D en Area3D del agua")
-		return Vector3. ZERO
+	var collision_shape = player.get_node_or_null("BaseMap/Water/Area3D/CollisionShape3D")
 	
 	var shape = collision_shape.shape
-	if shape == null:
-		return Vector3.ZERO
+	var center = collision_shape.global_position
 	
-	# 🔥 Generar posición aleatoria según el tipo de shape
-	var random_pos := Vector3.ZERO
+	var margin = 10.0
+	var half_x = (shape.size.x / 2.0) - margin
+	var half_z = (shape.size.z / 2.0) - margin
 	
-	if shape is BoxShape3D:
-		var box_size = shape.size
-		random_pos = Vector3(
-			randf_range(-box_size.x / 2, box_size.x / 2),
-			0,
-			randf_range(-box_size.z / 2, box_size.z / 2)
-		)
-	elif shape is CylinderShape3D:
-		var radius = shape.radius
-		var angle = randf() * TAU
-		var distance = randf() * radius
-		random_pos = Vector3(
-			cos(angle) * distance,
-			0,
-			sin(angle) * distance
-		)
-	else:
-		print("⚠️ Tipo de shape no soportado:", shape.get_class())
-		return Vector3.ZERO
+	var xmin = center.x - half_x
+	var xmax = center.x + half_x
+	var zmin = center.z - half_z
+	var zmax = center.z + half_z
 	
-	# Convertir a posición global
-	var global_pos = water_area.global_position + random_pos
+	print("X range: ", xmin, " to ", xmax)
+	print("Z range: ", zmin, " to ", zmax)
 	
-	return global_pos
+	return Vector3(
+		center.x + randf_range(-half_x, half_x),
+		-1.0,
+		center.z + randf_range(-half_z, half_z)
+	)

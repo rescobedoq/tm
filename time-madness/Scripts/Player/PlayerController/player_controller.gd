@@ -70,6 +70,8 @@ var units: Array = []
 var buildings: Array = []  
 var selected_unit: Entity = null
 var selected_building: Building = null 
+var attack_units: Array = []
+var defense_units: Array = []
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -98,6 +100,10 @@ func add_unit(unit: Entity) -> void:
 	if unit not in units:
 		units.append(unit)
 		unit.player_owner = self
+		if unit not in defense_units:
+			defense_units.append(unit)
+		
+		_update_units_labels()
 		print("Unidad agregada a ", player_name, ": ", unit.name)
 
 # ==============================
@@ -509,6 +515,11 @@ func _update_resources_label():
 @onready var castle_controller = $BaseMap/MedievalCastleController
 var workers: int = 0
 @onready var workers_label = $InfoHud/workers   
+@onready var attackUnits_label = $InfoHud/unitsAttack   
+@onready var defenseUnits_label = $InfoHud/unitsDefense   
+
+
+
 func add_worker():
 	workers += 1
 	_update_workers_label()
@@ -540,7 +551,8 @@ func _ready() -> void:
 		camera.make_current() 
 		moveButton.pressed.connect(_on_move_button_pressed)
 		update_team_hud() 
-
+		_update_units_labels()
+		_update_workers_label()
 	else:
 		camera.current = false
 		rts.set_process(false)
@@ -619,3 +631,40 @@ func _on_player_hud_smithy_pressed() -> void:
 func _on_player_hud_tower_pressed() -> void:
 	_start_build_mode("tower")
 	pass
+	
+
+func move_unit_to_attack(unit: Entity) -> void:
+	if unit == null or unit not in units:
+		return
+	
+	# Remover de defensa si está ahí
+	if unit in defense_units:
+		defense_units. erase(unit)
+	
+	# Agregar a ataque si no está
+	if unit not in attack_units:
+		attack_units.append(unit)
+	
+	_update_units_labels()
+	print("🗡️ Unidad movida a ATAQUE:", unit.name)
+
+func move_unit_to_defense(unit: Entity) -> void:
+	if unit == null or unit not in units:
+		return
+	
+	# Remover de ataque si está ahí
+	if unit in attack_units:
+		attack_units.erase(unit)
+	
+	# Agregar a defensa si no está
+	if unit not in defense_units:
+		defense_units.append(unit)
+	
+	_update_units_labels()
+	print("🛡️ Unidad movida a DEFENSA:", unit.name)
+
+func _update_units_labels() -> void:
+	if attackUnits_label:
+		attackUnits_label.text = "Attack units: " + str(attack_units. size())
+	if defenseUnits_label:
+		defenseUnits_label.text = "Defense units: " + str(defense_units.size())
