@@ -8,6 +8,8 @@ signal player_controllers_ready(controllers: Array)
 signal second_tick(time_left: int)
 signal stage_time_over(stage: int)
 
+signal battle_mode_started
+
 var stage_duration := 10
 var stage_time_left := stage_duration
 var _timer := Timer.new()

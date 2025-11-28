@@ -80,6 +80,9 @@ var is_selecting_terrain: bool = false
 var is_placing_building: bool = false
 var build_placeholder: Node3D = null
 
+var is_battle_mode: bool = false
+
+
 
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
@@ -121,15 +124,11 @@ func add_building(building: CharacterBody3D) -> void:
 		
 		
 func update_team_hud() -> void:
-	print("SE LLAMO!")
 	if upKeepLabel:
-		print("waos1")
 		upKeepLabel.text = str(upkeep) + " / " + str(maxUpKeep)
 	if resourcesLabel:
-		print("waos2")
 		resourcesLabel.text = str(resources)
 	if goldLabel:
-		print("waos3")
 		goldLabel.text = str(gold)
 
 
@@ -527,8 +526,10 @@ func add_worker():
 func _update_workers_label():
 	workers_label.text = "Workers: " + str(workers)
 	
-	
+
+
 func _ready() -> void:
+	# Conectar señal del GameManager
 	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
 	var rts = $RtsController
@@ -556,8 +557,8 @@ func _ready() -> void:
 	else:
 		camera.current = false
 		rts.set_process(false)
-	disable_node_3d_recursive($BaseMap)
 
+	disable_node_3d_recursive($BaseMap)
 var building_to_build: String = ""
 
 func _start_build_mode(building_name: String) -> void:

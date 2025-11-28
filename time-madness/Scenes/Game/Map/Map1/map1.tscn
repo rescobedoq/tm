@@ -1,5 +1,6 @@
-[gd_scene load_steps=58 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=59 format=3 uid="uid://7x3dhs70f2fg"]
 
+[ext_resource type="Script" uid="uid://d27dq4betjefe" path="res://Scenes/Game/Map/Map1/map_1.gd" id="1_q241q"]
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
 [ext_resource type="Texture2D" uid="uid://jo04y7b56tm7" path="res://Assets/Textures/Grass001/Grass001_1K_normal.dds" id="2_31ip1"]
 [ext_resource type="Texture2D" uid="uid://c6bwmqdyx3fiu" path="res://Assets/Textures/Grass004/Grass004.dds" id="3_806h8"]
@@ -243,6 +244,7 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 size = Vector3(50, 1, 50)
 
 [node name="Map1" type="Node3D"]
+script = ExtResource("1_q241q")
 
 [node name="Terrain3D" type="Terrain3D" parent="."]
 data_directory = "res://Scenes/Game/Map/Map1/data"
@@ -340,6 +342,7 @@ transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 208.96896, -2, 41.75641
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 1000, 0)
+visible = false
 light_energy = 1.5
 sky_mode = 1
 
@@ -466,8 +469,13 @@ shape = SubResource("BoxShape3D_8cs45")
 debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
 
 [node name="PlayerController" parent="." instance=ExtResource("32_42luu")]
-movement_speed = 256.0
+movement_speed = 300.0
 min_x = -1000.0
 max_x = 1000.0
 min_z = -1000.0
 max_z = 1000.0
+
+[node name="PlayerController2" parent="." instance=ExtResource("32_42luu")]
+visible = false
+player_name = "Jugador2"
+is_active_player = false
