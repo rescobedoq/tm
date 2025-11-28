@@ -20,7 +20,7 @@ func _ready():
 	attack_damage = 25
 	defense = 10
 	move_speed = 7
-	attack_range = 3.0
+	attack_range = 30
 
 	var tex := load(PORTRAIT_PATH)
 	if tex:
@@ -46,4 +46,15 @@ func play_move():
 func play_attack():
 	if anim_player:
 		print(">>> play_attack CALLED <<<")
-		# No tiene animación de ataque
+		anim_player.play("mage_soell_cast_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("mage_soell_cast_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR
+
+func play_death():
+	if anim_player:
+		print(">>> play_death CALLED <<<")
+		anim_player.play("Dead_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Dead_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR

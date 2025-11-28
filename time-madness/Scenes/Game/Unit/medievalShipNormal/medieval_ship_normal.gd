@@ -40,3 +40,7 @@ func play_move():
 func play_attack():
 	print(">>> play_attack CALLED <<<")
 	# No tiene animación
+	
+func play_death():
+	print(">>> play_death CALLED <<<")
+	# No tiene animación

@@ -20,7 +20,7 @@ func _ready():
 	attack_damage = 25
 	defense = 10
 	move_speed = 7
-	attack_range = 3.0
+	attack_range = 10
 
 	var tex := load(PORTRAIT_PATH)
 	if tex:
@@ -46,4 +46,15 @@ func play_move():
 func play_attack():
 	if anim_player:
 		print(">>> play_attack CALLED <<<")
-		anim_player.play("Attack_frame_rate_24_fbx")
+		anim_player.play("Right_Hand_Sword_Slash_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Right_Hand_Sword_Slash_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR
+
+func play_death():
+	if anim_player:
+		print(">>> play_death CALLED <<<")
+		anim_player.play("Shot_and_Fall_Backward_frame_rate_24_fbx")
+		var anim = anim_player.get_animation("Shot_and_Fall_Backward_frame_rate_24_fbx")
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR
