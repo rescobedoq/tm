@@ -191,7 +191,60 @@ func _unhandled_input(event):
 		build_placeholder = null
 		is_placing_building = false
 		return
+	# =====================================
+	# 🔥 MODO DE SELECCIÓN DE TERRENO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_terrain:
+		print(">>> Entramos en MODO SELECCIÓN DE TERRENO PARA HABILIDAD")
+		
+		mouse_pos = get_viewport().get_mouse_position()
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var dir = camera.project_ray_normal(mouse_pos)
+		
+		var plane_y = 0.0
+		var target_pos: Vector3
 
+		if dir.y == 0:
+			target_pos = from
+		else:
+			var t = (plane_y - from.y) / dir.y
+			target_pos = from + dir * t
+		
+		print("🎯 Terreno seleccionado para habilidad: %v" % target_pos)
+		
+		# 🔥 Verificar rango si está especificado
+		if ability_terrain_max_range > 0 and ability_source_unit:
+			var distance = ability_source_unit.global_position.distance_to(target_pos)
+			if distance > ability_terrain_max_range:
+				print("❌ Posición demasiado lejos (%.1f / %.1f)" % [distance, ability_terrain_max_range])
+				# No ejecutar, solo limpiar
+				is_selecting_ability_terrain = false
+				ability_source_unit = null
+				ability_id_pending = ""
+				ability_terrain_max_range = 0.0
+				
+				if select_cursor_instance:
+					select_cursor_instance.queue_free()
+					select_cursor_instance = null
+				
+				return
+		
+		# Notificar a la unidad con la posición
+		if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+			ability_source_unit.on_ability_target_selected(ability_id_pending, target_pos)
+		
+		# Limpiar estado
+		is_selecting_ability_terrain = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		ability_terrain_max_range = 0.0
+		
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
 			# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO PARA HABILIDAD
 	# =====================================
@@ -580,14 +633,14 @@ func _process(delta: float) -> void:
 	if not is_active_player: 
 		return
 	
-	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target) and select_cursor_instance:
-		var mouse_pos = get_viewport().get_mouse_position()
+	# 🔥 Cursor para habilidades (objetivo O terreno) O ataque O movimiento
+	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or is_selecting_ability_terrain) and select_cursor_instance:
+		var mouse_pos = get_viewport(). get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
 		if animated_sprite and not animated_sprite.is_playing():
 			animated_sprite.play("default")
-
 
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
@@ -809,3 +862,31 @@ func _on_unit_died(unit: Entity) -> void:
 		deselect_current_unit()
 	
 	print("📊 Unidades restantes: %d" % units.size())
+
+
+# 🔥 Nueva variable
+var is_selecting_ability_terrain: bool = false
+var ability_terrain_max_range: float = 0.0
+
+# 🔥 Nueva función para seleccionar terreno
+func _start_ability_terrain_selection(source_unit: Unit, ability_id: String, max_range: float = 0.0) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	ability_terrain_max_range = max_range
+	
+	# Cargar cursor de selección de terreno
+	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar SelectTerrain.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_terrain = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de terreno para habilidad activado: %s" % ability_id)
