@@ -78,6 +78,11 @@ var is_selecting_terrain: bool = false
 # 🔥 Cursor de selección de objetivo (ATAQUE)
 var is_selecting_objective: bool = false
 
+# 🔥 NUEVAS VARIABLES PARA HABILIDADES
+var is_selecting_ability_target: bool = false
+var ability_source_unit: Unit = null
+var ability_id_pending: String = ""
+
 var is_placing_building: bool = false
 var build_placeholder: Node3D = null
 
@@ -85,6 +90,29 @@ var is_battle_mode: bool = false
 
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
+
+# 🔥 Iniciar selección de objetivo para habilidad
+func _start_ability_target_selection(source_unit: Unit, ability_id: String) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	
+	# Cargar cursor de selección
+	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar TargetObjetive.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_target = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de objetivo para habilidad activado: %s" % ability_id)
+
 
 func format_hms(seconds: int) -> String:
 	var m = (seconds % 3600) / 60
@@ -163,6 +191,50 @@ func _unhandled_input(event):
 		build_placeholder = null
 		is_placing_building = false
 		return
+
+			# =====================================
+	# 🔥 MODO DE SELECCIÓN DE OBJETIVO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_target:
+		print(">>> Entramos en MODO SELECCIÓN DE OBJETIVO PARA HABILIDAD")
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result and result.collider is Entity:
+			var target_entity = result.collider as Entity
+			
+			# Verificar que NO sea nuestra unidad
+			if target_entity. player_owner != self:
+				print("🎯 OBJETIVO SELECCIONADO PARA HABILIDAD -> ", target_entity.name)
+				
+				# 🔥 Notificar a la unidad con el objetivo
+				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
+			else:
+				print("⚠️ No puedes usar habilidades en tus propias unidades")
+		else:
+			print("❌ No se detectó ningún objetivo válido")
+		
+		# Limpiar estado
+		is_selecting_ability_target = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
+
 
 	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO (ATAQUE)
@@ -508,13 +580,14 @@ func _process(delta: float) -> void:
 	if not is_active_player: 
 		return
 	
-	if (is_selecting_terrain or is_selecting_objective) and select_cursor_instance:
+	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target) and select_cursor_instance:
 		var mouse_pos = get_viewport().get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
 		if animated_sprite and not animated_sprite.is_playing():
 			animated_sprite.play("default")
+
 
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
