@@ -78,6 +78,11 @@ var is_selecting_terrain: bool = false
 # 🔥 Cursor de selección de objetivo (ATAQUE)
 var is_selecting_objective: bool = false
 
+# 🔥 NUEVAS VARIABLES PARA HABILIDADES
+var is_selecting_ability_target: bool = false
+var ability_source_unit: Unit = null
+var ability_id_pending: String = ""
+
 var is_placing_building: bool = false
 var build_placeholder: Node3D = null
 
@@ -85,6 +90,29 @@ var is_battle_mode: bool = false
 
 # Cámara para raycast
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
+
+# 🔥 Iniciar selección de objetivo para habilidad
+func _start_ability_target_selection(source_unit: Unit, ability_id: String) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	
+	# Cargar cursor de selección
+	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar TargetObjetive.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_target = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de objetivo para habilidad activado: %s" % ability_id)
+
 
 func format_hms(seconds: int) -> String:
 	var m = (seconds % 3600) / 60
@@ -163,7 +191,144 @@ func _unhandled_input(event):
 		build_placeholder = null
 		is_placing_building = false
 		return
+	# =====================================
+	# 🔥 MODO DE SELECCIÓN DE TERRENO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_terrain:
+		print(">>> Entramos en MODO SELECCIÓN DE TERRENO PARA HABILIDAD")
+		
+		mouse_pos = get_viewport().get_mouse_position()
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var dir = camera.project_ray_normal(mouse_pos)
+		
+		var plane_y = 0.0
+		var target_pos: Vector3
 
+		if dir.y == 0:
+			target_pos = from
+		else:
+			var t = (plane_y - from.y) / dir.y
+			target_pos = from + dir * t
+		
+		print("🎯 Terreno seleccionado para habilidad: %v" % target_pos)
+		
+		# 🔥 Verificar rango si está especificado
+		if ability_terrain_max_range > 0 and ability_source_unit:
+			var distance = ability_source_unit.global_position.distance_to(target_pos)
+			if distance > ability_terrain_max_range:
+				print("❌ Posición demasiado lejos (%.1f / %.1f)" % [distance, ability_terrain_max_range])
+				# No ejecutar, solo limpiar
+				is_selecting_ability_terrain = false
+				ability_source_unit = null
+				ability_id_pending = ""
+				ability_terrain_max_range = 0.0
+				
+				if select_cursor_instance:
+					select_cursor_instance.queue_free()
+					select_cursor_instance = null
+				
+				return
+		
+		# Notificar a la unidad con la posición
+		if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+			ability_source_unit.on_ability_target_selected(ability_id_pending, target_pos)
+		
+		# Limpiar estado
+		is_selecting_ability_terrain = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		ability_terrain_max_range = 0.0
+		
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
+			# =====================================
+	# 🔥 MODO DE SELECCIÓN DE OBJETIVO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_target:
+		print(">>> Entramos en MODO SELECCIÓN DE OBJETIVO PARA HABILIDAD")
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result and result.collider is Entity:
+			var target_entity = result.collider as Entity
+			
+			# Verificar que NO sea nuestra unidad
+			if target_entity. player_owner != self:
+				print("🎯 OBJETIVO SELECCIONADO PARA HABILIDAD -> ", target_entity.name)
+				
+				# 🔥 Notificar a la unidad con el objetivo
+				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
+			else:
+				print("⚠️ No puedes usar habilidades en tus propias unidades")
+		else:
+			print("❌ No se detectó ningún objetivo válido")
+		
+		# Limpiar estado
+		is_selecting_ability_target = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
+
+	# =====================================
+	# 🔥 MODO DE SELECCIÓN DE ALIADO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_ally:
+		print(">>> Entramos en MODO SELECCIÓN DE ALIADO PARA HABILIDAD")
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result and result.collider is Entity:
+			var target_entity = result.collider as Entity
+			
+			# 🔥 Verificar que SEA nuestra unidad (aliado)
+			if target_entity.player_owner == self:
+				print("🎯 ALIADO SELECCIONADO -> ", target_entity.name)
+				
+				# Notificar a la unidad con el objetivo
+				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
+			else:
+				print("⚠️ Solo puedes seleccionar aliados para esta habilidad")
+		else:
+			print("❌ No se detectó ningún aliado")
+		
+		# Limpiar estado
+		is_selecting_ability_ally = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
 	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO (ATAQUE)
 	# =====================================
@@ -285,22 +450,32 @@ func _unhandled_input(event):
 func select_unit(entity: Entity) -> void:
 	if entity == null:
 		return
+
+	# Si había otra unidad seleccionada, deseleccionarla
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
 
+	# Limpia selección de edificio
 	selected_building = null
 	_clear_abilities()
+
 	selected_unit = entity
 	selected_unit.select()
 	print("Unidad seleccionada:", entity.name)
 
-	if selected_unit. portrait and hud_portrait:
+	# Portrait
+	if selected_unit.portrait and hud_portrait:
 		hud_portrait.texture = selected_unit.portrait
 	else:
-		hud_portrait. texture = null
+		hud_portrait.texture = null
 
+	# ===============================
+	# 📌 Si es unidad, cargar HUD y habilidades
+	# ===============================
 	if entity is Unit:
 		var u := entity as Unit
+
+		# 📊 Estadísticas
 		hud_attack.text = "Attack: " + str(u.attack_damage)
 		hud_defense.text = "Defense: " + str(u.defense)
 		hud_velocity.text = "Speed: " + str(u.move_speed)
@@ -309,6 +484,42 @@ func select_unit(entity: Entity) -> void:
 		hud_energy.max_value = u.max_magic
 		hud_energy.value = u.current_magic
 		hud_name.text = u.unit_type
+
+		# ===============================
+		# 🔥 Cargar habilidades de UNIDAD
+		# ===============================
+		var spell_buttons = [spell1, spell2, spell3, spell4, spell5, spell6, spell7]
+
+		# Limpiar botones antes
+		for button in spell_buttons:
+			if button:
+				button.texture_normal = null
+				button.visible = false
+				button.disabled = true
+				button.tooltip_text = ""
+
+		# Verificar habilidades
+		if u.abilities and u.abilities.size() > 0:
+			for i in range(min(u.abilities.size(), spell_buttons.size())):
+				var ability = u.abilities[i]
+				var button = spell_buttons[i]
+
+				if button and ability:
+					var icon_texture = load(ability.icon)
+					if icon_texture:
+						button.texture_normal = icon_texture
+						button.visible = true
+						button.disabled = false
+						button.tooltip_text = ability.name + "\n" + ability.description
+
+						# Eliminar conexiones anteriores
+						for connection in button.pressed.get_connections():
+							button.pressed.disconnect(connection["callable"])
+
+						# Conectar nueva habilidad
+						button.pressed.connect(func():
+							_on_unit_ability_pressed(u, ability))
+
 
 func select_building(building: Building) -> void:
 	if building == null:
@@ -366,6 +577,15 @@ func select_building(building: Building) -> void:
 	hud_energy.max_value = 10000
 	hud_energy.value = 0
 	hud_name. text = building.get_class()
+
+func _on_unit_ability_pressed(unit: Unit, ability):
+	print("🔥 Activando habilidad de unidad:", ability.name)
+
+	if unit.has_method("use_ability"):
+		unit.use_ability(ability)
+	else:
+		print("⚠️ La unidad no implementa use_ability()")
+
 
 func _on_ability_pressed(building, ability):
 	print("Ejecutando habilidad:", ability.name, " del edificio: ", building)
@@ -453,7 +673,8 @@ func _process(delta: float) -> void:
 	if not is_active_player: 
 		return
 	
-	if (is_selecting_terrain or is_selecting_objective) and select_cursor_instance:
+	# 🔥 Cursor para todas las selecciones
+	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or is_selecting_ability_terrain or is_selecting_ability_ally) and select_cursor_instance:
 		var mouse_pos = get_viewport().get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 
@@ -463,7 +684,6 @@ func _process(delta: float) -> void:
 
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
-
 func _update_build_placeholder_position() -> void:
 	if not is_placing_building or build_placeholder == null:
 		return
@@ -681,3 +901,56 @@ func _on_unit_died(unit: Entity) -> void:
 		deselect_current_unit()
 	
 	print("📊 Unidades restantes: %d" % units.size())
+
+
+# 🔥 Nueva variable
+var is_selecting_ability_terrain: bool = false
+var ability_terrain_max_range: float = 0.0
+
+# 🔥 Nueva función para seleccionar terreno
+func _start_ability_terrain_selection(source_unit: Unit, ability_id: String, max_range: float = 0.0) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	ability_terrain_max_range = max_range
+	
+	# Cargar cursor de selección de terreno
+	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar SelectTerrain.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_terrain = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de terreno para habilidad activado: %s" % ability_id)
+	
+# 🔥 Nueva variable
+var is_selecting_ability_ally: bool = false
+
+# 🔥 Nueva función para seleccionar ALIADOS
+func _start_ability_ally_selection(source_unit: Unit, ability_id: String) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	
+	# Cargar cursor de selección
+	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar TargetObjetive.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_ally = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de aliado para habilidad activado: %s" % ability_id)

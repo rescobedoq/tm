@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://dtv5nd3thvep2"]
+
+[ext_resource type="Texture2D" uid="uid://ckn4ixdn8fl55" path="res://Assets/Images/HUD/sprites/Blue Effect Bullet Impact Explosion 32x32.png" id="1_2h8yk"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q2ugj"]
+atlas = ExtResource("1_2h8yk")
+region = Rect2(512, 161, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8aac"]
+atlas = ExtResource("1_2h8yk")
+region = Rect2(544, 161, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_angjj"]
+atlas = ExtResource("1_2h8yk")
+region = Rect2(576, 161, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jkgdg"]
+atlas = ExtResource("1_2h8yk")
+region = Rect2(608, 161, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0bsef"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q2ugj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8aac")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_angjj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jkgdg")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="MentalControl" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
+sprite_frames = SubResource("SpriteFrames_0bsef")
+frame_progress = 0.7082991

@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://ch48mumc88hwt"]
+
+[ext_resource type="Texture2D" uid="uid://c8nhpo4xq3hrg" path="res://Assets/Images/HUD/sprites/abilitiesSprite.png" id="1_kp8at"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cch46"]
+atlas = ExtResource("1_kp8at")
+region = Rect2(512, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_85h5d"]
+atlas = ExtResource("1_kp8at")
+region = Rect2(544, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rwi3v"]
+atlas = ExtResource("1_kp8at")
+region = Rect2(576, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tsrr2"]
+atlas = ExtResource("1_kp8at")
+region = Rect2(608, 193, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kc8lx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cch46")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_85h5d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rwi3v")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tsrr2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Punch" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
+sprite_frames = SubResource("SpriteFrames_kc8lx")
+frame_progress = 0.73267734
+speed_scale = 2.0
