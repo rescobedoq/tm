@@ -288,7 +288,47 @@ func _unhandled_input(event):
 		
 		return
 
+	# =====================================
+	# 🔥 MODO DE SELECCIÓN DE ALIADO PARA HABILIDAD
+	# =====================================
+	if is_selecting_ability_ally:
+		print(">>> Entramos en MODO SELECCIÓN DE ALIADO PARA HABILIDAD")
+		
+		var from = camera.project_ray_origin(mouse_pos)
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
+		var params = PhysicsRayQueryParameters3D.new()
+		params.from = from
+		params.to = to
+		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+
+		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result and result.collider is Entity:
+			var target_entity = result.collider as Entity
+			
+			# 🔥 Verificar que SEA nuestra unidad (aliado)
+			if target_entity.player_owner == self:
+				print("🎯 ALIADO SELECCIONADO -> ", target_entity.name)
+				
+				# Notificar a la unidad con el objetivo
+				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
+			else:
+				print("⚠️ Solo puedes seleccionar aliados para esta habilidad")
+		else:
+			print("❌ No se detectó ningún aliado")
+		
+		# Limpiar estado
+		is_selecting_ability_ally = false
+		ability_source_unit = null
+		ability_id_pending = ""
+		
+		if select_cursor_instance:
+			select_cursor_instance.queue_free()
+			select_cursor_instance = null
+		
+		return
 	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO (ATAQUE)
 	# =====================================
@@ -633,9 +673,9 @@ func _process(delta: float) -> void:
 	if not is_active_player: 
 		return
 	
-	# 🔥 Cursor para habilidades (objetivo O terreno) O ataque O movimiento
-	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or is_selecting_ability_terrain) and select_cursor_instance:
-		var mouse_pos = get_viewport(). get_mouse_position()
+	# 🔥 Cursor para todas las selecciones
+	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or is_selecting_ability_terrain or is_selecting_ability_ally) and select_cursor_instance:
+		var mouse_pos = get_viewport().get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
@@ -644,7 +684,6 @@ func _process(delta: float) -> void:
 
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
-
 func _update_build_placeholder_position() -> void:
 	if not is_placing_building or build_placeholder == null:
 		return
@@ -890,3 +929,28 @@ func _start_ability_terrain_selection(source_unit: Unit, ability_id: String, max
 	is_selecting_ability_terrain = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	print("🎯 Modo selección de terreno para habilidad activado: %s" % ability_id)
+	
+# 🔥 Nueva variable
+var is_selecting_ability_ally: bool = false
+
+# 🔥 Nueva función para seleccionar ALIADOS
+func _start_ability_ally_selection(source_unit: Unit, ability_id: String) -> void:
+	if source_unit == null:
+		print("⚠️ source_unit es null")
+		return
+	
+	ability_source_unit = source_unit
+	ability_id_pending = ability_id
+	
+	# Cargar cursor de selección
+	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+	if select_scene == null:
+		print("ERROR: no se pudo cargar TargetObjetive.tscn")
+		return
+
+	select_cursor_instance = select_scene.instantiate()
+	get_tree().current_scene.add_child(select_cursor_instance)
+
+	is_selecting_ability_ally = true
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	print("🎯 Modo selección de aliado para habilidad activado: %s" % ability_id)
