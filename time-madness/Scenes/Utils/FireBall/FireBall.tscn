@@ -44,5 +44,5 @@ animations = [{
 transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
 modulate = Color(1, 0.7294118, 0.5254902, 1)
 sprite_frames = SubResource("SpriteFrames_0n3uv")
-frame_progress = 0.9303787
+frame_progress = 0.24482158
 speed_scale = 2.0
