@@ -36,4 +36,4 @@ animations = [{
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 2, 0)
 sprite_frames = SubResource("SpriteFrames_17b80")
-frame_progress = 0.16290614
+frame_progress = 0.08496412

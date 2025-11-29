@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://dswlu65sjm1xw"]
+
+[ext_resource type="Texture2D" uid="uid://emcrjchx8stw" path="res://Assets/Images/HUD/sprites/Green Effect Bullet Impact Explosion 32x32.png" id="1_hi7l0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_47upu"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(352, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ihrsj"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(384, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ntnwl"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(416, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7hc5y"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(448, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x5pey"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(352, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cpt5d"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(384, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mcrpi"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(416, 193, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qvcr1"]
+atlas = ExtResource("1_hi7l0")
+region = Rect2(448, 193, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_eyiev"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_47upu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ihrsj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ntnwl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7hc5y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x5pey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cpt5d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mcrpi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qvcr1")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="StealLife" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
+sprite_frames = SubResource("SpriteFrames_eyiev")
+frame_progress = 0.49369332
+speed_scale = 2.0

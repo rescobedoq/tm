@@ -1,0 +1,48 @@
+[gd_scene load_steps=7 format=3 uid="uid://t48pf17g0nar"]
+
+[ext_resource type="Texture2D" uid="uid://ddb8el41scb4o" path="res://Assets/Images/HUD/sprites/Red Effect Bullet Impact Explosion 32x32.png" id="1_bptb7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a601l"]
+atlas = ExtResource("1_bptb7")
+region = Rect2(512, 257, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mfdim"]
+atlas = ExtResource("1_bptb7")
+region = Rect2(544, 257, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bigsh"]
+atlas = ExtResource("1_bptb7")
+region = Rect2(576, 257, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ijbpw"]
+atlas = ExtResource("1_bptb7")
+region = Rect2(608, 257, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0n3uv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a601l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mfdim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bigsh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ijbpw")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Node3d" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
+modulate = Color(1, 0.7294118, 0.5254902, 1)
+sprite_frames = SubResource("SpriteFrames_0n3uv")
+frame_progress = 0.9303787
+speed_scale = 2.0

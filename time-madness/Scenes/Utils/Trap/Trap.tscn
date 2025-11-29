@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://bmsxtgs3qkyc0"]
+
+[ext_resource type="Texture2D" uid="uid://ckn4ixdn8fl55" path="res://Assets/Images/HUD/sprites/Blue Effect Bullet Impact Explosion 32x32.png" id="1_nt617"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5eygg"]
+atlas = ExtResource("1_nt617")
+region = Rect2(608, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ck07a"]
+atlas = ExtResource("1_nt617")
+region = Rect2(576, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5wm1s"]
+atlas = ExtResource("1_nt617")
+region = Rect2(544, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l1a7y"]
+atlas = ExtResource("1_nt617")
+region = Rect2(512, 225, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b8fs7"]
+atlas = ExtResource("1_nt617")
+region = Rect2(192, 321, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fin8p"]
+atlas = ExtResource("1_nt617")
+region = Rect2(224, 321, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s1sja"]
+atlas = ExtResource("1_nt617")
+region = Rect2(256, 321, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_e3g44"]
+atlas = ExtResource("1_nt617")
+region = Rect2(288, 321, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6h7rx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5eygg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ck07a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5wm1s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l1a7y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b8fs7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fin8p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s1sja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_e3g44")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Trap" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, -20, 0, 20, -8.742278e-07, 0, 3, 0)
+sprite_frames = SubResource("SpriteFrames_6h7rx")
+frame_progress = 0.62971354
