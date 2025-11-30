@@ -731,6 +731,18 @@ func _update_workers_label():
 	workers_label.text = "Workers: " + str(workers)
 
 func _ready() -> void:
+	# 🔹 Ocultar todos los HUDs por defecto
+	if menu_hud:
+		menu_hud.visible = false
+	if $RtsController:
+		$RtsController.visible = false
+	if $UnitHud:
+		$UnitHud.visible = false
+	if $TeamHud:
+		$TeamHud.visible = false
+	if $InfoHud:
+		$InfoHud.visible = false
+	
 	GameStarter.connect("second_tick", _on_second_tick)
 	add_building(castle_controller)
 	var rts = $RtsController

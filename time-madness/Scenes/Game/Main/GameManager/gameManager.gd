@@ -54,6 +54,11 @@ func _ready() -> void:
 	GameStarter.stage_changed.connect(_on_stage_changed)
 	GameStarter.stage_time_over.connect(_on_stage_time_over)
 	
+	for controller in GameStarter.get_player_controllers():
+		if is_instance_valid(controller) and controller.get_parent() == null:
+			add_child(controller)        
+			_hide_all_player_ui(controller)
+
 	_start_intro_video()
 
 # === LOOP PRINCIPAL ===
@@ -83,9 +88,6 @@ func _on_video_finished() -> void:
 	_setup_players()
 	current_stage = GameStarter.get_current_stage()
 	_update_stage_colors()
-	
-	_spawn_player_controllers()
-	
 	_start_stage_preparation()
 
 # === CONFIGURACIÓN DE JUGADORES ===
@@ -121,26 +123,13 @@ func _setup_players() -> void:
 func _get_team_color(team_id: int) -> Color:
 	match team_id:
 		0: return Color.RED
-		1: return Color. BLUE
-		2: return Color. GREEN
-		3: return Color. YELLOW
-		4: return Color. PURPLE
-		5: return Color. ORANGE
+		1: return Color.BLUE
+		2: return Color.GREEN
+		3: return Color.YELLOW
+		4: return Color.PURPLE
+		5: return Color.ORANGE
 		_: return Color.WHITE
 
-# 🔥 INSTANCIAR CONTROLLERS UNA SOLA VEZ
-func _spawn_player_controllers() -> void:
-	print("\n🎮 Instanciando PlayerControllers (TODO OCULTO INICIALMENTE)...")
-	
-	for controller in GameStarter.get_player_controllers():
-		add_child(controller)
-		_hide_all_player_ui(controller)
-		print("  ✅ %s instanciado (UI oculta)" % controller.player_name)
-	
-	if GameStarter.battle_map_instance != null:
-		GameStarter.battle_map_instance. visible = false
-	
-	print("✅ Todos los PlayerControllers listos\n")
 
 # === GESTIÓN DE STAGES ===
 func _start_stage_preparation() -> void:

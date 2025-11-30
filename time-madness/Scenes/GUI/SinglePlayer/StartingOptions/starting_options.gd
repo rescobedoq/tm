@@ -51,6 +51,8 @@ func _ready() -> void:
 	# Inicializar los demás playerBox
 	bot_boxes = [box2, box3, box4, box5, box6]
 	_initialize_bots()
+	GameStarter.game_starting.connect(_on_game_starting)
+
 
 func _initialize_bots() -> void:
 	var index := 1
@@ -165,14 +167,16 @@ func _on_start_button_pressed() -> void:
 	# 🔥 Emitir señal a través del GameStarter autoload
 	GameStarter.start_game(players_data)
 	
-	# 🔥 TODO: Cambiar a la escena del juego (comentado por ahora)
+func _on_game_starting(players: Array) -> void:
 	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameManager/GameManager.tscn")
-
+	
+func _on_back_button_pressed() -> void:
+	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
+	
 func _process(delta: float) -> void:
 	pass
 
-func _on_back_button_pressed() -> void:
-	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
+
 	
 func _show_alert_starting():
 	if alert_starting_instance == null:

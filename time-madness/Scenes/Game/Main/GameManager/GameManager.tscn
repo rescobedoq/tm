@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://3pbb2ky6xcrw"]
 
-[ext_resource type="Script" uid="uid://b7qvedguqcphe" path="res://Scenes/Game/Main/GameManager/gameManager.gd" id="1_lbe6u"]
+[ext_resource type="Script" uid="uid://b7qvedguqcphe" path="res://Scenes/Game/Main/GameManager/GameManager.gd" id="1_lbe6u"]
 [ext_resource type="VideoStream" uid="uid://di8jccadpn5hi" path="res://Assets/Videos/loading.ogv" id="2_fnph8"]
 [ext_resource type="Texture2D" uid="uid://xetd4xf8clb1" path="res://Assets/Images/battleLog.png" id="3_iacd1"]
 [ext_resource type="Texture2D" uid="uid://d21jfvvno8uy7" path="res://Assets/Images/UI/battleLogLogo.png" id="4_hp3kw"]
