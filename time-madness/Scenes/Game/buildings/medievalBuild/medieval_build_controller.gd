@@ -1,4 +1,5 @@
 extends CharacterBody3D
+
 var building_type: String = ""
 var default_scale: Vector3 = Vector3(10, 10, 10)
 var proximity_area: Area3D
@@ -58,7 +59,7 @@ func _setup_proximity_detection():
 	
 	_adjust_proximity_radius()
 	
-	# Las señales siguen siendo útiles para optimización
+	# Señales para optimización
 	proximity_area.area_entered.connect(_on_area_nearby)
 	proximity_area.area_exited.connect(_on_area_cleared)
 	proximity_area.body_entered.connect(_on_building_nearby)
@@ -70,6 +71,7 @@ func _get_building_scale() -> int:
 func _adjust_proximity_radius():
 	if proximity_area == null:
 		return
+	# 🔹 Aquí podrías ajustar el radio según el tipo de edificio si quieres
 
 func _on_area_nearby(area: Area3D):
 	if area != proximity_area:
@@ -77,7 +79,6 @@ func _on_area_nearby(area: Area3D):
 		_update_visual_feedback()
 
 func _on_area_cleared(area: Area3D):
-	# Ya no es necesario verificar aquí, _process lo hace
 	pass
 
 func _on_building_nearby(body):
@@ -86,7 +87,6 @@ func _on_building_nearby(body):
 		_update_visual_feedback()
 
 func _on_building_cleared(body):
-	# Ya no es necesario verificar aquí, _process lo hace
 	pass
 
 func _update_visual_feedback():
@@ -133,16 +133,12 @@ func _create_preview_model():
 			preview_model.collision_mask = 0
 		
 		_remove_physics_recursive(preview_model)
-		
-		var sz: int = _get_building_scale()
-		preview_model.scale = Vector3(sz, sz, sz)
-		
+
 		add_child(preview_model)
 		_update_visual_feedback()
 
 func _remove_physics_recursive(node: Node):
-	var children = node.get_children()
-	for child in children:
+	for child in node.get_children():
 		if child is CollisionShape3D or child is Area3D or child is CollisionPolygon3D or child is CollisionObject3D:
 			child.queue_free()
 		else:

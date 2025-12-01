@@ -9,6 +9,7 @@ size = Vector3(1, 0.42, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_behgs"]
 
 [node name="MedievalBarracksController" type="CharacterBody3D"]
+transform = Transform3D(30, 0, 0, 0, 30, 0, 0, 0, 30, 0, 0, 0)
 script = ExtResource("1_behgs")
 
 [node name="medievalBarracks" parent="." instance=ExtResource("1_7eddx")]
