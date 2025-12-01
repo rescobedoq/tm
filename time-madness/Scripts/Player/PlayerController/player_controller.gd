@@ -1,5 +1,15 @@
 extends Node3D
 class_name PlayerController
+# 🔥 SISTEMA DE VIDAS (BATTLE MAP)
+var max_lives: int = 6
+var current_lives: int = 6
+var is_defeated: bool = false
+
+# 🔥 Sistema de invulnerabilidad
+var is_invulnerable: bool = false
+var invulnerability_timer: float = 0.0
+const INVULNERABILITY_DURATION: float = 2.0  # 2 segundos de invulnerabilidad
+var battle_life_bar = null
 
 # ==============================
 # Nombre del jugador
@@ -8,7 +18,7 @@ class_name PlayerController
 @export var is_active_player: bool = true
 @export var difficult_bot: bool = true
 @export var faction: String = "default"
-
+var player_index: int = 0
 # ===== HUD =====================
 @onready var hud_portrait: TextureRect = $"UnitHud/Portrait"
 @onready var hud_attack: Label = $"UnitHud/Attack"
@@ -38,6 +48,8 @@ class_name PlayerController
 @onready var hour: Label = $"TeamHud/hour"
 
 @onready var menu_hud: Control = $"PlayerHud"
+
+
 
 # ===== Configuración de cámara =====
 @export_range(0, 1000) var movement_speed: float = 64
@@ -70,6 +82,9 @@ var selected_unit: Entity = null
 var selected_building: Building = null 
 var attack_units: Array = []
 var defense_units: Array = []
+var battle_units: Array = []
+
+
 
 # Cursor de selección de terreno
 var select_cursor_instance: Node2D = null
@@ -107,7 +122,18 @@ func _start_ability_target_selection(source_unit: Unit, ability_id: String) -> v
 		return
 
 	select_cursor_instance = select_scene.instantiate()
-	get_tree().current_scene.add_child(select_cursor_instance)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
+
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+
+	parent_node.add_child(select_cursor_instance)
+
 
 	is_selecting_ability_target = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -128,6 +154,11 @@ func add_unit(unit: Entity) -> void:
 	if unit not in units:
 		units.append(unit)
 		unit.player_owner = self
+		
+		# 🔥 Configurar capas del jugador
+		if unit.has_method("setup_player_collision_layers"):
+			unit.setup_player_collision_layers(player_index)
+		
 		if unit not in defense_units:
 			defense_units.append(unit)
 		
@@ -142,7 +173,12 @@ func add_building(building: CharacterBody3D) -> void:
 		return
 	if building not in buildings:
 		buildings.append(building)
-		building.player_owner = self 
+		building.player_owner = self
+		
+		# 🔥 Configurar capas del jugador
+		if building.has_method("setup_player_collision_layers"):
+			building.setup_player_collision_layers(player_index)
+		
 		print("✅ Edificio agregado a ", player_name, ": ", building.name)
 		print("   Total de edificios: ", buildings.size())
 
@@ -183,14 +219,38 @@ func _unhandled_input(event):
 		var final_build_selected = build_placeholder.get_build()
 		if final_build_selected:
 			final_build_selected.global_position = build_placeholder.global_position
-			get_tree().current_scene.add_child(final_build_selected)
+			
+			match build_placeholder.building_type:
+				"barracks": final_build_selected.scale = Vector3(30,30,30)
+				"dragon": final_build_selected.scale = Vector3(25,25,25)
+				"farm": final_build_selected.scale = Vector3(15,15,15)
+				"harbor": final_build_selected.scale = Vector3(20,20,20)
+				"magic": final_build_selected.scale = Vector3(25,25,25)
+				"shrine": final_build_selected.scale = Vector3(22,22,22)
+				"smithy": final_build_selected. scale = Vector3(18,18,18)
+				"tower": final_build_selected. scale = Vector3(25,25,25)
+				_: final_build_selected.scale = Vector3(10,10,10)
+			
+			var parent_node: Node
+			if is_battle_mode:
+				parent_node = get_battle_map()
+			else:
+				parent_node = get_base_map()
+
+			if parent_node == null:
+				print("❌ No se pudo obtener el mapa activo")
+				return
+
+			parent_node.add_child(final_build_selected)
+						
 			await get_tree().process_frame
 			add_building(final_build_selected)
 		
-		build_placeholder. queue_free()
+		build_placeholder.queue_free()
 		build_placeholder = null
 		is_placing_building = false
 		return
+	
 	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE TERRENO PARA HABILIDAD
 	# =====================================
@@ -245,7 +305,8 @@ func _unhandled_input(event):
 			select_cursor_instance = null
 		
 		return
-			# =====================================
+	
+	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO PARA HABILIDAD
 	# =====================================
 	if is_selecting_ability_target:
@@ -257,18 +318,36 @@ func _unhandled_input(event):
 		var params = PhysicsRayQueryParameters3D.new()
 		params.from = from
 		params.to = to
-		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		
+		# 🔥 DETECTAR según el modo
+		if is_battle_mode:
+			params.collision_mask = 1 << 8
+			print("  🔍 Raycast habilidad (batalla): mask = %d (Layer 8)" % params.collision_mask)
+		else:
+			var enemy_mask = 0
+			for i in range(6):
+				if i != player_index:
+					enemy_mask |= 1 << (2 + i)
+			params. collision_mask = enemy_mask
+			print("  🔍 Raycast habilidad (base): mask = %d (enemigos)" % params.collision_mask)
 
 		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result:
+			print("  ✅ Detectado: %s | Layer: %d | Owner: %s" % [
+				result.collider.name,
+				result.collider.collision_layer if "collision_layer" in result.collider else -1,
+				result.collider.player_owner. player_name if result.collider and "player_owner" in result.collider else "sin dueño"
+			])
+		else:
+			print("  ❌ No se detectó nada")
 		
 		if result and result.collider is Entity:
 			var target_entity = result.collider as Entity
 			
-			# Verificar que NO sea nuestra unidad
-			if target_entity. player_owner != self:
+			if target_entity.player_owner != self:
 				print("🎯 OBJETIVO SELECCIONADO PARA HABILIDAD -> ", target_entity.name)
 				
-				# 🔥 Notificar a la unidad con el objetivo
 				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
 					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
 			else:
@@ -295,24 +374,38 @@ func _unhandled_input(event):
 		print(">>> Entramos en MODO SELECCIÓN DE ALIADO PARA HABILIDAD")
 		
 		var from = camera.project_ray_origin(mouse_pos)
-		var to = from + camera.project_ray_normal(mouse_pos) * 2000
+		var to = from + camera. project_ray_normal(mouse_pos) * 2000
 
 		var params = PhysicsRayQueryParameters3D.new()
 		params.from = from
 		params.to = to
-		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		
+		# 🔥 DETECTAR según el modo
+		if is_battle_mode:
+			params.collision_mask = 1 << 8
+			print("  🔍 Raycast aliado (batalla): mask = %d (Layer 8)" % params. collision_mask)
+		else:
+			params.collision_mask = 1 << (2 + player_index)
+			print("  🔍 Raycast aliado (base): mask = %d (mi capa)" % params.collision_mask)
 
 		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		
+		if result:
+			print("  ✅ Detectado: %s | Layer: %d | Owner: %s" % [
+				result.collider.name,
+				result.collider.collision_layer if "collision_layer" in result.collider else -1,
+				result.collider.player_owner.player_name if result. collider and "player_owner" in result.collider else "sin dueño"
+			])
+		else:
+			print("  ❌ No se detectó nada")
 		
 		if result and result.collider is Entity:
 			var target_entity = result.collider as Entity
 			
-			# 🔥 Verificar que SEA nuestra unidad (aliado)
 			if target_entity.player_owner == self:
 				print("🎯 ALIADO SELECCIONADO -> ", target_entity.name)
 				
-				# Notificar a la unidad con el objetivo
-				if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
+				if ability_source_unit and ability_source_unit. has_method("on_ability_target_selected"):
 					ability_source_unit.on_ability_target_selected(ability_id_pending, target_entity)
 			else:
 				print("⚠️ Solo puedes seleccionar aliados para esta habilidad")
@@ -329,6 +422,7 @@ func _unhandled_input(event):
 			select_cursor_instance = null
 		
 		return
+	
 	# =====================================
 	# 🔥 MODO DE SELECCIÓN DE OBJETIVO (ATAQUE)
 	# =====================================
@@ -338,26 +432,43 @@ func _unhandled_input(event):
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
-		# 🔥 Detectar UNIDADES ENEMIGAS (Layer 2)
 		var params = PhysicsRayQueryParameters3D.new()
 		params.from = from
 		params.to = to
-		params.collision_mask = 1 << 1  # Layer 2 -> Unidades
+		
+		# 🔥 DETECTAR según el modo
+		if is_battle_mode:
+			params.collision_mask = 1 << 8
+			print("  🔍 Raycast ataque (batalla): mask = %d (Layer 8)" % params.collision_mask)
+		else:
+			var enemy_mask = 0
+			for i in range(6):
+				if i != player_index:
+					enemy_mask |= 1 << (2 + i)
+			params.collision_mask = enemy_mask
+			print("  🔍 Raycast ataque (base): mask = %d (enemigos)" % params. collision_mask)
 
-		var result = get_world_3d().direct_space_state.intersect_ray(params)
+		var result = get_world_3d(). direct_space_state.intersect_ray(params)
+		
+		if result:
+			print("  ✅ Detectado: %s | Layer: %d | Owner: %s" % [
+				result.collider.name,
+				result.collider. collision_layer if "collision_layer" in result.collider else -1,
+				result.collider.player_owner.player_name if result.collider and "player_owner" in result.collider else "sin dueño"
+			])
+		else:
+			print("  ❌ No se detectó nada")
 		
 		if result and result.collider is Entity:
 			var target_entity = result.collider as Entity
 			
-			# 🔥 Verificar que NO sea nuestra unidad
 			if target_entity.player_owner != self:
 				print("🎯 ENEMIGO DETECTADO -> ", target_entity.name)
 				
-				# 🔥 Ordenar ataque a la unidad seleccionada
 				if selected_unit and selected_unit is Unit:
 					var attacking_unit = selected_unit as Unit
 					attacking_unit.attack_target(target_entity)
-					print("⚔️ %s persiguiendo a %s" % [attacking_unit.name, target_entity.name])
+					print("⚔️ %s persiguiendo a %s" % [attacking_unit.name, target_entity. name])
 			else:
 				print("⚠️ No puedes atacar a tus propias unidades")
 		else:
@@ -407,43 +518,82 @@ func _unhandled_input(event):
 	# Modo selección de unidades Y EDIFICIOS
 	# =====================================
 	else:
+		print("\n🖱️ Click para seleccionar (Batalla: %s | Player: %s)" % [is_battle_mode, player_name])
+		
 		var from = camera.project_ray_origin(mouse_pos)
 		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
-		# ESTRATEGIA 1: Intentar seleccionar UNIDADES (Layer 2)
+		# ESTRATEGIA 1: Intentar seleccionar UNIDADES (de MI jugador)
 		var params_units = PhysicsRayQueryParameters3D.new()
 		params_units.from = from
 		params_units.to = to
-		params_units.collision_mask = 1 << 1
+
+		# 🔥 DETECTAR según el modo
+		if is_battle_mode:
+			params_units.collision_mask = 1 << 8
+			print("  🔍 Raycast unidades (batalla): mask = %d (Layer 8)" % params_units.collision_mask)
+		else:
+			var my_layer = 2 + player_index
+			params_units.collision_mask = 1 << my_layer
+			print("  🔍 Raycast unidades (base): mask = %d (Layer %d)" % [params_units.collision_mask, my_layer])
 
 		var result_units = get_world_3d().direct_space_state.intersect_ray(params_units)
 		
-		if result_units and result_units.collider is Entity:
+		if result_units:
+			print("  ✅ Unidad detectada: %s | Layer: %d | Owner: %s" % [
+				result_units. collider.name,
+				result_units.collider.collision_layer if "collision_layer" in result_units.collider else -1,
+				result_units. collider.player_owner.player_name if result_units.collider and "player_owner" in result_units.collider else "sin dueño"
+			])
+		else:
+			print("  ❌ No se detectó unidad")
+		
+		if result_units and result_units. collider is Entity:
 			var entity = result_units.collider as Entity
 			if entity.player_owner == self:
 				select_unit(entity)
+				print("  ✅ Unidad seleccionada: %s" % entity.name)
 			else:
 				deselect_current_unit()
+				print("  ⚠️ Unidad de otro jugador, no se selecciona")
 			return
 		
-		# ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (Layer 4)
+		# ESTRATEGIA 2: Si no hay unidad, intentar seleccionar EDIFICIOS (de MI jugador)
 		var params_buildings = PhysicsRayQueryParameters3D.new()
 		params_buildings.from = from
 		params_buildings.to = to
-		params_buildings. collision_mask = 1 << 3
+
+		# 🔥 DETECTAR según el modo
+		if is_battle_mode:
+			params_buildings.collision_mask = 1 << 8
+			print("  🔍 Raycast edificios (batalla): mask = %d (Layer 8)" % params_buildings. collision_mask)
+		else:
+			var my_layer = 2 + player_index
+			params_buildings.collision_mask = 1 << my_layer
+			print("  🔍 Raycast edificios (base): mask = %d (Layer %d)" % [params_buildings.collision_mask, my_layer])
 
 		var result_buildings = get_world_3d().direct_space_state.intersect_ray(params_buildings)
+		
+		if result_buildings:
+			print("  ✅ Edificio detectado: %s | Layer: %d" % [
+				result_buildings. collider.name,
+				result_buildings.collider.collision_layer if "collision_layer" in result_buildings.collider else -1
+			])
+		else:
+			print("  ❌ No se detectó edificio")
 		
 		if result_buildings and result_buildings.collider is Building:
 			var building = result_buildings.collider as Building
 			if building in buildings:
 				select_building(building)
+				print("  ✅ Edificio seleccionado: %s" % building. name)
 			else:
 				deselect_current_unit()
+				print("  ⚠️ Edificio de otro jugador, no se selecciona")
 			return
 		
 		deselect_current_unit()
-
+		print("  ℹ️ Click en vacío, deseleccionado\n")
 # ==============================
 # Seleccionar / deseleccionar
 # ==============================
@@ -637,7 +787,17 @@ func _on_move_button_pressed() -> void:
 		return
 
 	select_cursor_instance = select_scene.instantiate()
-	get_tree().current_scene.add_child(select_cursor_instance)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
+
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+	parent_node.add_child(select_cursor_instance)
+
 
 	is_selecting_terrain = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -660,7 +820,18 @@ func _on_attack_button_pressed() -> void:
 		return
 
 	select_cursor_instance = select_scene.instantiate()
-	get_tree().current_scene.add_child(select_cursor_instance)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
+
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+
+	parent_node.add_child(select_cursor_instance)
+
 
 	is_selecting_objective = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -670,6 +841,15 @@ func _on_attack_button_pressed() -> void:
 # Cursor de selección
 # ==============================
 func _process(delta: float) -> void:
+	# 🔥 Manejar invulnerabilidad
+	if is_invulnerable:
+		invulnerability_timer -= delta
+		
+		if invulnerability_timer <= 0:
+			is_invulnerable = false
+			invulnerability_timer = 0
+			print("  ✅ Invulnerabilidad de %s terminada" % player_name)
+	# ===== TU CÓDIGO EXISTENTE =====
 	if not is_active_player: 
 		return
 	
@@ -680,10 +860,11 @@ func _process(delta: float) -> void:
 
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
 		if animated_sprite and not animated_sprite.is_playing():
-			animated_sprite.play("default")
+			animated_sprite. play("default")
 
 	if is_placing_building and build_placeholder:
 		_update_build_placeholder_position()
+		
 func _update_build_placeholder_position() -> void:
 	if not is_placing_building or build_placeholder == null:
 		return
@@ -717,7 +898,6 @@ func _update_gold_label():
 func _update_resources_label():
 	resourcesLabel.text = str(resources)
 
-@onready var castle_controller = $BaseMap/MedievalCastleController
 var workers: int = 0
 @onready var workers_label = $InfoHud/workers   
 @onready var attackUnits_label = $InfoHud/unitsAttack   
@@ -742,9 +922,13 @@ func _ready() -> void:
 		$TeamHud.visible = false
 	if $InfoHud:
 		$InfoHud.visible = false
+	if $DirectionalLight3D:
+		$DirectionalLight3D.visible = false;
 	
+	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
+	GameStarter.battle_mode_ended.connect(_on_battle_mode_ended)
 	GameStarter.connect("second_tick", _on_second_tick)
-	add_building(castle_controller)
+	
 	var rts = $RtsController
 	if is_active_player:
 		rts. movement_speed = movement_speed
@@ -772,8 +956,13 @@ func _ready() -> void:
 	else:
 		camera.current = false
 		rts.set_process(false)
+func _on_battle_mode_started() -> void:
+	is_battle_mode = true
+	print("⚔️ %s entró en modo batalla" % player_name)
 
-	disable_node_3d_recursive($BaseMap)
+func _on_battle_mode_ended() -> void:
+	is_battle_mode = false
+	print("🏠 %s salió del modo batalla" % player_name)
 
 var building_to_build: String = ""
 
@@ -787,7 +976,17 @@ func _start_build_mode(building_name: String) -> void:
 	build_placeholder = controller_scene.instantiate()
 	build_placeholder.set_physics_process(false)
 
-	get_tree().current_scene.add_child(build_placeholder)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
+
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+	parent_node.add_child(build_placeholder)
+
 	
 	await get_tree().process_frame
 	
@@ -851,6 +1050,10 @@ func _update_units_labels() -> void:
 		attackUnits_label.text = "Attack units: " + str(attack_units.size())
 	if defenseUnits_label:
 		defenseUnits_label.text = "Defense units: " + str(defense_units.size())
+	if workers_label:
+		workers_label.text = "Workers: " + str(workers)
+	print("📊 Attack: %d | Defense: %d | Battle: %d | Total: %d" %
+		[attack_units.size(), defense_units.size(), battle_units.size(), units.size()])
 
 func disable_node_3d_recursive(node: Node) -> void:
 	if node == null:
@@ -895,24 +1098,26 @@ func enable_node_3d_recursive(node: Node) -> void:
 # 💀 Callback cuando una unidad muere
 # ==============================
 func _on_unit_died(unit: Entity) -> void:
-	print("💀 Unidad muerta detectada: %s" % unit. name)
+	print("💀 Unidad muerta detectada: %s" % unit.name)
 	
-	# Remover de arrays
+	# Remover de arrays asociados a BaseMap
 	if unit in units:
 		units.erase(unit)
 	if unit in attack_units:
 		attack_units.erase(unit)
 	if unit in defense_units:
 		defense_units.erase(unit)
+	# Remover de battle_units (si estaba en batalla)
+	if unit in battle_units:
+		battle_units.erase(unit)
+		print("  ❌ Removido de battle_units: %s" % unit.name)
 	
-	# Actualizar HUD
 	_update_units_labels()
 	
-	# Si era la unidad seleccionada, deseleccionar
 	if selected_unit == unit:
 		deselect_current_unit()
 	
-	print("📊 Unidades restantes: %d" % units.size())
+	print("📊 Unidades restantes: total %d | battle %d" % [units.size(), battle_units.size()])
 
 
 # 🔥 Nueva variable
@@ -936,7 +1141,18 @@ func _start_ability_terrain_selection(source_unit: Unit, ability_id: String, max
 		return
 
 	select_cursor_instance = select_scene.instantiate()
-	get_tree().current_scene.add_child(select_cursor_instance)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
+
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+
+	parent_node.add_child(select_cursor_instance)
+
 
 	is_selecting_ability_terrain = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -961,8 +1177,252 @@ func _start_ability_ally_selection(source_unit: Unit, ability_id: String) -> voi
 		return
 
 	select_cursor_instance = select_scene.instantiate()
-	get_tree().current_scene.add_child(select_cursor_instance)
+	var parent_node: Node
+	if is_battle_mode:
+		parent_node = get_battle_map()
+	else:
+		parent_node = get_base_map()
 
+	if parent_node == null:
+		print("❌ No se pudo obtener el mapa activo")
+		return
+
+	parent_node.add_child(select_cursor_instance)
 	is_selecting_ability_ally = true
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	print("🎯 Modo selección de aliado para habilidad activado: %s" % ability_id)
+	
+	
+# 🔥 NUEVA FUNCIÓN: Obtener BaseMap desde GameScene
+func get_base_map() -> Node:
+	# El PlayerController es hijo de GameManager
+	# GameManager es hijo de GameScene
+	# BaseMap es hijo de GameScene
+	
+	var game_manager = get_parent()
+	if game_manager == null:
+		print("❌ No se encontró GameManager")
+		return null
+	
+	var game_scene = game_manager.get_parent()
+	if game_scene == null:
+		print("❌ No se encontró GameScene")
+		return null
+	
+	var base_map = game_scene.get_node_or_null("BaseMap")
+	if base_map == null:
+		print("❌ No se encontró BaseMap en GameScene")
+		return null
+	
+	return base_map
+
+# 🔥 NUEVA FUNCIÓN: Obtener BattleMap desde GameScene
+func get_battle_map() -> Node:
+	var game_manager = get_parent()
+	if game_manager == null:
+		return null
+	
+	var game_scene = game_manager.get_parent()
+	if game_scene == null:
+		return null
+	
+	return game_scene.get_node_or_null("Map1")
+	
+	
+# 🔥 NUEVA FUNCIÓN: Transferir unidades de ataque al Battle Map
+# 🔥 FUNCIÓN: Transferir unidades de ataque al Battle Map
+func transfer_attack_units_to_battle_map() -> void:
+	print("\n🔍 DEBUG: transfer_attack_units_to_battle_map() - attack_units.size() = %d" % attack_units.size())
+	
+	if attack_units.size() == 0:
+		print("⚠️ %s: No hay unidades de ataque para transferir" % player_name)
+		return
+	
+	var battle_map = GameStarter.battle_map_instance
+	if battle_map == null:
+		print("❌ No se encontró Battle Map")
+		return
+	
+	# Determinar áreas de spawn según el player_index
+	var ground_area_name = "Player%dArea3D" % (player_index + 1)
+	var water_area_name = "Player%dWArea3D" % (player_index + 1)
+	
+	var ground_area = battle_map.get_node_or_null("Node3D/" + ground_area_name)
+	var water_area = battle_map.get_node_or_null("Node3D/" + water_area_name)
+	
+	if ground_area == null:
+		print("❌ No se encontró área de spawn terrestre: %s" % ground_area_name)
+		return
+	
+	if water_area == null:
+		print("❌ No se encontró área de spawn acuática: %s" % water_area_name)
+		return
+	
+	var ground_collision = ground_area.get_node_or_null("CollisionShape3D")
+	var water_collision = water_area.get_node_or_null("CollisionShape3D")
+	if ground_collision == null or water_collision == null:
+		print("❌ No se encontraron CollisionShapes en las áreas")
+		return
+	
+	# Copiar array para iterar (evitar modificar durante iteración)
+	var units_to_transfer = attack_units.duplicate()
+	
+	for unit in units_to_transfer:
+		if not is_instance_valid(unit):
+			# eliminar referencias inválidas
+			if unit in attack_units:
+				attack_units.erase(unit)
+			continue
+		
+		# REMOVER de todos los arrays relacionados con BaseMap
+		if unit in attack_units:
+			attack_units.erase(unit)
+		if unit in defense_units:
+			defense_units.erase(unit)
+		if unit in units:
+			units.erase(unit)
+		
+		# AGREGAR a battle_units (pertenecerán ahora a la batalla únicamente)
+		if unit not in battle_units:
+			battle_units.append(unit)
+		
+		# Determinar área de spawn según tipo de unidad
+		var spawn_collision: CollisionShape3D
+		if unit.unit_category == "aquatic":
+			spawn_collision = water_collision
+		else:
+			spawn_collision = ground_collision
+		
+		# Calcular posición aleatoria dentro del área
+		var spawn_pos = _get_random_position_in_area(spawn_collision)
+		
+		# Reparentar la unidad al Battle Map (desaparece del BaseMap)
+		var old_parent = unit.get_parent()
+		if old_parent:
+			old_parent.remove_child(unit)
+		
+		battle_map.add_child(unit)
+		await get_tree().process_frame
+		
+		# Posicionar y reactivar
+		unit.global_position = spawn_pos
+		unit.visible = true
+		unit.set_physics_process(true)
+		unit.set_process(true)
+		
+		print("  ✅ %s transferido a Battle Map en %v (Player %s)" % [unit.name, spawn_pos, player_name])
+	
+	# Al finalizar, asegurarse que attack_units está limpio
+	attack_units.clear()
+	_update_units_labels()
+	print("🎯 Transferencia completada para %s" % player_name)
+	print("   📊 battle_units: %d | attack_units: %d | defense_units: %d | units_total: %d" %
+		[battle_units.size(), attack_units.size(), defense_units.size(), units.size()])	
+# 🔥 NUEVA FUNCIÓN: Obtener posición aleatoria en área
+# 🔥 FUNCIÓN AUXILIAR: Obtener posición aleatoria en el CollisionShape (BoxShape3D)
+func _get_random_position_in_area(collision_shape: CollisionShape3D) -> Vector3:
+	var shape = collision_shape.shape
+	var center = collision_shape.global_position
+	if shape is BoxShape3D:
+		var half_x = shape.size.x / 2.0
+		var half_z = shape.size.z / 2.0
+		return Vector3(
+			center.x + randf_range(-half_x, half_x),
+			center.y,
+			center.z + randf_range(-half_z, half_z)
+		)
+	# fallback
+	return center
+# 🔥 NUEVA FUNCIÓN: Retornar unidades del Battle Map al BaseMap
+# 🔥 FUNCIÓN: Retornar unidades supervivientes del Battle Map al BaseMap
+func return_units_from_battle_map() -> void:
+	# Ahora las unidades NO vuelven nunca. Si se invoca, solo limpiamos unidades muertas y avisamos.
+	print("⚠️ return_units_from_battle_map() INVOCADO para %s — las unidades NO retornan por diseño." % player_name)
+	# Limpiar battle_units que estén inválidas o muertas
+	var copy = battle_units.duplicate()
+	for u in copy:
+		if not is_instance_valid(u) or (u is Unit and not u.is_alive):
+			if u in battle_units:
+				battle_units.erase(u)
+				print("  🗑️ Eliminada unidad inválida/muerta de battle_units:", u)
+
+	_update_units_labels()
+
+# Al final del archivo, agregar estas funciones nuevas
+
+# Modificar la función lose_life()
+func lose_life() -> void:
+	if is_defeated or is_invulnerable:
+		return
+	
+	current_lives -= 1
+	current_lives = max(0, current_lives)
+	
+	print("❤️‍🩹 %s perdió 1 vida (Vidas restantes: %d/%d)" % [player_name, current_lives, max_lives])
+	
+	# 🔥 ACTUALIZAR LIFEBAR VISUAL
+	if battle_life_bar != null and is_instance_valid(battle_life_bar):
+		if battle_life_bar.has_method("lose_life"):
+			battle_life_bar.lose_life()
+			print("  💔 LifeBar visual actualizado")
+		else:
+			print("  ⚠️ LifeBar no tiene método lose_life()")
+	else:
+		print("  ⚠️ No hay LifeBar asignado")
+	
+	# 🔥 Activar invulnerabilidad
+	is_invulnerable = true
+	invulnerability_timer = INVULNERABILITY_DURATION
+	print("  🛡️ Invulnerabilidad activada por %.1f segundos" % INVULNERABILITY_DURATION)
+	
+	if current_lives <= 0:
+		_on_defeat()
+# 🔥 FUNCIÓN: Jugador derrotado
+func _on_defeat() -> void:
+	if is_defeated:
+		return
+	
+	is_defeated = true
+	
+	print("\n💀💀💀 %s HA SIDO DERROTADO 💀💀💀" % player_name)
+	print("❌ Vidas: 0/%d\n" % max_lives)
+	
+	# TODO: Lógica de derrota
+	# - Ocultar todas las unidades del jugador
+	# - Mostrar mensaje de derrota
+	# - Deshabilitar controles
+	# etc.
+	
+	
+# 🔥 FUNCIÓN: Configurar unidades para Battle Mode
+func set_battle_mode_layers(enable: bool) -> void:
+	print("🔥 Configurando layers para Battle Mode: %s (Jugador: %s)" % [enable, player_name])
+	
+	if enable:
+		# 🔥 BATTLE MODE: Todas las unidades en capa compartida
+		for unit in battle_units:
+			if not is_instance_valid(unit):
+				continue
+			
+			# Están EN la capa de batalla
+			unit.collision_layer = 1 << 8  # LAYER_BATTLE_UNITS
+			
+			# Detectan: Terreno + Capa de batalla
+			unit.collision_mask = (1 << 0) | (1 << 8)
+			
+			# Si es acuática, añadir agua
+			if unit.unit_category == "aquatic":
+				unit.collision_mask |= 1 << 1
+			
+			print("  ✅ %s → Battle Layer (Layer: %d, Mask: %d)" % [unit.name, unit.collision_layer, unit.collision_mask])
+	
+	else:
+		# 🔥 BASE MODE: Restaurar capa individual del jugador
+		for unit in units:  # Todas las unidades (no solo battle_units)
+			if not is_instance_valid(unit):
+				continue
+			
+			# Restaurar configuración original
+			if unit.has_method("setup_player_collision_layers"):
+				unit.setup_player_collision_layers(player_index)
+				print("  ✅ %s → Restaurado a Player Layer %d" % [unit.name, 2 + player_index])
