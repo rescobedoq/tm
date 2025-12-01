@@ -9,6 +9,7 @@ size = Vector3(1, 0.765, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_qf52y"]
 
 [node name="MedievalShrineController" type="CharacterBody3D"]
+transform = Transform3D(22, 0, 0, 0, 22, 0, 0, 0, 22, 0, 0, 0)
 script = ExtResource("1_f5ppr")
 
 [node name="medievalForestShrine" parent="." instance=ExtResource("1_8gvyg")]

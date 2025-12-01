@@ -1,0 +1,88 @@
+[gd_scene load_steps=13 format=3 uid="uid://c52r1nmbey2sr"]
+
+[ext_resource type="Texture2D" uid="uid://drvr7dv2g0p8r" path="res://Assets/Images/HUD/sprites/pixelheart.png" id="1_jadoj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8tyo"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(0, 0, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kof8b"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(157, 0, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t36fr"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(314, 0, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3gtra"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(471, 0, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_msw4s"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(628, 0, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mqemu"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(0, 159, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jdgpe"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(157, 159, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1o75g"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(314, 159, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nfra2"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(471, 159, 157, 159)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66x41"]
+atlas = ExtResource("1_jadoj")
+region = Rect2(628, 159, 157, 159)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_08t6c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8tyo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kof8b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t36fr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3gtra")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_msw4s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mqemu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jdgpe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1o75g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nfra2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66x41")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Heart" type="Node3D"]
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
+transform = Transform3D(20, 0, 0, 0, -8.742278e-07, 20, 0, -20, -8.742278e-07, 0, 35, 0)
+sprite_frames = SubResource("SpriteFrames_08t6c")
+frame_progress = 0.26911473

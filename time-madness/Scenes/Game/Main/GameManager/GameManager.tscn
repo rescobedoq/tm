@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://3pbb2ky6xcrw"]
 
-[ext_resource type="Script" uid="uid://b7qvedguqcphe" path="res://Scenes/Game/Main/GameManager/GameManager.gd" id="1_lbe6u"]
+[ext_resource type="Script" uid="uid://u2j887k5f6yc" path="res://Scenes/Game/Main/GameManager/gameManager.gd" id="1_hp3kw"]
 [ext_resource type="VideoStream" uid="uid://di8jccadpn5hi" path="res://Assets/Videos/loading.ogv" id="2_fnph8"]
 [ext_resource type="Texture2D" uid="uid://xetd4xf8clb1" path="res://Assets/Images/battleLog.png" id="3_iacd1"]
 [ext_resource type="Texture2D" uid="uid://d21jfvvno8uy7" path="res://Assets/Images/UI/battleLogLogo.png" id="4_hp3kw"]
@@ -13,14 +13,14 @@ font_size = 30
 outline_size = 5
 outline_color = Color(0, 0, 0, 1)
 
-[node name="GameManager" type="Node2D"]
-script = ExtResource("1_lbe6u")
+[node name="GameManager" type="Node3D"]
+script = ExtResource("1_hp3kw")
 
 [node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
 offset_right = 40.0
 offset_bottom = 40.0
 stream = ExtResource("2_fnph8")
-speed_scale = 0.5
+speed_scale = 7.465
 
 [node name="Node" type="Control" parent="."]
 layout_mode = 3

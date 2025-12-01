@@ -1,4 +1,4 @@
-# GameStarter. gd (Autoload)
+# GameStarter.gd (Autoload)
 extends Node
 
 signal game_starting(players_data: Array)
@@ -8,9 +8,12 @@ signal player_controllers_ready(controllers: Array)
 signal second_tick(time_left: int)
 signal stage_time_over(stage: int)
 
-signal battle_mode_started
+signal battle_mode_started  # ✅ Ya existe
+signal battle_mode_ended     # 🔥 NUEVA SEÑAL
 
-var stage_duration := 10
+const LAYER_BATTLE_UNITS = 8  # 🔥 Nueva capa compartida en batalla
+
+var stage_duration := 60
 var stage_time_left := stage_duration
 var _timer := Timer.new()
 var _timer_is_running := false
@@ -57,10 +60,9 @@ func start_game(players: Array) -> void:
 	current_stage = 1
 	update_stage_type()
 
-	# 🔥 Crear PlayerControllers y BattleMap
+	# 🔥 Solo crear PlayerControllers
 	_create_player_controllers()
-	_create_battle_map()
-
+	
 	emit_signal("game_starting", players)
 	print("🎮 Señal game_starting emitida con %d jugadores" % players.size())
 	print("⏱️ Stage inicial: %d" % current_stage)
@@ -139,10 +141,10 @@ func _create_player_controllers() -> void:
 	# Limpiar controllers previos
 	for controller in player_controllers:
 		if is_instance_valid(controller):
-			controller.queue_free()
+			controller. queue_free()
 	player_controllers.clear()
 	
-	print("\n" + "=".repeat(60))
+	print("\n" + "=". repeat(60))
 	print("🎮 CREANDO PLAYER CONTROLLERS")
 	print("=".repeat(60))
 	
@@ -151,13 +153,14 @@ func _create_player_controllers() -> void:
 		
 		# 🔥 Crear PlayerController
 		var controller = player_controller_scene.instantiate()
-		controller.name = "Player%d" % (i + 1)
+		controller. name = "Player%d" % (i + 1)
 		controller.player_name = player_data.player_name
 		controller.is_active_player = not player_data.is_bot
 		controller.faction = player_data.race
 		controller.difficult_bot = player_data.is_bot
 		controller.gold = 500
 		controller.resources = 500
+		controller.player_index = i
 
 		# Posicionar el controller
 		controller.position = Vector3(i * 300, 0, 0)

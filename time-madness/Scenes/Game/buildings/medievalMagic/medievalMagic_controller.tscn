@@ -8,9 +8,10 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_yjp26"]
 
 [node name="MedievalMagicController" type="CharacterBody3D"]
+transform = Transform3D(25, 0, 0, 0, 25, 0, 0, 0, 25, 0, 0, 0)
 script = ExtResource("1_vf0dq")
 
-[node name="medievalMagicSchool" parent="." instance=ExtResource("1_ou1kl")]
+[node name="model3D" parent="." instance=ExtResource("1_ou1kl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.49, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

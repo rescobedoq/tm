@@ -279,16 +279,44 @@ func _ready() -> void:
 	play_idle()
 
 func setup_collision_layers() -> void:
-	collision_layer = 1 << 1              
-	collision_mask = (1 << 1) | (1 << 3) 
-
+	# Por defecto, capa 2 (Player 1)
+	# Esto se sobrescribirá cuando se asigne el player_owner
+	collision_layer = 1 << 2
+	collision_mask = (1 << 2) | (1 << 0)  # Mismo jugador + terreno
+	
+	# Configuración específica por tipo de unidad
 	if unit_category == "ground":
-		print("GROUND UNIT - Puede chocar con terreno")
-		collision_mask |= 1 << 4
+		collision_mask |= 1 << 0  # Terreno
 	elif unit_category == "aquatic":
-		print("AQUATIC UNIT")
-		collision_mask |= 1 << 9
+		collision_mask |= 1 << 1  # Agua
 
+# 🔥 NUEVA FUNCIÓN: Configurar capas según el jugador
+func setup_player_collision_layers(player_idx: int) -> void:
+	# Bits:
+	# 0 = Terreno
+	# 1 = Agua
+	# 2 = Player 0
+	# 3 = Player 1
+	# 4 = Player 2
+	# 5 = Player 3
+	# 6 = Player 4
+	# 7 = Player 5
+	
+	var player_layer = 2 + player_idx  # 2-7
+	
+	# Esta unidad está en la capa de su jugador
+	collision_layer = 1 << player_layer
+	
+	# Puede colisionar con:
+	# - Unidades/edificios de su mismo jugador
+	# - Terreno (bit 0)
+	collision_mask = (1 << player_layer) | (1 << 0)
+	
+	# Agregar agua si es unidad acuática
+	if unit_category == "aquatic":
+		collision_mask |= 1 << 1
+	
+	print("✅ [%s] Capas configuradas - Layer: %d, Mask: %d (Jugador %d)" % [name, player_layer, collision_mask, player_idx])
 
 func use_ability(ability):
 	print("Ejecutando habilidad de UNIDAD:", ability.name)
