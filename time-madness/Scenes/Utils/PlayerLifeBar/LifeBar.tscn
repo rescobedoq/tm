@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnmh0eebydy58"]
+
+[ext_resource type="Script" uid="uid://b33fs63icgxws" path="res://Scenes/Utils/PlayerLifeBar/life_bar.gd" id="1_eseme"]
+[ext_resource type="PackedScene" uid="uid://c52r1nmbey2sr" path="res://Scenes/Utils/PlayerLifeBar/Heart.tscn" id="1_il5on"]
+
+[node name="LifeBar" type="Node3D"]
+transform = Transform3D(0.2, 0, 0, 0, 0.18327256, -0.080069795, 0, 0.080069795, 0.18327256, -33.32749, -7.6293945e-06, 1.299582)
+script = ExtResource("1_eseme")
+
+[node name="h1" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.703842, 0, 1.0562727)
+
+[node name="h2" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 68.2679, 0, 0.8052666)
+
+[node name="h3" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 92.278946, 0, 0.63484025)
+
+[node name="h4" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.61963, 0, 1.2399428)
+
+[node name="h5" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 116.08983, 0, 0.6348479)
+
+[node name="h6" parent="." instance=ExtResource("1_il5on")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.151762, 0, 1.2415404)

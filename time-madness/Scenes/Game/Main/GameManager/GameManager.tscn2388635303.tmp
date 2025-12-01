@@ -1,0 +1,485 @@
+[gd_scene load_steps=8 format=3 uid="uid://3pbb2ky6xcrw"]
+
+[ext_resource type="Script" path="res://Scenes/Game/Main/GameManager/GameManager.gd" id="1_lbe6u"]
+[ext_resource type="VideoStream" uid="uid://di8jccadpn5hi" path="res://Assets/Videos/loading.ogv" id="2_fnph8"]
+[ext_resource type="Texture2D" uid="uid://xetd4xf8clb1" path="res://Assets/Images/battleLog.png" id="3_iacd1"]
+[ext_resource type="Texture2D" uid="uid://d21jfvvno8uy7" path="res://Assets/Images/UI/battleLogLogo.png" id="4_hp3kw"]
+[ext_resource type="LabelSettings" uid="uid://bsr17naa8nfge" path="res://Scenes/GUI/MainMenu/BattleLog.tres" id="5_i8hqc"]
+[ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_hp3kw"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pgyte"]
+font = ExtResource("6_hp3kw")
+font_size = 30
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[node name="GameManager" type="Node2D"]
+script = ExtResource("1_lbe6u")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+stream = ExtResource("2_fnph8")
+speed_scale = 0.5
+
+[node name="Node" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="ColorRect" type="ColorRect" parent="Node"]
+z_index = -375
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 0.022000002
+offset_left = -24.0
+offset_top = -21.0
+offset_right = 1949.0
+offset_bottom = 1117.24
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="Node"]
+position = Vector2(953.00006, 530)
+scale = Vector2(1.0615234, 1.0610352)
+texture = ExtResource("3_iacd1")
+
+[node name="BattleLogLogo" type="Sprite2D" parent="Node"]
+position = Vector2(705.375, 145.12498)
+scale = Vector2(0.60300785, 0.7553003)
+texture = ExtResource("4_hp3kw")
+
+[node name="Labels" type="Control" parent="Node"]
+anchors_preset = 0
+
+[node name="Label4" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 705.0
+offset_top = 219.0
+offset_right = 813.0
+offset_bottom = 263.0
+text = "Night 2"
+label_settings = ExtResource("5_i8hqc")
+
+[node name="Label3" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 703.0
+offset_top = 267.0
+offset_right = 802.0
+offset_bottom = 311.0
+text = "Day 2"
+label_settings = ExtResource("5_i8hqc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label9" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 908.0
+offset_top = 265.0
+offset_right = 1007.0
+offset_bottom = 309.0
+text = "Day 3"
+label_settings = ExtResource("5_i8hqc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label10" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 903.0
+offset_top = 218.0
+offset_right = 1011.0
+offset_bottom = 262.0
+text = "Night 3"
+label_settings = ExtResource("5_i8hqc")
+
+[node name="Label7" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 1100.0
+offset_top = 265.0
+offset_right = 1199.0
+offset_bottom = 309.0
+text = "Day 4"
+label_settings = ExtResource("5_i8hqc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label8" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 1099.0
+offset_top = 218.0
+offset_right = 1207.0
+offset_bottom = 262.0
+text = "Night 4"
+label_settings = ExtResource("5_i8hqc")
+
+[node name="Label5" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 1300.0
+offset_top = 267.0
+offset_right = 1399.0
+offset_bottom = 311.0
+text = "Day 5"
+label_settings = ExtResource("5_i8hqc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label6" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 1298.0
+offset_top = 218.0
+offset_right = 1406.0
+offset_bottom = 262.0
+text = "Night 5"
+label_settings = ExtResource("5_i8hqc")
+
+[node name="Label" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 503.0
+offset_top = 267.0
+offset_right = 602.0
+offset_bottom = 311.0
+text = "Day 1"
+label_settings = ExtResource("5_i8hqc")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label2" type="Label" parent="Node/Labels"]
+layout_mode = 0
+offset_left = 505.0
+offset_top = 219.0
+offset_right = 604.0
+offset_bottom = 263.0
+text = "Night 1"
+label_settings = ExtResource("5_i8hqc")
+
+[node name="Players" type="Control" parent="Node"]
+anchors_preset = 0
+
+[node name="Player1" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_right = -460.80002
+offset_bottom = -341.28003
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player1"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player1"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player1"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player1"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Player2" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_left = 473.0
+offset_right = 102.19998
+offset_bottom = -277.28003
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player2"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player2"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player2"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player2"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Player3" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_left = 9.0
+offset_top = 217.0
+offset_right = -361.80002
+offset_bottom = -60.28003
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player3"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player3"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player3"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player3"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Player4" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_left = 475.0
+offset_top = 219.0
+offset_right = 104.19998
+offset_bottom = -58.28003
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player4"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player4"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player4"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player4"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Player5" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_left = 12.0
+offset_top = 439.0
+offset_right = -358.80002
+offset_bottom = 161.71997
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player5"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player5"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player5"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player5"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Player6" type="Control" parent="Node/Players"]
+layout_mode = 1
+anchor_right = 0.24000001
+anchor_bottom = 0.316
+offset_left = 479.0
+offset_top = 436.0
+offset_right = 108.19998
+offset_bottom = 158.71997
+
+[node name="ColorRect" type="ColorRect" parent="Node/Players/Player6"]
+layout_mode = 0
+offset_left = 532.0
+offset_top = 407.0
+offset_right = 596.0
+offset_bottom = 470.0
+
+[node name="Name" type="Label" parent="Node/Players/Player6"]
+layout_mode = 0
+offset_left = 639.0
+offset_top = 410.0
+offset_right = 874.0
+offset_bottom = 452.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Faction" type="Label" parent="Node/Players/Player6"]
+layout_mode = 0
+offset_left = 633.0
+offset_top = 462.0
+offset_right = 868.0
+offset_bottom = 504.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Status" type="Label" parent="Node/Players/Player6"]
+layout_mode = 0
+offset_left = 631.0
+offset_top = 519.0
+offset_right = 866.0
+offset_bottom = 561.0
+label_settings = SubResource("LabelSettings_pgyte")
+
+[node name="Colors" type="Control" parent="Node"]
+anchors_preset = 0
+
+[node name="c1" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 499.0
+offset_top = 218.0
+offset_right = 612.0
+offset_bottom = 263.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c2" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 499.0
+offset_top = 265.0
+offset_right = 612.0
+offset_bottom = 310.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c3" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 701.0
+offset_top = 217.0
+offset_right = 814.0
+offset_bottom = 262.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c4" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 702.0
+offset_top = 265.0
+offset_right = 815.0
+offset_bottom = 310.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c5" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 899.0
+offset_top = 218.0
+offset_right = 1012.0
+offset_bottom = 263.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c6" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 899.0
+offset_top = 265.0
+offset_right = 1012.0
+offset_bottom = 310.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c7" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 1093.0
+offset_top = 218.0
+offset_right = 1206.0
+offset_bottom = 263.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c8" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 1093.0
+offset_top = 266.0
+offset_right = 1206.0
+offset_bottom = 311.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c9" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 1295.0
+offset_top = 218.0
+offset_right = 1408.0
+offset_bottom = 263.0
+color = Color(1, 1, 0.76862746, 0.3254902)
+
+[node name="c10" type="ColorRect" parent="Node/Colors"]
+visible = false
+layout_mode = 0
+offset_left = 1296.0
+offset_top = 266.0
+offset_right = 1409.0
+offset_bottom = 311.0
+color = Color(1, 1, 0.76862746, 0.3254902)
