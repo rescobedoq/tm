@@ -1,4 +1,4 @@
-[gd_scene load_steps=60 format=3 uid="uid://7x3dhs70f2fg"]
+[gd_scene load_steps=59 format=3 uid="uid://7x3dhs70f2fg"]
 
 [ext_resource type="Script" uid="uid://d27dq4betjefe" path="res://Scenes/Game/Map/Map1/map_1.gd" id="1_q241q"]
 [ext_resource type="Texture2D" uid="uid://7wbamyw854sj" path="res://Assets/Textures/Grass001/Grass001_1K.dds" id="1_ss6el"]
@@ -31,9 +31,7 @@
 [ext_resource type="Texture2D" uid="uid://doe1twna2vgly" path="res://Assets/Textures/Rocks022/Rocks022_normal.dds" id="28_pxqre"]
 [ext_resource type="Texture2D" uid="uid://d2ragfk15sfyk" path="res://Assets/Textures/Rocks023/Rocks023.dds" id="29_ktje0"]
 [ext_resource type="Texture2D" uid="uid://bmsvjkiev2o3x" path="res://Assets/Textures/Rocks023/Rocks023_normal.dds" id="30_kotuw"]
-[ext_resource type="PackedScene" uid="uid://bdf557rqesylj" path="res://Scripts/Player/PlayerController/PlayerController.tscn" id="32_42luu"]
-[ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="33_q241q"]
-[ext_resource type="PackedScene" uid="uid://prn7yngh7jse" path="res://Scenes/Game/Unit/medievalSoldier/medievalSoldier_controler.tscn" id="35_42luu"]
+[ext_resource type="Script" uid="uid://cdo1pnc23iix3" path="res://Scenes/Game/Map/Map1/PlayerBaseArea.gd" id="33_2vshx"]
 [ext_resource type="PackedScene" uid="uid://b5ed3ppcoyx82" path="res://Scenes/Game/Map/MapModels/water/waterPlane.tscn" id="36_b0elb"]
 
 [sub_resource type="Gradient" id="Gradient_806h8"]
@@ -244,6 +242,10 @@ texture_list = Array[Terrain3DTextureAsset]([SubResource("Terrain3DTextureAsset_
 [sub_resource type="BoxShape3D" id="BoxShape3D_8cs45"]
 size = Vector3(50, 1, 50)
 
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8cs45"]
+height = 50.0
+radius = 18.0
+
 [node name="Map1" type="Node3D"]
 script = ExtResource("1_q241q")
 
@@ -341,12 +343,6 @@ transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 66.121, -2, 54.625595)
 [node name="WaterPlane27" parent="Node" instance=ExtResource("36_b0elb")]
 transform = Transform3D(300, 0, 0, 0, 300, 0, 0, 0, 300, 208.96896, -2, 41.756416)
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 1000, 0)
-visible = false
-light_energy = 1.5
-sky_mode = 1
-
 [node name="PlayerBases" type="Node3D" parent="."]
 
 [node name="player1" type="Marker3D" parent="PlayerBases"]
@@ -366,10 +362,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -69.85698, 0, 218.1451)
 
 [node name="player6" type="Marker3D" parent="PlayerBases"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -226.53032, 0, 2.949854)
-
-[node name="medievalCastle" parent="." instance=ExtResource("33_q241q")]
-transform = Transform3D(37.875, 0, 0, 0, 37.875, 0, 0, 0, 37.875, 118.641, 19.14, -213.845)
-visible = false
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -469,21 +461,59 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.137054, 0, 16.814407)
 shape = SubResource("BoxShape3D_8cs45")
 debug_color = Color(0.9999998, 0.14987516, 0.26412508, 1)
 
-[node name="PlayerController" parent="." instance=ExtResource("32_42luu")]
-movement_speed = 300.0
-min_x = -1000.0
-max_x = 1000.0
-min_z = -1000.0
-max_z = 1000.0
+[node name="PlayerAreaBase" type="Node3D" parent="."]
 
-[node name="PlayerController2" parent="." instance=ExtResource("32_42luu")]
-visible = false
-player_name = "Jugador2"
-is_active_player = false
+[node name="Player1Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -108.021355, 0, -203.9521)
+script = ExtResource("33_2vshx")
 
-[node name="MedievalSoldierControler2" parent="." instance=ExtResource("35_42luu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -172.15414, 0, -67.80044)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player1Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5959015, 3.8146973e-06, -0.63368225)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
 
-[node name="MedievalSoldierControler" parent="." node_paths=PackedStringArray("player_owner") instance=ExtResource("35_42luu")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -188.49515, 0, -77.560036)
-player_owner = NodePath("../PlayerController2")
+[node name="Player2Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 117.24843, 1.5258789e-05, -212.5804)
+script = ExtResource("33_2vshx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player2Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2103424, 3.8146973e-06, -0.14865112)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
+
+[node name="Player3Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 211.12526, 1.5258789e-05, 1.9951782)
+script = ExtResource("33_2vshx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player3Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2103424, 3.8146973e-06, -0.14865112)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
+
+[node name="Player4Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 111.88402, 1.5258789e-05, 222.6057)
+script = ExtResource("33_2vshx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player4Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2103424, 3.8146973e-06, -0.14865112)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
+
+[node name="Player5Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75.19908, 1.5258789e-05, 218.5824)
+collision_layer = 0
+script = ExtResource("33_2vshx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player5Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2103424, 3.8146973e-06, -0.14865112)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
+
+[node name="Player6Area3D" type="Area3D" parent="PlayerAreaBase"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -228.75471, 1.5258789e-05, 6.018448)
+script = ExtResource("33_2vshx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerAreaBase/Player6Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.2103424, 3.8146973e-06, -0.14865112)
+shape = SubResource("CylinderShape3D_8cs45")
+debug_color = Color(1, 1, 1, 1)
