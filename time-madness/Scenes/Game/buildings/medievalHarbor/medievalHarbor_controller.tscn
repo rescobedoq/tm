@@ -9,6 +9,7 @@ size = Vector3(1, 0.55, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_3m32p"]
 
 [node name="MedievalHarborController" type="CharacterBody3D"]
+transform = Transform3D(20, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0)
 script = ExtResource("1_13847")
 
 [node name="medievalHarbor" parent="." instance=ExtResource("1_k4736")]
