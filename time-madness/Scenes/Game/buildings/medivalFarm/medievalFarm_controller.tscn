@@ -8,6 +8,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_10fww"]
 
 [node name="MedievalFarmController" type="CharacterBody3D"]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
 script = ExtResource("1_38i0p")
 
 [node name="medievalFarm" parent="." instance=ExtResource("1_i6gyi")]
