@@ -13,6 +13,8 @@ var player_buttons: Array = []
 var is_initialized: bool = false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	player_buttons = [
 		player1_button,
 		player2_button,
@@ -21,7 +23,11 @@ func _ready() -> void:
 		player5_button,
 		player6_button
 	]
-	
+	for button in [player1_button, player2_button, player3_button, player4_button, player5_button, player6_button]:
+		if button:
+			button.process_mode = Node.PROCESS_MODE_ALWAYS
+	if current_player_label:
+		current_player_label.process_mode = Node. PROCESS_MODE_ALWAYS
 	# Conectar a la señal de controllers listos
 	GameStarter.player_controllers_ready. connect(_on_controllers_ready)
 	

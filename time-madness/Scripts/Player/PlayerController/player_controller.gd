@@ -11,6 +11,7 @@ var invulnerability_timer: float = 0.0
 const INVULNERABILITY_DURATION: float = 2.0  # 2 segundos de invulnerabilidad
 var battle_life_bar = null
 var lose_screen_instance: Control = null
+var win_screen_instance: Control = null
 
 # ==============================
 # Nombre del jugador
@@ -1512,7 +1513,16 @@ func _on_defeat() -> void:
 		_show_lose_screen()
 	
 	print("✅ %s completamente deshabilitado" % player_name)
-
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
+	if game_manager == null:
+		game_manager = get_parent()  # Si está en GameManager directamente
+	
+	if game_manager and game_manager.has_method("check_victory_conditions"):
+		# Esperar un frame para asegurar que todo se procesó
+		await get_tree(). process_frame
+		game_manager.check_victory_conditions()
+		
+		
 # 🔥 NUEVA FUNCIÓN: Destruir castillo y LifeBar del Battle Map
 func _destroy_battle_castle() -> void:
 	print("🏰 Destruyendo castillo de %s..." % player_name)
@@ -1662,11 +1672,34 @@ func _cleanup_cursors() -> void:
 func _on_activated() -> void:
 	print("🎮 %s es ahora el jugador activo" % player_name)
 	
+	# 🔥 VERIFICAR SI GANÓ
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
+	var has_won = false
+	
+	if game_manager and game_manager.has_method("_get_player_data_for_controller"):
+		var player_data = game_manager._get_player_data_for_controller(self)
+		if player_data:
+			# Verificar si su equipo ganó
+			var alive_teams = []
+			for controller in GameStarter.get_player_controllers():
+				if is_instance_valid(controller) and not controller.is_defeated:
+					var other_data = game_manager._get_player_data_for_controller(controller)
+					if other_data and other_data.team not in alive_teams:
+						alive_teams.append(other_data.team)
+			
+			# Si solo queda 1 equipo Y es el mío → GANÉ
+			if alive_teams. size() == 1 and player_data.team in alive_teams:
+				has_won = true
+	
 	# 🔥 Si está derrotado, mostrar SOLO pantalla de derrota
 	if is_defeated:
 		_show_lose_screen()
 		return  # No mostrar HUDs normales
 	
+	# 🔥 Si ganó, mostrar SOLO pantalla de victoria
+	if has_won:
+		_show_victory_screen()
+		return  # No mostrar HUDs normales
 	# 🔥 HABILITAR RtsController
 	var rts = $RtsController
 	if rts:
@@ -1723,12 +1756,15 @@ func _on_activated() -> void:
 		if $InfoHud:
 			$InfoHud.visible = true
 
-# 🔥 NUEVA FUNCIÓN: Llamada cuando este jugador deja de ser activo
+# 🔥 MODIFICAR: Ocultar pantallas al desactivar
 func _on_deactivated() -> void:
 	print("🎮 %s ya no es el jugador activo" % player_name)
 	
 	# 🔥 Ocultar pantalla de derrota si existe
 	_hide_lose_screen()
+	
+	# 🔥 Ocultar pantalla de victoria si existe
+	_hide_victory_screen()
 	
 	# 🔥 Si está derrotado, no hacer nada más (ya está todo deshabilitado)
 	if is_defeated:
@@ -1787,3 +1823,52 @@ func _hide_lose_screen() -> void:
 	if lose_screen_instance != null and is_instance_valid(lose_screen_instance):
 		lose_screen_instance.visible = false
 		print("👁️ Pantalla de derrota ocultada para %s" % player_name)
+		
+		
+		
+# 🔥 MODIFICAR: Ocultar TODO el UI al mostrar pantalla de victoria
+func _show_victory_screen() -> void:
+	print("🏆 Mostrando pantalla de victoria para %s" % player_name)
+	
+	# 🔥 OCULTAR TODO EL UI PRIMERO
+	_hide_all_ui()
+	
+	var win_scene = load("res://Scenes/Game/Main/WinScene/WinScene.tscn")
+	if win_scene == null:
+		print("❌ No se pudo cargar WinScene. tscn")
+		return
+	
+	win_screen_instance = win_scene.instantiate()
+	
+	# Agregar como hijo directo de este PlayerController
+	add_child(win_screen_instance)
+	
+	# Asegurarse que esté en frente de todo
+	win_screen_instance.z_index = 100
+	
+	print("✅ Pantalla de victoria mostrada")
+
+# 🔥 NUEVA FUNCIÓN: Ocultar TODO el UI
+func _hide_all_ui() -> void:
+	if $UnitHud:
+		$UnitHud.visible = false
+	if $TeamHud:
+		$TeamHud.visible = false
+	if $PlayerHud:
+		$PlayerHud.visible = false
+	if $InfoHud:
+		$InfoHud.visible = false
+	if $DirectionalLight3D:
+		$DirectionalLight3D.visible = false
+	
+	# Deshabilitar RtsController
+	var rts = $RtsController
+	if rts:
+		rts.visible = false
+
+
+# 🔥 NUEVA FUNCIÓN: Ocultar pantalla de victoria
+func _hide_victory_screen() -> void:
+	if win_screen_instance != null and is_instance_valid(win_screen_instance):
+		win_screen_instance.visible = false
+		print("👁️ Pantalla de victoria ocultada para %s" % player_name)

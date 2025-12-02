@@ -1,19 +1,6 @@
 extends Node3D
 
-# Datos de prueba para 2 jugadores
-class PlayerConfig:
-	var player_name: String
-	var is_bot: bool
-	var race: String
-	var team: int
-	var difficulty: String
-	
-	func _init(name, bot, race, team, diff="easy"):
-		player_name = name
-		is_bot = bot
-		race = race
-		team = team
-		difficulty = diff
+
 
 
 func _ready():
@@ -22,19 +9,20 @@ func _ready():
 	print("==============================")
 	$Map1.disable_map()
 	GameStarter.battle_map_instance = $Map1
+	
 	# Conectar señales importantes del GameStarter (autoload)
 	GameStarter.player_controllers_ready.connect(_on_player_controllers_ready)
-	GameStarter.stage_changed.connect(_on_stage_changed)
+	GameStarter.stage_changed. connect(_on_stage_changed)
 	GameStarter.game_starting.connect(_on_game_starting)
 
 	# Crear configuración de 2 jugadores de prueba
 	var players = [
-		PlayerConfig.new("Player1", false, "humans", 1),
-		PlayerConfig.new("AI Bot", true, "orcs", 2, "normal")
+		PlayerData.new("Player1", "humans", "easy", 1, false),
+		PlayerData.new("AI Bot", "orcs", "normal", 2, true)
 	]
 
 	# 🔥 Lanzar el inicio del juego con 2 jugadores
-	GameStarter.start_game(players)
+	GameStarter. start_game(players)
 
 
 func _on_game_starting(players):
@@ -43,7 +31,7 @@ func _on_game_starting(players):
 
 	# Activar el primer stage
 	_update_stage_visibility()
-	GameStarter.start_stage_timer()
+	GameStarter. start_stage_timer()
 
 
 func _on_player_controllers_ready(controllers):
