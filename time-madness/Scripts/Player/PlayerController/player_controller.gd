@@ -10,6 +10,7 @@ var is_invulnerable: bool = false
 var invulnerability_timer: float = 0.0
 const INVULNERABILITY_DURATION: float = 2.0  # 2 segundos de invulnerabilidad
 var battle_life_bar = null
+var lose_screen_instance: Control = null
 
 # ==============================
 # Nombre del jugador
@@ -193,6 +194,8 @@ func update_team_hud() -> void:
 # Manejo de input (clicks)
 # ==============================
 func _unhandled_input(event):
+	if is_defeated:
+		return
 	if not is_active_player: 
 		return 
 	
@@ -851,6 +854,10 @@ func _on_attack_button_pressed() -> void:
 # Cursor de selección
 # ==============================
 func _process(delta: float) -> void:
+	# 🔥 Si está derrotado, no procesar nada
+	if is_defeated:
+		return
+	
 	# 🔥 Manejar invulnerabilidad
 	if is_invulnerable:
 		invulnerability_timer -= delta
@@ -1411,6 +1418,7 @@ func lose_life() -> void:
 	
 	if current_lives <= 0:
 		_on_defeat()
+		
 # 🔥 FUNCIÓN: Jugador derrotado
 func _on_defeat() -> void:
 	if is_defeated:
@@ -1421,13 +1429,125 @@ func _on_defeat() -> void:
 	print("\n💀💀💀 %s HA SIDO DERROTADO 💀💀💀" % player_name)
 	print("❌ Vidas: 0/%d\n" % max_lives)
 	
-	# TODO: Lógica de derrota
-	# - Ocultar todas las unidades del jugador
-	# - Mostrar mensaje de derrota
-	# - Deshabilitar controles
-	# etc.
+	# 🔥 1.  OCULTAR Y DESACTIVAR TODAS LAS UNIDADES DEL JUGADOR
+	print("👻 Ocultando todas las unidades de %s..." % player_name)
 	
+	# Ocultar unidades en batalla
+	for unit in battle_units:
+		if is_instance_valid(unit):
+			unit.visible = false
+			unit.set_physics_process(false)
+			unit.set_process(false)
+			unit.set_process_input(false)
+			print("  👻 %s ocultado" % unit.name)
 	
+	# Ocultar unidades restantes (por si acaso)
+	for unit in units:
+		if is_instance_valid(unit):
+			unit.visible = false
+			unit.set_physics_process(false)
+			unit.set_process(false)
+			unit.set_process_input(false)
+	
+	# Ocultar unidades de defensa
+	for unit in defense_units:
+		if is_instance_valid(unit):
+			unit.visible = false
+			unit. set_physics_process(false)
+			unit.set_process(false)
+			unit.set_process_input(false)
+	
+	# Ocultar unidades de ataque
+	for unit in attack_units:
+		if is_instance_valid(unit):
+			unit. visible = false
+			unit.set_physics_process(false)
+			unit.set_process(false)
+			unit.set_process_input(false)
+	
+	# 🔥 2. OCULTAR TODOS LOS EDIFICIOS DEL JUGADOR
+	print("🏚️ Ocultando todos los edificios de %s..." % player_name)
+	for building in buildings:
+		if is_instance_valid(building):
+			building.visible = false
+			building.set_physics_process(false)
+			building.set_process(false)
+	
+	# 🔥 3. ELIMINAR CASTILLO Y LIFEBAR EN BATTLE MAP
+	_destroy_battle_castle()
+	
+	# 🔥 4. DESHABILITAR TODOS LOS CONTROLES DEL DERROTADO
+	print("🚫 Deshabilitando controles de %s..." % player_name)
+	
+	# Deshabilitar RtsController (cámara y movimiento)
+	var rts = $RtsController
+	if rts:
+		rts.set_process(false)
+		rts. set_physics_process(false)
+		rts.set_process_input(false)
+		rts.set_process_unhandled_input(false)
+	
+	# Desconectar botones de UI
+	if has_method("_disconnect_ui_buttons"):
+		_disconnect_ui_buttons()
+	
+	# Deshabilitar input
+	set_process_input(false)
+	set_process_unhandled_input(false)
+	
+	# 🔥 5. OCULTAR TODOS LOS HUDS DEL DERROTADO
+	if $UnitHud:
+		$UnitHud.visible = false
+	if $TeamHud:
+		$TeamHud.visible = false
+	if $PlayerHud:
+		$PlayerHud.visible = false
+	if $InfoHud:
+		$InfoHud.visible = false
+	if $DirectionalLight3D:
+		$DirectionalLight3D.visible = false
+	
+	# 🔥 6. MOSTRAR PANTALLA DE DERROTA (SOLO PARA EL JUGADOR ACTIVO DERROTADO)
+	if is_active_player:
+		_show_lose_screen()
+	
+	print("✅ %s completamente deshabilitado" % player_name)
+
+# 🔥 NUEVA FUNCIÓN: Destruir castillo y LifeBar del Battle Map
+func _destroy_battle_castle() -> void:
+	print("🏰 Destruyendo castillo de %s..." % player_name)
+	
+	var battle_map = GameStarter. battle_map_instance
+	if battle_map == null:
+		print("  ⚠️ No hay Battle Map activo")
+		return
+	
+	# 🔥 BUSCAR Y ELIMINAR EL CASTILLO
+	var castle_name = "BattleCastle_Player%d" % (player_index + 1)
+	var castle = battle_map.get_node_or_null(castle_name)
+	
+	if castle and is_instance_valid(castle):
+		castle.queue_free()
+		print("  💥 Castillo '%s' eliminado" % castle_name)
+	else:
+		print("  ⚠️ No se encontró castillo: %s" % castle_name)
+	
+	# 🔥 BUSCAR Y ELIMINAR EL LIFEBAR
+	if battle_life_bar != null and is_instance_valid(battle_life_bar):
+		battle_life_bar.queue_free()
+		battle_life_bar = null
+		print("  💥 LifeBar eliminado")
+	else:
+		var life_bar_name = "LifeBar_Player%d" % (player_index + 1)
+		var life_bar = battle_map. get_node_or_null(life_bar_name)
+		
+		if life_bar and is_instance_valid(life_bar):
+			life_bar.queue_free()
+			print("  💥 LifeBar '%s' eliminado" % life_bar_name)
+		else:
+			print("  ⚠️ No se encontró LifeBar: %s" % life_bar_name)
+	
+	print("  ✅ Castillo y LifeBar de %s destruidos" % player_name)
 # 🔥 FUNCIÓN: Configurar unidades para Battle Mode
 func set_battle_mode_layers(enable: bool) -> void:
 	print("🔥 Configurando layers para Battle Mode: %s (Jugador: %s)" % [enable, player_name])
@@ -1538,3 +1658,132 @@ func _cleanup_cursors() -> void:
 	ability_terrain_max_range = 0.0
 	
 	print("🧹 Cursores, selecciones y HUD limpiados para: %s" % player_name)
+
+func _on_activated() -> void:
+	print("🎮 %s es ahora el jugador activo" % player_name)
+	
+	# 🔥 Si está derrotado, mostrar SOLO pantalla de derrota
+	if is_defeated:
+		_show_lose_screen()
+		return  # No mostrar HUDs normales
+	
+	# 🔥 HABILITAR RtsController
+	var rts = $RtsController
+	if rts:
+		rts.visible = true
+		rts.set_process(true)
+		rts.set_physics_process(true)
+		rts.set_process_input(true)
+		rts.set_process_unhandled_input(true)
+		
+		# Configurar parámetros de cámara
+		rts.movement_speed = movement_speed
+		rts.rotation_speed = rotation_speed
+		rts.zoom_speed = zoom_speed
+		rts.min_zoom = min_zoom
+		rts.max_zoom = max_zoom
+		rts.min_elevation_angle = min_elevation_angle
+		rts.max_elevation_angle = max_elevation_angle
+		rts.edge_margin = edge_margin
+		rts.allow_rotation = allow_rotation
+		rts.allow_zoom = allow_zoom
+		rts.allow_pan = allow_pan
+		rts.min_x = min_x
+		rts.max_x = max_x
+		rts.min_z = min_z
+		rts.max_z = max_z
+	
+	# 🔥 CONECTAR BOTONES DE UI
+	if has_method("_connect_ui_buttons"):
+		_connect_ui_buttons()
+	
+	# 🔥 ACTIVAR CÁMARA
+	if camera:
+		camera.make_current()
+	
+	# 🔥 HABILITAR DirectionalLight3D
+	if $DirectionalLight3D:
+		$DirectionalLight3D.visible = true
+	
+	# Mostrar HUDs según el modo
+	if is_battle_mode:
+		if $UnitHud:
+			$UnitHud.visible = true
+		if $TeamHud:
+			$TeamHud. visible = true
+		if $InfoHud:
+			$InfoHud.visible = true
+	else:
+		if $UnitHud:
+			$UnitHud.visible = true
+		if $TeamHud:
+			$TeamHud.visible = true
+		if $PlayerHud:
+			$PlayerHud.visible = true
+		if $InfoHud:
+			$InfoHud.visible = true
+
+# 🔥 NUEVA FUNCIÓN: Llamada cuando este jugador deja de ser activo
+func _on_deactivated() -> void:
+	print("🎮 %s ya no es el jugador activo" % player_name)
+	
+	# 🔥 Ocultar pantalla de derrota si existe
+	_hide_lose_screen()
+	
+	# 🔥 Si está derrotado, no hacer nada más (ya está todo deshabilitado)
+	if is_defeated:
+		return
+	
+	# 🔥 DESCONECTAR BOTONES
+	if has_method("_disconnect_ui_buttons"):
+		_disconnect_ui_buttons()
+	
+	# 🔥 DESHABILITAR RtsController
+	var rts = $RtsController
+	if rts:
+		rts.set_process(false)
+		rts.set_physics_process(false)
+		rts.set_process_input(false)
+		rts.set_process_unhandled_input(false)
+	
+	# Ocultar HUDs
+	if $UnitHud:
+		$UnitHud.visible = false
+	if $TeamHud:
+		$TeamHud.visible = false
+	if $PlayerHud:
+		$PlayerHud.visible = false
+	if $InfoHud:
+		$InfoHud. visible = false
+	if $DirectionalLight3D:
+		$DirectionalLight3D.visible = false
+
+# 🔥 MODIFICAR: Guardar referencia al crear
+func _show_lose_screen() -> void:
+	print("💀 Mostrando pantalla de derrota para %s" % player_name)
+	
+	# Si ya existe, solo hacerla visible
+	if lose_screen_instance != null and is_instance_valid(lose_screen_instance):
+		lose_screen_instance.visible = true
+		return
+	
+	var lose_scene = load("res://Scenes/Game/Main/LoseScene/LoseScene.tscn")
+	if lose_scene == null:
+		print("❌ No se pudo cargar LoseScene. tscn")
+		return
+	
+	lose_screen_instance = lose_scene.instantiate()
+	
+	# Agregar como hijo directo de este PlayerController
+	add_child(lose_screen_instance)
+	
+	# Asegurarse que esté en frente de todo
+	lose_screen_instance.z_index = 100
+	
+	print("✅ Pantalla de derrota mostrada")
+
+# 🔥 NUEVA FUNCIÓN: Ocultar pantalla de derrota
+func _hide_lose_screen() -> void:
+	if lose_screen_instance != null and is_instance_valid(lose_screen_instance):
+		lose_screen_instance.visible = false
+		print("👁️ Pantalla de derrota ocultada para %s" % player_name)

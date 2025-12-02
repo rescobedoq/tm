@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://5r1e7bdadrjo"]
+
+[ext_resource type="Texture2D" uid="uid://df68funesjilo" path="res://Assets/Images/victoryImage.png" id="1_mwm4q"]
+
+[sub_resource type="Theme" id="Theme_kp4ec"]
+
+[node name="WinScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DefeatImage" type="Sprite2D" parent="."]
+position = Vector2(946.00006, 539)
+scale = Vector2(1.0029297, 1.0673828)
+texture = ExtResource("1_mwm4q")
+
+[node name="Button" type="Button" parent="."]
+z_index = 1
+layout_mode = 0
+offset_left = 807.0
+offset_top = 738.0
+offset_right = 936.0
+offset_bottom = 769.0
+theme = SubResource("Theme_kp4ec")
+text = "Continuar"
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 848.0
+offset_top = 746.0
+offset_right = 895.0
+offset_bottom = 760.0
+mouse_filter = 2
+color = Color(0.25490198, 0.5411765, 0.20784314, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -195
+layout_mode = 0
+offset_left = -41.0
+offset_top = -114.0
+offset_right = 2011.0
+offset_bottom = 1128.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)

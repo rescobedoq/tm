@@ -25,7 +25,7 @@ func _ready():
 	current_magic = max_magic
 	attack_damage = 100
 	defense = 10
-	move_speed = 10
+	move_speed = 100
 	attack_range = 10.0
 	
 	# --- CARGAR RETRATO AUTOMÁTICAMENTE ---

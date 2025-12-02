@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6exb2g63ow63"]
+
+[ext_resource type="Texture2D" uid="uid://dy8d2wl0v35bn" path="res://Assets/Images/defeatImage.png" id="1_y41u5"]
+
+[sub_resource type="Theme" id="Theme_ovgi5"]
+
+[node name="LoseScene" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DefeatImage" type="Sprite2D" parent="."]
+position = Vector2(946.00006, 539)
+scale = Vector2(1.0029297, 1.0673828)
+texture = ExtResource("1_y41u5")
+
+[node name="Button" type="Button" parent="."]
+z_index = 1
+layout_mode = 0
+offset_left = 773.0
+offset_top = 758.0
+offset_right = 934.0
+offset_bottom = 793.0
+theme = SubResource("Theme_ovgi5")
+text = "Continuar"
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 828.0
+offset_top = 768.0
+offset_right = 875.0
+offset_bottom = 782.0
+mouse_filter = 2
+color = Color(0.67058825, 0.21568628, 0.16470589, 1)
+
+[node name="ColorRect" type="ColorRect" parent="."]
+z_index = -195
+layout_mode = 0
+offset_left = -63.0
+offset_top = -89.0
+offset_right = 1989.0
+offset_bottom = 1153.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
