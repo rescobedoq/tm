@@ -1014,6 +1014,12 @@ func _start_build_mode(building_name: String) -> void:
 	
 	await get_tree().process_frame
 	
+	if build_placeholder.has_method("setup_for_player"):
+		build_placeholder.setup_for_player(self)
+		print("✅ Placeholder configurado para %s (Player %d)" % [player_name, player_index])
+	else:
+		print("❌ BuildingPlaceholder no tiene setup_for_player()")
+	
 	if build_placeholder.has_method("set_building_type"):
 		build_placeholder.set_building_type(building_name)
 
