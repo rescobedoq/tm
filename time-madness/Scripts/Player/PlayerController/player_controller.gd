@@ -52,23 +52,22 @@ var player_index: int = 0
 
 
 # ===== Configuración de cámara =====
-@export_range(0, 1000) var movement_speed: float = 64
+@export_range(0, 1000) var movement_speed: float = 256
 @export_range(0, 1000) var rotation_speed: float = 5
 @export_range(0, 1000, 0.1) var zoom_speed: float = 50
-@export_range(0, 1000) var min_zoom: float = 32
-@export_range(0, 1000) var max_zoom: float = 256
-@export_range(0, 90) var min_elevation_angle: float = 10
-@export_range(0, 90) var max_elevation_angle: float = 90
+@export_range(0, 1000) var min_zoom: float = 8
+@export_range(0, 1000) var max_zoom: float = 512
+@export_range(0, 90) var min_elevation_angle: float = 0
+@export_range(0, 90) var max_elevation_angle: float = 360
 @export var edge_margin: float = 50
 @export var allow_rotation: bool = true
 @export var allow_zoom: bool = true
 @export var allow_pan: bool = true
 
-@export var min_x: float = 0
-@export var max_x: float = 250
-@export var min_z: float = -250
-@export var max_z: float = 0
-
+@export var min_x: float = -1000   
+@export var max_x: float = 5000    
+@export var min_z: float = -5000   
+@export var max_z: float = 1000    
 # ===== Recursos =====
 @export var gold: int = 500
 @export var resources: int = 500
@@ -277,7 +276,7 @@ func _unhandled_input(event):
 		if ability_terrain_max_range > 0 and ability_source_unit:
 			var distance = ability_source_unit.global_position.distance_to(target_pos)
 			if distance > ability_terrain_max_range:
-				print("❌ Posición demasiado lejos (%.1f / %.1f)" % [distance, ability_terrain_max_range])
+				print("❌ Posición demasiado lejos (%.1f / %. 1f)" % [distance, ability_terrain_max_range])
 				# No ejecutar, solo limpiar
 				is_selecting_ability_terrain = false
 				ability_source_unit = null
@@ -285,7 +284,7 @@ func _unhandled_input(event):
 				ability_terrain_max_range = 0.0
 				
 				if select_cursor_instance:
-					select_cursor_instance.queue_free()
+					select_cursor_instance. queue_free()
 					select_cursor_instance = null
 				
 				return
@@ -319,6 +318,10 @@ func _unhandled_input(event):
 		params.from = from
 		params.to = to
 		
+		# 🔥 EXCLUIR LA UNIDAD SELECCIONADA
+		if selected_unit:
+			params.exclude = [selected_unit. get_rid()]
+		
 		# 🔥 DETECTAR según el modo
 		if is_battle_mode:
 			params.collision_mask = 1 << 8
@@ -328,7 +331,7 @@ func _unhandled_input(event):
 			for i in range(6):
 				if i != player_index:
 					enemy_mask |= 1 << (2 + i)
-			params. collision_mask = enemy_mask
+			params.collision_mask = enemy_mask
 			print("  🔍 Raycast habilidad (base): mask = %d (enemigos)" % params.collision_mask)
 
 		var result = get_world_3d().direct_space_state.intersect_ray(params)
@@ -374,11 +377,15 @@ func _unhandled_input(event):
 		print(">>> Entramos en MODO SELECCIÓN DE ALIADO PARA HABILIDAD")
 		
 		var from = camera.project_ray_origin(mouse_pos)
-		var to = from + camera. project_ray_normal(mouse_pos) * 2000
+		var to = from + camera.project_ray_normal(mouse_pos) * 2000
 
 		var params = PhysicsRayQueryParameters3D.new()
-		params.from = from
+		params. from = from
 		params.to = to
+		
+		# 🔥 EXCLUIR LA UNIDAD SELECCIONADA
+		if selected_unit:
+			params.exclude = [selected_unit.get_rid()]
 		
 		# 🔥 DETECTAR según el modo
 		if is_battle_mode:
@@ -392,9 +399,9 @@ func _unhandled_input(event):
 		
 		if result:
 			print("  ✅ Detectado: %s | Layer: %d | Owner: %s" % [
-				result.collider.name,
-				result.collider.collision_layer if "collision_layer" in result.collider else -1,
-				result.collider.player_owner.player_name if result. collider and "player_owner" in result.collider else "sin dueño"
+				result. collider.name,
+				result.collider.collision_layer if "collision_layer" in result. collider else -1,
+				result.collider.player_owner.player_name if result.collider and "player_owner" in result.collider else "sin dueño"
 			])
 		else:
 			print("  ❌ No se detectó nada")
@@ -435,6 +442,10 @@ func _unhandled_input(event):
 		var params = PhysicsRayQueryParameters3D.new()
 		params.from = from
 		params.to = to
+		
+		# 🔥 EXCLUIR LA UNIDAD SELECCIONADA
+		if selected_unit:
+			params.exclude = [selected_unit.get_rid()]
 		
 		# 🔥 DETECTAR según el modo
 		if is_battle_mode:
@@ -552,7 +563,7 @@ func _unhandled_input(event):
 			var entity = result_units.collider as Entity
 			if entity.player_owner == self:
 				select_unit(entity)
-				print("  ✅ Unidad seleccionada: %s" % entity.name)
+				print("  ✅ Unidad seleccionada: %s" % entity. name)
 			else:
 				deselect_current_unit()
 				print("  ⚠️ Unidad de otro jugador, no se selecciona")
@@ -594,7 +605,6 @@ func _unhandled_input(event):
 		
 		deselect_current_unit()
 		print("  ℹ️ Click en vacío, deseleccionado\n")
-# ==============================
 # Seleccionar / deseleccionar
 # ==============================
 func select_unit(entity: Entity) -> void:
@@ -923,7 +933,7 @@ func _ready() -> void:
 	if $InfoHud:
 		$InfoHud.visible = false
 	if $DirectionalLight3D:
-		$DirectionalLight3D.visible = false;
+		$DirectionalLight3D.visible = false
 	
 	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
 	GameStarter.battle_mode_ended.connect(_on_battle_mode_ended)
@@ -931,7 +941,7 @@ func _ready() -> void:
 	
 	var rts = $RtsController
 	if is_active_player:
-		rts. movement_speed = movement_speed
+		rts.movement_speed = movement_speed
 		rts.rotation_speed = rotation_speed
 		rts.zoom_speed = zoom_speed
 		rts.min_zoom = min_zoom
@@ -939,29 +949,35 @@ func _ready() -> void:
 		rts.min_elevation_angle = min_elevation_angle
 		rts.max_elevation_angle = max_elevation_angle
 		rts.edge_margin = edge_margin
-		rts. allow_rotation = allow_rotation
+		rts.allow_rotation = allow_rotation
 		rts.allow_zoom = allow_zoom
 		rts.allow_pan = allow_pan
 		rts.min_x = min_x
 		rts.max_x = max_x
 		rts.min_z = min_z
 		rts.max_z = max_z
-		camera. make_current() 
-		moveButton.pressed.connect(_on_move_button_pressed)
-		attackButton.pressed.connect(_on_attack_button_pressed)
-
-		update_team_hud() 
+		camera.make_current()
+		
+		# 🔥 CONECTAR BOTONES SOLO SI ES ACTIVO
+		_connect_ui_buttons()
+		
+		update_team_hud()
 		_update_units_labels()
 		_update_workers_label()
 	else:
 		camera.current = false
 		rts.set_process(false)
+
 func _on_battle_mode_started() -> void:
 	is_battle_mode = true
+	_cleanup_cursors()  # 🔥 AGREGAR
+
 	print("⚔️ %s entró en modo batalla" % player_name)
 
 func _on_battle_mode_ended() -> void:
 	is_battle_mode = false
+	_cleanup_cursors()  # 🔥 AGREGAR
+
 	print("🏠 %s salió del modo batalla" % player_name)
 
 var building_to_build: String = ""
@@ -1426,3 +1442,81 @@ func set_battle_mode_layers(enable: bool) -> void:
 			if unit.has_method("setup_player_collision_layers"):
 				unit.setup_player_collision_layers(player_index)
 				print("  ✅ %s → Restaurado a Player Layer %d" % [unit.name, 2 + player_index])
+
+
+# 🔥 FUNCIÓN: Conectar botones de UI
+func _connect_ui_buttons() -> void:
+	# Desconectar primero (por si ya estaban conectados)
+	if moveButton. pressed. is_connected(_on_move_button_pressed):
+		moveButton.pressed.disconnect(_on_move_button_pressed)
+	if attackButton.pressed.is_connected(_on_attack_button_pressed):
+		attackButton.pressed. disconnect(_on_attack_button_pressed)
+	
+	# Conectar
+	moveButton.pressed.connect(_on_move_button_pressed)
+	attackButton.pressed.connect(_on_attack_button_pressed)
+	
+	print("  🔘 Botones de UI conectados para: %s" % player_name)
+
+# 🔥 FUNCIÓN: Desconectar botones de UI
+func _disconnect_ui_buttons() -> void:
+	if moveButton.pressed.is_connected(_on_move_button_pressed):
+		moveButton.pressed. disconnect(_on_move_button_pressed)
+	if attackButton. pressed.is_connected(_on_attack_button_pressed):
+		attackButton.pressed.disconnect(_on_attack_button_pressed)
+	
+	print("  🔘 Botones de UI desconectados para: %s" % player_name)
+
+# 🔥 NUEVA FUNCIÓN: Limpiar todos los cursores activos
+func _cleanup_cursors() -> void:
+	# Limpiar cursor de selección de terreno
+	if select_cursor_instance and is_instance_valid(select_cursor_instance):
+		select_cursor_instance.queue_free()
+		select_cursor_instance = null
+	
+	# Limpiar placeholder de construcción
+	if build_placeholder and is_instance_valid(build_placeholder):
+		build_placeholder. queue_free()
+		build_placeholder = null
+	
+	# 🔥 Deseleccionar unidades y edificios
+	if selected_unit != null:
+		selected_unit. deselect()
+		selected_unit = null
+	
+	if selected_building != null:
+		selected_building = null
+	
+	# 🔥 Limpiar habilidades y HUD
+	_clear_abilities()
+	
+	if hud_portrait:
+		hud_portrait.texture = null
+	if hud_attack:
+		hud_attack.text = "Attack: -"
+	if hud_defense:
+		hud_defense. text = "Defense: -"
+	if hud_velocity:
+		hud_velocity. text = "Speed: -"
+	if hud_health:
+		hud_health. max_value = 10000
+		hud_health.value = 0
+	if hud_energy:
+		hud_energy. max_value = 10000
+		hud_energy.value = 0
+	if hud_name:
+		hud_name. text = ""
+	
+	# Resetear estados
+	is_selecting_terrain = false
+	is_selecting_objective = false
+	is_selecting_ability_target = false
+	is_selecting_ability_terrain = false
+	is_selecting_ability_ally = false
+	is_placing_building = false
+	
+	ability_source_unit = null
+	ability_id_pending = ""
+	ability_terrain_max_range = 0.0
+	
+	print("🧹 Cursores, selecciones y HUD limpiados para: %s" % player_name)

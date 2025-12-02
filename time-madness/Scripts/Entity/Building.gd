@@ -170,7 +170,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	if new_unit.unit_category == "aquatic":
 		new_unit. global_position = _get_random_water_position()
 	else:
-		var min_dist := 15.0
+		var min_dist := 20.0
 		var max_dist := 20.0
 		var angle := randf() * TAU
 		var direction := Vector3(cos(angle), 0, sin(angle))
