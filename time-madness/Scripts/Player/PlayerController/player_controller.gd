@@ -75,13 +75,13 @@ var player_index: int = 0
 @export var maxUpKeep: int = 10
 
 # ===== Unidades y Edificios =====
-var units: Array = []
-var buildings: Array = []  
+var units: Array[Entity] = []  # 🔥 Tipado
+var buildings: Array[Building] = []  # 🔥 Tipado
 var selected_unit: Entity = null
 var selected_building: Building = null 
-var attack_units: Array = []
-var defense_units: Array = []
-var battle_units: Array = []
+var attack_units: Array[Entity] = []  # 🔥 Tipado
+var defense_units: Array[Entity] = []  # 🔥 Tipado
+var battle_units: Array[Entity] = []  # 🔥 Tipado
 
 
 
@@ -1244,11 +1244,8 @@ func get_battle_map() -> Node:
 	
 	return game_scene.get_node_or_null("Map1")
 	
-	
-# 🔥 NUEVA FUNCIÓN: Transferir unidades de ataque al Battle Map
-# 🔥 FUNCIÓN: Transferir unidades de ataque al Battle Map
 func transfer_attack_units_to_battle_map() -> void:
-	print("\n🔍 DEBUG: transfer_attack_units_to_battle_map() - attack_units.size() = %d" % attack_units.size())
+	print("\n🔍 DEBUG: transfer_attack_units_to_battle_map() - attack_units.size() = %d" % attack_units. size())
 	
 	if attack_units.size() == 0:
 		print("⚠️ %s: No hay unidades de ataque para transferir" % player_name)
@@ -1274,22 +1271,28 @@ func transfer_attack_units_to_battle_map() -> void:
 		print("❌ No se encontró área de spawn acuática: %s" % water_area_name)
 		return
 	
-	var ground_collision = ground_area.get_node_or_null("CollisionShape3D")
+	var ground_collision = ground_area. get_node_or_null("CollisionShape3D")
 	var water_collision = water_area.get_node_or_null("CollisionShape3D")
 	if ground_collision == null or water_collision == null:
 		print("❌ No se encontraron CollisionShapes en las áreas")
 		return
 	
-	# Copiar array para iterar (evitar modificar durante iteración)
+	# 🔥 LIMPIAR REFERENCIAS INVÁLIDAS ANTES DE ITERAR
+	var cleaned_units: Array[Entity] = []
+	for unit in attack_units:
+		if is_instance_valid(unit) and unit. is_alive and unit is Unit:
+			cleaned_units.append(unit)
+		else:
+			print("  🗑️ Referencia inválida encontrada y eliminada")
+	
+	attack_units = cleaned_units
+	print("  ✅ Unidades válidas para transferir: %d" % attack_units.size())
+	
+	# Copiar array para iterar
 	var units_to_transfer = attack_units.duplicate()
 	
+	# 🔥 FASE 1: TRANSFERIR TODAS LAS UNIDADES SIN AWAIT
 	for unit in units_to_transfer:
-		if not is_instance_valid(unit):
-			# eliminar referencias inválidas
-			if unit in attack_units:
-				attack_units.erase(unit)
-			continue
-		
 		# REMOVER de todos los arrays relacionados con BaseMap
 		if unit in attack_units:
 			attack_units.erase(unit)
@@ -1298,43 +1301,58 @@ func transfer_attack_units_to_battle_map() -> void:
 		if unit in units:
 			units.erase(unit)
 		
-		# AGREGAR a battle_units (pertenecerán ahora a la batalla únicamente)
+		# AGREGAR a battle_units
 		if unit not in battle_units:
 			battle_units.append(unit)
 		
-		# Determinar área de spawn según tipo de unidad
+		# Determinar área de spawn
 		var spawn_collision: CollisionShape3D
-		if unit.unit_category == "aquatic":
+		if unit. unit_category == "aquatic":
 			spawn_collision = water_collision
 		else:
 			spawn_collision = ground_collision
 		
-		# Calcular posición aleatoria dentro del área
+		# Calcular posición
 		var spawn_pos = _get_random_position_in_area(spawn_collision)
 		
-		# Reparentar la unidad al Battle Map (desaparece del BaseMap)
-		var old_parent = unit.get_parent()
+		# Reparentar
+		var old_parent = unit. get_parent()
 		if old_parent:
 			old_parent.remove_child(unit)
 		
 		battle_map.add_child(unit)
-		await get_tree().process_frame
 		
-		# Posicionar y reactivar
+		# 🔥 CONFIGURAR INMEDIATAMENTE (sin await)
+		unit.collision_layer = 1 << 8
+		unit.collision_mask = (1 << 0) | (1 << 8)
+		
+		if unit.unit_category == "aquatic":
+			unit.collision_mask |= 1 << 1
+		
+		# Posicionar
 		unit.global_position = spawn_pos
 		unit.visible = true
 		unit.set_physics_process(true)
 		unit.set_process(true)
 		
-		print("  ✅ %s transferido a Battle Map en %v (Player %s)" % [unit.name, spawn_pos, player_name])
+		print("  ✅ %s transferido a Battle Map en %v (Layer: %d, Mask: %d)" % [
+			unit.name, 
+			spawn_pos, 
+			unit.collision_layer,
+			unit.collision_mask
+		])
 	
-	# Al finalizar, asegurarse que attack_units está limpio
+	# 🔥 FASE 2: UN SOLO AWAIT AL FINAL
+	await get_tree().process_frame
+	
+	# Limpiar
 	attack_units.clear()
 	_update_units_labels()
+	
 	print("🎯 Transferencia completada para %s" % player_name)
 	print("   📊 battle_units: %d | attack_units: %d | defense_units: %d | units_total: %d" %
-		[battle_units.size(), attack_units.size(), defense_units.size(), units.size()])	
-# 🔥 NUEVA FUNCIÓN: Obtener posición aleatoria en área
+		[battle_units.size(), attack_units.size(), defense_units. size(), units.size()])
+
 # 🔥 FUNCIÓN AUXILIAR: Obtener posición aleatoria en el CollisionShape (BoxShape3D)
 func _get_random_position_in_area(collision_shape: CollisionShape3D) -> Vector3:
 	var shape = collision_shape.shape

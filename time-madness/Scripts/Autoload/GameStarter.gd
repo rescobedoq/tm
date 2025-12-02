@@ -13,7 +13,7 @@ signal battle_mode_ended     # 🔥 NUEVA SEÑAL
 
 const LAYER_BATTLE_UNITS = 8  # 🔥 Nueva capa compartida en batalla
 
-var stage_duration := 30
+var stage_duration := 120
 var stage_time_left := stage_duration
 var _timer := Timer.new()
 var _timer_is_running := false
