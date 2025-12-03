@@ -5,13 +5,37 @@ var default_scale: Vector3 = Vector3(10, 10, 10)
 var proximity_area: Area3D
 var is_valid_placement: bool = true
 var preview_model: Node3D = null
+var player_owner: Node = null  # 🔥 NUEVO
 
 func _ready():
-	collision_layer = 1 << 3
-	collision_mask = 4
+	# 🔥 NO configurar layers aquí
+	# Se configurarán cuando se asigne al jugador
 	
 	await get_tree().process_frame
 	_setup_proximity_detection()
+
+# 🔥 NUEVA FUNCIÓN: Configurar para un jugador
+func setup_for_player(player: Node):
+	player_owner = player
+	
+	if "player_index" not in player:
+		print("❌ Player no tiene player_index")
+		return
+	
+	var player_layer = 2 + player.player_index
+	
+	# CharacterBody3D del placeholder (no colisiona)
+	collision_layer = 0
+	collision_mask = 0
+	
+	# Area3D detecta edificios del mismo jugador
+	if proximity_area:
+		proximity_area.collision_layer = 0
+		proximity_area. collision_mask = 1 << player_layer
+		print("✅ BuildingPlaceholder configurado - Detecta layer %d (Jugador %d)" % [player_layer, player.player_index])
+	
+	# Forzar verificación inicial
+	_check_placement_validity()
 
 func _process(_delta):
 	# 🔥 VERIFICAR EN CADA FRAME
@@ -19,17 +43,20 @@ func _process(_delta):
 
 func _check_placement_validity():
 	if proximity_area == null:
+		is_valid_placement = true
 		return
 	
-	var overlapping_bodies = proximity_area.get_overlapping_bodies()
+	var overlapping_bodies = proximity_area. get_overlapping_bodies()
 	var overlapping_areas = proximity_area.get_overlapping_areas()
+	
+	
 	
 	# Filtrar para excluirse a sí mismo
 	var valid_bodies = []
 	for body in overlapping_bodies:
 		if body != self:
 			valid_bodies.append(body)
-	
+
 	var valid_areas = []
 	for area in overlapping_areas:
 		if area != proximity_area:
@@ -47,23 +74,22 @@ func _setup_proximity_detection():
 	proximity_area = get_node_or_null("Area3D")
 	
 	if proximity_area == null:
-		print("❌ No se encontró Area3D")
+		print("❌ No se encontró Area3D en BuildingPlaceholder")
 		return
 	
-	proximity_area.collision_layer = 1 << 3
-	proximity_area.collision_mask = 1 << 3
+	# 🔥 Layers se configuran en setup_for_player()
 	
-	var collision_shape = proximity_area.get_node_or_null("CollisionShape3D")
+	var collision_shape = proximity_area. get_node_or_null("CollisionShape3D")
 	if collision_shape:
 		collision_shape.disabled = false
 	
 	_adjust_proximity_radius()
 	
 	# Señales para optimización
-	proximity_area.area_entered.connect(_on_area_nearby)
-	proximity_area.area_exited.connect(_on_area_cleared)
+	proximity_area.area_entered.  connect(_on_area_nearby)
+	proximity_area.area_exited. connect(_on_area_cleared)
 	proximity_area.body_entered.connect(_on_building_nearby)
-	proximity_area.body_exited.connect(_on_building_cleared)
+	proximity_area. body_exited.connect(_on_building_cleared)
 
 func _get_building_scale() -> int:
 	return Building.get_building_scale_value(building_type)
@@ -74,20 +100,26 @@ func _adjust_proximity_radius():
 	# 🔹 Aquí podrías ajustar el radio según el tipo de edificio si quieres
 
 func _on_area_nearby(area: Area3D):
+	print("🟡 Area3D entró: %s" % area.name)
 	if area != proximity_area:
 		is_valid_placement = false
 		_update_visual_feedback()
 
 func _on_area_cleared(area: Area3D):
+	print("🟢 Area3D salió: %s" % area.name)
 	pass
 
 func _on_building_nearby(body):
+	print("🟡 Body entró: %s (tipo: %s)" % [body.name, body.get_class()])
 	if body is CharacterBody3D and body != self:
 		is_valid_placement = false
 		_update_visual_feedback()
 
 func _on_building_cleared(body):
+	print("🟢 Body salió: %s" % body.name)
 	pass
+
+# ...  resto del código sin cambios ...
 
 func _update_visual_feedback():
 	if preview_model == null:
@@ -175,3 +207,31 @@ func get_build() -> Node3D:
 		return null
 
 	return scene.instantiate()
+
+
+# 🔥 NUEVA FUNCIÓN: Verificar si la posición actual es válida
+func is_placement_valid() -> bool:
+	# Forzar una verificación inmediata
+	_check_placement_validity()
+	return is_valid_placement
+
+# 🔥 NUEVA FUNCIÓN: Verificar en una posición específica
+func can_build_at_position(pos: Vector3, player_layer: int) -> bool:
+	# Temporal: mover el placeholder a esa posición
+	var original_pos = global_position
+	global_position = pos
+	
+	await get_tree().process_frame
+	
+	# Configurar layers para el jugador específico
+	if proximity_area:
+		proximity_area.collision_mask = 1 << player_layer
+	
+	# Verificar colisiones
+	_check_placement_validity()
+	var result = is_valid_placement
+	
+	# Restaurar posición
+	global_position = original_pos
+	
+	return result

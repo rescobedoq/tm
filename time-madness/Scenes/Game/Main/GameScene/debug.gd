@@ -13,6 +13,8 @@ var player_buttons: Array = []
 var is_initialized: bool = false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
 	player_buttons = [
 		player1_button,
 		player2_button,
@@ -21,7 +23,11 @@ func _ready() -> void:
 		player5_button,
 		player6_button
 	]
-	
+	for button in [player1_button, player2_button, player3_button, player4_button, player5_button, player6_button]:
+		if button:
+			button.process_mode = Node.PROCESS_MODE_ALWAYS
+	if current_player_label:
+		current_player_label.process_mode = Node. PROCESS_MODE_ALWAYS
 	# Conectar a la señal de controllers listos
 	GameStarter.player_controllers_ready. connect(_on_controllers_ready)
 	
@@ -130,9 +136,35 @@ func _on_player_button_pressed(player_index: int) -> void:
 	])
 
 
-
 func _deactivate_player(controller) -> void:
 	controller.is_active_player = false
+	
+	# 🔥 LLAMAR A LA FUNCIÓN DEL CONTROLLER
+	if controller.has_method("_on_deactivated"):
+		controller._on_deactivated()
+	else:
+		# Fallback si no existe la función (código antiguo)
+		_deactivate_player_legacy(controller)
+	
+	print("  ❌ %s desactivado" % controller. player_name)
+
+func _activate_player(controller) -> void:
+	controller.is_active_player = true
+	
+	# 🔥 LLAMAR A LA FUNCIÓN DEL CONTROLLER
+	if controller.has_method("_on_activated"):
+		controller._on_activated()
+	else:
+		# Fallback si no existe la función (código antiguo)
+		_activate_player_legacy(controller)
+	
+	print("  ✅ %s activado completamente" % controller.player_name)
+
+# 🔥 Código antiguo como fallback
+func _deactivate_player_legacy(controller) -> void:
+	# 🔥 DESCONECTAR BOTONES
+	if controller.has_method("_disconnect_ui_buttons"):
+		controller._disconnect_ui_buttons()
 	
 	# 🔥 DESHABILITAR RtsController completamente
 	var rts = controller.get_node_or_null("RtsController")
@@ -146,54 +178,55 @@ func _deactivate_player(controller) -> void:
 	var unit_hud = controller.get_node_or_null("UnitHud")
 	var team_hud = controller.get_node_or_null("TeamHud")
 	var player_hud = controller.get_node_or_null("PlayerHud")
-	var info_hud = controller.get_node_or_null("InfoHud")
+	var info_hud = controller. get_node_or_null("InfoHud")
 	var light = controller.get_node_or_null("DirectionalLight3D")
 	
-	if unit_hud: unit_hud.visible = false
-	if team_hud: team_hud.visible = false
-	if player_hud: player_hud.visible = false
-	if info_hud: info_hud.visible = false
+	if unit_hud: unit_hud. visible = false
+	if team_hud: team_hud. visible = false
+	if player_hud: player_hud. visible = false
+	if info_hud: info_hud. visible = false
 	if light: light.visible = false
-	
-	print("  ❌ %s desactivado" % controller.player_name)
-func _activate_player(controller) -> void:
-	controller. is_active_player = true
-	
+
+func _activate_player_legacy(controller) -> void:
 	# 🔥 HABILITAR RtsController PRIMERO
 	var rts = controller.get_node_or_null("RtsController")
 	if rts:
 		rts.visible = true
 		rts.set_process(true)
-		rts.set_physics_process(true)
+		rts. set_physics_process(true)
 		rts.set_process_input(true)
 		rts.set_process_unhandled_input(true)
 		
-		# 🔥🔥🔥 CONFIGURAR PARÁMETROS DE CÁMARA 🔥🔥🔥
-		rts.movement_speed = controller.movement_speed
+		# 🔥 CONFIGURAR PARÁMETROS DE CÁMARA
+		rts. movement_speed = controller.movement_speed
 		rts.rotation_speed = controller.rotation_speed
 		rts.zoom_speed = controller.zoom_speed
-		rts.min_zoom = controller.min_zoom
-		rts.max_zoom = controller.max_zoom
+		rts.min_zoom = controller. min_zoom
+		rts. max_zoom = controller.max_zoom
 		rts.min_elevation_angle = controller.min_elevation_angle
-		rts.max_elevation_angle = controller.max_elevation_angle
-		rts. edge_margin = controller.edge_margin
-		rts.allow_rotation = controller.allow_rotation
+		rts. max_elevation_angle = controller. max_elevation_angle
+		rts.edge_margin = controller. edge_margin
+		rts. allow_rotation = controller.allow_rotation
 		rts.allow_zoom = controller.allow_zoom
 		rts.allow_pan = controller.allow_pan
-		rts.min_x = controller.min_x
-		rts.max_x = controller.max_x
+		rts.min_x = controller. min_x
+		rts. max_x = controller.max_x
 		rts.min_z = controller.min_z
 		rts.max_z = controller.max_z
 		
-		print("  ✅ RtsController habilitado y configurado: %s" % controller.player_name)
+		print("  ✅ RtsController habilitado y configurado: %s" % controller. player_name)
+	
+	# 🔥 CONECTAR BOTONES DE UI
+	if controller.has_method("_connect_ui_buttons"):
+		controller._connect_ui_buttons()
 	
 	# 🔥 ACTIVAR CÁMARA
-	var camera = controller.get_node_or_null("RtsController/Elevation/Camera3D")
+	var camera = controller. get_node_or_null("RtsController/Elevation/Camera3D")
 	if camera:
 		camera.make_current()
-		print("  ✅ Cámara activada: %s" % controller. player_name)
+		print("  ✅ Cámara activada: %s" % controller.player_name)
 	else:
-		print("  ❌ No se encontró cámara para: %s" % controller. player_name)
+		print("  ❌ No se encontró cámara para: %s" % controller.player_name)
 	
 	# Obtener GameManager
 	var game_manager = get_tree().get_first_node_in_group("game_manager")
@@ -240,5 +273,3 @@ func _activate_player(controller) -> void:
 				print("  ✅ BaseMap activado: %s" % controller.player_name)
 		
 		print("  ✅ HUD completo visible: %s" % controller.player_name)
-	
-	print("  ✅ %s activado completamente" % controller.player_name)

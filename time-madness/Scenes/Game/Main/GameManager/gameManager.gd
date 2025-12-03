@@ -626,3 +626,110 @@ func _apply_color_to_meshes(node: Node, color: Color) -> void:
 	# Aplicar recursivamente a todos los hijos
 	for child in node.get_children():
 		_apply_color_to_meshes(child, color)
+
+
+# 🔥 AGREGAR AL GameManager. gd
+
+# === DETECCIÓN DE VICTORIA ===
+func check_victory_conditions() -> void:
+	print("\n🏆 Verificando condiciones de victoria...")
+	
+	var alive_players: Array = []
+	var alive_teams: Array = []
+	
+	# 🔥 Recopilar jugadores vivos y sus equipos
+	for controller in GameStarter.get_player_controllers():
+		if is_instance_valid(controller) and not controller.is_defeated:
+			alive_players.append(controller)
+			
+			# Obtener el equipo del jugador desde configured_players
+			var player_data = _get_player_data_for_controller(controller)
+			if player_data and player_data.team not in alive_teams:
+				alive_teams.append(player_data.team)
+			
+			print("  ✅ Vivo: %s (Equipo: %d)" % [controller.player_name, player_data.team if player_data else -1])
+	
+	print("📊 Jugadores vivos: %d | Equipos vivos: %d" % [alive_players.size(), alive_teams.size()])
+	
+	# 🔥 CASO 1: Solo queda 1 equipo → VICTORIA
+	if alive_teams.size() == 1:
+		var winning_team = alive_teams[0]
+		print("🏆 ¡EQUIPO %d HA GANADO!" % winning_team)
+		_on_team_victory(winning_team, alive_players)
+		return
+	
+	# 🔥 CASO 2: No quedan jugadores vivos → EMPATE (raro)
+	if alive_players.size() == 0:
+		print("⚖️ EMPATE: Todos los jugadores fueron derrotados")
+		_on_game_draw()
+		return
+	
+	# 🔥 CASO 3: Aún hay varios equipos → Continuar jugando
+	print("⚔️ Aún hay %d equipos en competencia.  El juego continúa." % alive_teams.size())
+
+# 🔥 NUEVA FUNCIÓN: Obtener PlayerData de un controller
+func _get_player_data_for_controller(controller: PlayerController) -> PlayerData:
+	var players_data = GameStarter.configured_players
+	var controllers = GameStarter.get_player_controllers()
+	
+	# Buscar el índice del controller
+	var index = controllers.find(controller)
+	if index >= 0 and index < players_data.size():
+		return players_data[index]
+	
+	return null
+
+# 🔥 NUEVA FUNCIÓN: Victoria de un equipo
+func _on_team_victory(winning_team: int, winning_players: Array) -> void:
+	print("\n" + "🏆". repeat(30))
+	print("🏆  VICTORIA DEL EQUIPO %d" % winning_team)
+	print("🏆".repeat(30))
+	
+	# Pausar el juego
+	get_tree().paused = true
+	
+	# Mostrar pantalla según si el jugador activo ganó o perdió
+	var active_controller = GameStarter.get_active_player_controller()
+	
+	if active_controller in winning_players:
+		print("✅ El jugador activo (%s) GANÓ" % active_controller.player_name)
+		_show_victory_screen_for_player(active_controller)
+	else:
+		print("❌ El jugador activo (%s) PERDIÓ" % active_controller.player_name)
+		# Ya debería tener la pantalla de derrota mostrada desde _on_defeat()
+		# Pero por si acaso:
+		if active_controller and active_controller.has_method("_show_lose_screen"):
+			active_controller._show_lose_screen()
+
+# 🔥 NUEVA FUNCIÓN: Empate
+func _on_game_draw() -> void:
+	print("\n" + "⚖️".repeat(30))
+	print("⚖️  EMPATE")
+	print("⚖️".repeat(30))
+	
+	get_tree().paused = true
+	
+	# Mostrar pantalla de empate (por ahora usar derrota)
+	var active_controller = GameStarter. get_active_player_controller()
+	if active_controller and active_controller.has_method("_show_lose_screen"):
+		active_controller._show_lose_screen()
+
+# 🔥 MODIFICAR: Guardar referencia
+func _show_victory_screen_for_player(controller: PlayerController) -> void:
+	print("🏆 Mostrando pantalla de victoria para: %s" % controller.player_name)
+	
+	# 🔥 Llamar a la función del controller
+	if controller.has_method("_show_victory_screen"):
+		controller._show_victory_screen()
+	else:
+		# Fallback
+		var win_scene = load("res://Scenes/Game/Main/WinScene/WinScene.tscn")
+		if win_scene == null:
+			print("❌ No se pudo cargar WinScene.tscn")
+			return
+		
+		var win_instance = win_scene.instantiate()
+		controller.add_child(win_instance)
+		win_instance.z_index = 100
+		
+		print("✅ Pantalla de victoria mostrada")

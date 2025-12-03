@@ -1,6 +1,21 @@
 # GameStarter.gd (Autoload)
 extends Node
 
+class_name PlayerData
+
+var player_name: String
+var race: String
+var difficulty: String
+var team: int
+var is_bot: bool
+
+func _init(name: String = "", race_val: String = "", diff: String = "easy", team_val: int = 0, bot: bool = false):
+	player_name = name
+	race = race_val
+	difficulty = diff
+	team = team_val
+	is_bot = bot
+
 signal game_starting(players_data: Array)
 signal stage_changed(new_stage: int)
 signal player_controllers_ready(controllers: Array)

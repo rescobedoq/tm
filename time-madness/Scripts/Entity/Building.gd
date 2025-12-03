@@ -59,11 +59,38 @@ func get_building_portrait() -> String:
 	return ""
 
 func _ready():
-	
-	_setup_building()
+	pass
+	#_setup_building()
 
+func initialize_for_player(player: Node) -> void:
+	player_owner = player
+	
+	print("\n🔍 ========== DEBUG BUILDING ==========")
+	print("🏗️ Edificio: %s" % name)
+	print("👤 Player: %s" % (player.player_name if "player_name" in player else "Unknown"))
+	print("🔢 Player Index: %s" % (player.player_index if "player_index" in player else "NULL"))
+	
+	if "player_index" in player:
+		setup_player_collision_layers(player.player_index)
+	else:
+		print("❌ El player no tiene player_index")
+	
+	_setup_proximity_area()
+	
+	# 🔍 Verificar collision layers DESPUÉS de configurar
+	print("\n📊 CharacterBody3D Collision:")
+	print("   collision_layer = %d (binario: %s)" % [collision_layer, String. num_uint64(collision_layer, 2)])
+	print("   collision_mask = %d (binario: %s)" % [collision_mask, String.num_uint64(collision_mask, 2)])
+	
+	var area = get_node_or_null("Area3D")
+	if area:
+		print("\n📊 Area3D Collision:")
+		print("   collision_layer = %d (binario: %s)" % [area.collision_layer, String.num_uint64(area.collision_layer, 2)])
+		print("   collision_mask = %d (binario: %s)" % [area. collision_mask, String.num_uint64(area.collision_mask, 2)])
+	
+	print("🔍 ====================================\n")
+	
 func _setup_building():
-	setup_collision_layers()
 	#var scale_value = get_building_scale()
 	#scale = Vector3(scale_value, scale_value, scale_value)
 	
@@ -73,13 +100,7 @@ func _setup_building():
 	
 	_setup_proximity_area()
 	
-func setup_collision_layers() -> void:
-	# Por defecto Layer 4 (Player 2 / índice 2)
-	# Esto se sobrescribirá cuando se asigne al jugador
-	collision_layer = 1 << 4
-	collision_mask = 0
-	
-	print("✅ Collision layers configurados para edificio (temporal)")
+
 
 # 🔥 NUEVA FUNCIÓN: Configurar capas según el jugador
 func setup_player_collision_layers(player_idx: int) -> void:
@@ -97,20 +118,34 @@ func setup_player_collision_layers(player_idx: int) -> void:
 func _setup_proximity_area():
 	var area = get_node_or_null("Area3D")
 	if area == null:
-		print("⚠️ No se encontró Area3D en ", get_class())
+		print("⚠️ No se encontró Area3D en ", name)
 		return
 	
-	# 🔥 El Area3D detecta edificios del MISMO jugador
-	area.collision_layer = 0
+	if player_owner == null or not ("player_index" in player_owner):
+		print("❌ player_owner no válido para configurar Area3D")
+		return
 	
-	if player_owner and player_owner.has("player_index"):
-		var player_layer = 2 + player_owner.player_index
-		area. collision_mask = 1 << player_layer
-		print("✅ Area3D configurada para detectar edificios del jugador %d" % player_owner.player_index)
-	else:
-		# Fallback temporal
-		area.collision_mask = 1 << 4
+	var player_layer = 2 + player_owner. player_index
+	
+	area. collision_layer = 0
+	area.collision_mask = 1 << player_layer
+	
+	# 🔍 CONECTAR SEÑALES PARA DEBUG
+	if not area.body_entered.is_connected(_on_area_body_entered):
+		area.body_entered.connect(_on_area_body_entered)
+	if not area.body_exited.is_connected(_on_area_body_exited):
+		area.body_exited. connect(_on_area_body_exited)
+	
+	print("✅ Area3D de '%s' configurada - Detecta layer %d" % [name, player_layer])
 
+# 🔍 FUNCIONES DE DEBUG
+func _on_area_body_entered(body: Node3D):
+	print("🟢 [%s] Area3D detectó ENTRADA: %s" % [name, body.name])
+	if body is Building:
+		print("   ✅ Es un edificio!")
+
+func _on_area_body_exited(body: Node3D):
+	print("🔴 [%s] Area3D detectó SALIDA: %s" % [name, body.name])
 func use_ability(ability: BuildingAbility) -> void:
 	print("🏰 Usando habilidad:", ability.name, "en edificio:", get_class())
 	
@@ -170,7 +205,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	if new_unit.unit_category == "aquatic":
 		new_unit. global_position = _get_random_water_position()
 	else:
-		var min_dist := 15.0
+		var min_dist := 20.0
 		var max_dist := 20.0
 		var angle := randf() * TAU
 		var direction := Vector3(cos(angle), 0, sin(angle))

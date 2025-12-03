@@ -23,11 +23,16 @@ func setup_for_player(player_controller: PlayerController) -> void:
 	
 	await get_tree().process_frame
 	
-	# Configurar capas de colisión del castillo
-	if player_castle.has_method("setup_player_collision_layers"):
-		player_castle. setup_player_collision_layers(player_controller. player_index)
+	# 🔥 INICIALIZAR CON JUGADOR (configura collision layers)
+	if player_castle.has_method("initialize_for_player"):
+		player_castle.initialize_for_player(player_controller)
+	else:
+		# Fallback: configurar manualmente
+		player_castle.player_owner = player_controller
+		if player_castle.has_method("setup_player_collision_layers"):
+			player_castle.setup_player_collision_layers(player_controller.player_index)
 	
 	# Asignar al jugador
-	player_controller. add_building(player_castle)
+	player_controller.add_building(player_castle)
 	
 	print("🏰 Castillo creado para %s (Jugador %d) en BaseMap" % [player_controller.player_name, player_controller.player_index])
