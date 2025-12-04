@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://c8xq1pjpvis2q" path="res://Assets/Images/GUI/Button2/pressedButton.png" id="4_s0olb"]
 [ext_resource type="Texture2D" uid="uid://br7lqqh6sk8fk" path="res://Assets/Images/GUI/Button2/hoverButton.png" id="5_ilu23"]
 [ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="6_lnkrm"]
-[ext_resource type="PackedScene" uid="uid://diiboocsqj2qg" path="res://Scenes/GUI/CreditsMenu/playerBox/playerBox.tscn" id="7_ilu23"]
+[ext_resource type="PackedScene" uid="uid://diiboocsqj2qg" path="res://Scenes/playerBox/playerBox.tscn" id="7_ilu23"]
 [ext_resource type="VideoStream" uid="uid://bd83n8on2g1eh" path="res://Assets/Videos/startingOptions.ogv" id="7_s0olb"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jbqt5"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://6o2u00q4dqxy"]
 
-[ext_resource type="Script" uid="uid://t5qjf4x3v25" path="res://Scenes/Game/buildings/medievalCastle/medieval_castle_controller.gd" id="1_s6kal"]
+[ext_resource type="Script" uid="uid://t5qjf4x3v25" path="res://Scenes/Game/Buildings/medievalCastle/medieval_castle_controller.gd" id="1_s6kal"]
 [ext_resource type="PackedScene" uid="uid://cihgpcrus344b" path="res://Assets/Models/Buildings/medievalCastle/medievalCastle.fbx" id="1_v46c6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s6kal"]

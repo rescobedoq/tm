@@ -152,6 +152,7 @@ func get_current_stage() -> int:
 	return current_stage
 
 # 🔥 Crear PlayerControllers
+# 🔥 Crear PlayerControllers
 func _create_player_controllers() -> void:
 	# Limpiar controllers previos
 	for controller in player_controllers:
@@ -163,27 +164,43 @@ func _create_player_controllers() -> void:
 	print("🎮 CREANDO PLAYER CONTROLLERS")
 	print("=".repeat(60))
 	
-	for i in range(configured_players. size()):
+	for i in range(configured_players.size()):
 		var player_data = configured_players[i]
 		
-		# 🔥 Crear PlayerController
-		var controller = player_controller_scene.instantiate()
-		controller. name = "Player%d" % (i + 1)
+		# 🔥 ELEGIR ESCENA SEGÚN SI ES BOT O NO
+		var controller_scene: PackedScene
+		if player_data.is_bot:
+			controller_scene = preload("res://Scripts/Player/BotPlayer/BotPlaver.tscn")
+		else:
+			controller_scene = preload("res://Scripts/Player/PlayerController/PlayerController.tscn")
+		
+		# Instanciar
+		var controller = controller_scene. instantiate()
+		controller.name = "Player%d" % (i + 1)
 		controller.player_name = player_data.player_name
 		controller.is_active_player = not player_data.is_bot
 		controller.faction = player_data.race
-		controller.difficult_bot = player_data.is_bot
 		controller.gold = 500
 		controller.resources = 500
 		controller.player_index = i
-
-		# Posicionar el controller
+		
+		# 🔥 CONFIGURAR DIFICULTAD SI ES BOT
+		if player_data.is_bot and controller. has_method("set_difficulty"):
+			match player_data.difficulty. to_lower():
+				"easy":
+					controller.difficulty = BotPlayer. Difficulty.EASY
+				"normal":
+					controller.difficulty = BotPlayer.Difficulty.NORMAL
+				"hard":
+					controller.difficulty = BotPlayer. Difficulty.HARD
+		
+		# Posicionar
 		controller.position = Vector3(i * 300, 0, 0)
 		
 		# Guardar referencia
 		player_controllers.append(controller)
 		
-		# 🔥 Imprimir info del jugador
+		# Imprimir info
 		var player_type = "🎮 HUMANO" if not player_data.is_bot else "🤖 BOT [" + player_data.difficulty. to_upper() + "]"
 		print("  [%d] %s | %s | Facción: %s | Equipo: %d" % 
 			[i + 1, player_data.player_name, player_type, player_data.race, player_data.team])
@@ -193,7 +210,6 @@ func _create_player_controllers() -> void:
 	
 	# Emitir señal
 	emit_signal("player_controllers_ready", player_controllers)
-
 # 🔥 Obtener controllers
 func get_player_controllers() -> Array:
 	return player_controllers

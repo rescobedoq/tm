@@ -40,7 +40,6 @@ var defense_units: Array[Entity] = []
 var battle_units: Array[Entity] = []
 var selected_unit: Entity = null
 var selected_building: Building = null
-
 # ==============================
 # 🎬 MODOS Y ESTADOS
 # ==============================

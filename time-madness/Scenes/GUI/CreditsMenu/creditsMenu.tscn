@@ -22,8 +22,8 @@ paragraph_spacing = -0.655
 font = ExtResource("6_73unm")
 font_size = 36
 font_color = Color(0.1005227, 0.1005227, 0.10052268, 1)
-outline_size = 3
-shadow_size = 15
+outline_size = 10
+shadow_size = 0
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="CreditsMenu" type="Control"]

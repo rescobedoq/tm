@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://uy2wufk0gbd8"]
 
-[ext_resource type="Script" uid="uid://cq6ni2tl4tnbf" path="res://Scenes/Game/buildings/medivalFarm/medieval_farm_controller.gd" id="1_38i0p"]
+[ext_resource type="Script" uid="uid://cq6ni2tl4tnbf" path="res://Scenes/Game/Buildings/medivalFarm/medieval_farm_controller.gd" id="1_38i0p"]
 [ext_resource type="PackedScene" uid="uid://dp1m0llganvvg" path="res://Assets/Models/Buildings/medievalFarm/medievalFarm.fbx" id="1_i6gyi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_38i0p"]

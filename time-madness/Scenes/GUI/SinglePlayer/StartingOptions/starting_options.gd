@@ -16,21 +16,6 @@ var alert_starting_instance: Window
 # Guardaremos los playerBoxes en una lista para manejarlos fácilmente
 var bot_boxes: Array[playerBox] = []
 
-# 🔥 Estructura de datos para cada jugador
-class PlayerData:
-	var player_name: String
-	var race: String
-	var difficulty: String
-	var team: int
-	var is_bot: bool
-	
-	func _init(name: String, race_val: String, diff: String, team_val: int, bot: bool):
-		player_name = name
-		race = race_val
-		difficulty = diff
-		team = team_val
-		is_bot = bot
-
 func _ready() -> void:
 	# Botón de volver
 	if not back_button.is_connected("pressed", Callable(self, "_on_back_button_pressed")):

@@ -5,6 +5,8 @@ extends CanvasLayer
 
 var next_scene_path: String = ""
 
+
+
 func fade_to_scene(path: String):
 	next_scene_path = path
 	anim_player.play("fade_out")
