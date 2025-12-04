@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bx6q380fh4ngu"]
+[gd_scene load_steps=25 format=3 uid="uid://bx6q380fh4ngu"]
 
 [ext_resource type="Script" uid="uid://2qjdytgvqfum" path="res://Scenes/Game/Map/BaseMap/base_map.gd" id="1_jwd7e"]
 [ext_resource type="Terrain3DMaterial" uid="uid://dxvo3vecmq2mq" path="res://Scenes/Game/Map/BaseMap/baseMap.tres" id="2_hjoq5"]
@@ -28,6 +28,12 @@ size = Vector3(1, 1, 4.845)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gwrvl"]
 size = Vector3(500, 1, 200)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_emt48"]
+size = Vector3(343.88477, 2083.9277, 300)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hjoq5"]
+size = Vector3(306.25244, 100, 264.44836)
 
 [node name="BaseMap" type="Node3D"]
 script = ExtResource("1_jwd7e")
@@ -251,3 +257,27 @@ collision_layer = 513
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 117.66831, 0, -145.66693)
 shape = SubResource("BoxShape3D_gwrvl")
 debug_color = Color(0.14314795, 0.64608777, 0, 0.41960785)
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 65536
+collision_mask = 0
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 357.702, 0, -127.922)
+shape = SubResource("BoxShape3D_emt48")
+debug_color = Color(0, 0, 1, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -107.35718, 991.96387, -112.45928)
+shape = SubResource("BoxShape3D_emt48")
+debug_color = Color(0, 0, 1, 1)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 117.46484, 0, 51.996674)
+shape = SubResource("BoxShape3D_hjoq5")
+debug_color = Color(0, 0, 1, 1)
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 115.9025, 991.96387, -355.47473)
+shape = SubResource("BoxShape3D_emt48")
+debug_color = Color(0, 0, 1, 1)

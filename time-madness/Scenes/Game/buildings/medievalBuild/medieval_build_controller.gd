@@ -1,5 +1,5 @@
 extends CharacterBody3D
-
+const BLOCK_ZONE_LAYER = 16
 var building_type: String = ""
 var default_scale: Vector3 = Vector3(10, 10, 10)
 var proximity_area: Area3D
@@ -31,7 +31,8 @@ func setup_for_player(player: Node):
 	# Area3D detecta edificios del mismo jugador
 	if proximity_area:
 		proximity_area.collision_layer = 0
-		proximity_area. collision_mask = 1 << player_layer
+		proximity_area.collision_mask = (1 << player_layer) | (1 << BLOCK_ZONE_LAYER)
+
 		print("✅ BuildingPlaceholder configurado - Detecta layer %d (Jugador %d)" % [player_layer, player.player_index])
 	
 	# Forzar verificación inicial
