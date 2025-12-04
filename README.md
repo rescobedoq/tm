@@ -1,6 +1,6 @@
 # 🕰️ TIME MADNESS
 **Estrategia, conquista y caos a través del tiempo.**
-
+(AVANCE VIDEO 2) -> https://youtu.be/2AD_HQR3cFk
 ---
 
 ## 🎮 Descripción General
