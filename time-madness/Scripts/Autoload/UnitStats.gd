@@ -1,0 +1,114 @@
+# UnitStats.gd
+# Script singleton o de recurso que contiene los stats base de cada unidad
+
+extends Node
+
+var stats: Dictionary = {
+	"Medieval Dragon": {
+		"max_health": 200,
+		"current_health": 200,
+		"attack_damage": 25,
+		"defense": 10,
+		"move_speed": 50,
+		"attack_range": 40,
+		"max_magic": 100
+	},
+	"Medieval Druid": {
+		"max_health": 200,
+		"current_health": 200,
+		"attack_damage": 25,
+		"defense": 10,
+		"move_speed": 20,
+		"attack_range": 30,
+		"max_magic": 100
+	},
+	"Medieval Golem": {
+		"max_health": 350,
+		"current_health": 350,
+		"attack_damage": 40,
+		"defense": 20,
+		"move_speed": 10,
+		"attack_range": 10,
+		"max_magic": 0
+	},
+	"Medieval Soldier": {
+		"max_health": 150,
+		"current_health": 150,
+		"attack_damage": 15,
+		"defense": 5,
+		"move_speed": 25,
+		"attack_range": 10,
+		"max_magic": 0
+	},
+	"Medieval Archer": {
+		"max_health": 120,
+		"current_health": 120,
+		"attack_damage": 12,
+		"defense": 3,
+		"move_speed": 20,
+		"attack_range": 50,
+		"max_magic": 50
+	},
+	"Medieval Cavalry": {
+		"max_health": 180,
+		"current_health": 180,
+		"attack_damage": 25,
+		"defense": 8,
+		"move_speed": 40,
+		"attack_range": 15,
+		"max_magic": 0
+	},
+	"Medieval Sorcerer": {
+		"max_health": 200,
+		"current_health": 200,
+		"attack_damage": 25,
+		"defense": 10,
+		"move_speed": 7,
+		"attack_range": 30,
+		"max_magic": 150
+	},
+	"Medieval Magic Soldier": {
+		"max_health": 180,
+		"current_health": 180,
+		"attack_damage": 20,
+		"defense": 8,
+		"move_speed": 15,
+		"attack_range": 25,
+		"max_magic": 50
+	},
+	"Medieval Ship Ghost": {
+		"max_health": 250,
+		"current_health": 250,
+		"attack_damage": 30,
+		"defense": 10,
+		"move_speed": 15,
+		"attack_range": 35,
+		"max_magic": 0
+	},
+	"Medieval Ship Kraken": {
+		"max_health": 400,
+		"current_health": 400,
+		"attack_damage": 50,
+		"defense": 20,
+		"move_speed": 10,
+		"attack_range": 30,
+		"max_magic": 0
+	},
+	"Medieval Ship Normal": {
+		"max_health": 300,
+		"current_health": 300,
+		"attack_damage": 20,
+		"defense": 12,
+		"move_speed": 12,
+		"attack_range": 25,
+		"max_magic": 0
+	}
+}
+
+
+func get_stats(unit_type: String) -> Dictionary:
+	if stats.has(unit_type):
+		return stats[unit_type].duplicate() 
+	else:
+		push_warning("No se encontraron stats para la unidad: %s" % unit_type)
+		return {}

@@ -2,7 +2,6 @@ extends Unit
 class_name MedievalCavalry
 
 
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalCavalry.png"
 const IMPACT_SCENE := "res://Scenes/Utils/Charge/Charge.tscn"
 
 # Tween para animación de thrust
@@ -17,42 +16,18 @@ var thrust_speed_multiplier: float = 3.5
 var thrust_damage_bonus: float = 70.0
 
 func _ready():
+	portrait_path = "res://Assets/Images/Portraits/Units/medievalCavalry.png"
 	unit_category = "ground"
-	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()
-
 	unit_type = "Medieval Cavalry"
-	max_health = 200
-	current_health = max_health
-	max_magic = 30
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 20
-	attack_range = 10.0
-	rotation_speed = 6
 
-	# Retrato
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
+	# 🎯 Asignar animaciones normales al padre
+	# (solo play_move depende de animación real)
+	anim_idle = ""  # Idle lo manejas con tween -> se sobrescribe
+	anim_move = "Armature|Armature|Armature|Armature|Unreal Take|baselayer"
+	anim_attack = ""  # Attack usa tween -> se sobrescribe
+	anim_death = ""   # Death usa tween -> se sobrescribe
+
+	super._ready()
 
 	abilities = [
 		UnitAbility.new(
@@ -73,13 +48,6 @@ func play_idle():
 			anim_player.stop()
 	_reset_rotation()
 
-func play_move():
-	if anim_player:
-		print(">>> play_move CALLED <<<")
-		anim_player.play("Armature|Armature|Armature|Armature|Unreal Take|baselayer")
-		var anim = anim_player.get_animation("Armature|Armature|Armature|Armature|Unreal Take|baselayer")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
 
 func play_thrust():
 	# Animación simple: inclinar al caballo hacia adelante

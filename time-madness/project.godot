@@ -21,6 +21,7 @@ FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
 GlobalUser="*res://GlobalUser.gd"
 GameStarter="*res://Scripts/Autoload/GameStarter.gd"
 Teams="*res://Scripts/Autoload/Teams.gd"
+UnitStats="*res://Scripts/Autoload/UnitStats.gd"
 
 [display]
 

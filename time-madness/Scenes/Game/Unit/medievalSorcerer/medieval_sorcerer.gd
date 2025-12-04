@@ -1,7 +1,6 @@
 extends Unit
 class_name Sorcerer
 
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSorcerer.png"
 const AREA_DEFENSE_EFFECT := "res://Scenes/Utils/AreaDefense/AreaDefense.tscn"
 const HEAL_EFFECT := "res://Scenes/Utils/Heal/Heal.tscn"
 const MENTAL_CONTROL_EFFECT := "res://Scenes/Utils/MentalControl/MentalControl.tscn"
@@ -19,41 +18,13 @@ var heal_effect_duration: float = 2.0
 
 func _ready():
 	unit_category = "ground"
-	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()
+	anim_idle   = "Idle_3_frame_rate_24_fbx"
+	anim_move   = "Walking_frame_rate_24_fbx"
+	anim_attack = "Charged_Spell_Cast_2_frame_rate_24_fbx"
+	anim_death  = "Dead_frame_rate_24_fbx"
+	portrait_path =  "res://Assets/Images/Portraits/Units/medievalSorcerer.png"
 	unit_type = "Medieval Sorcerer"
-	max_health = 200
-	current_health = max_health
-	max_magic = 150  # 🔥 Suficiente para las 3 habilidades
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 7
-	attack_range = 30
-
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
-		print("Retrato cargado correctamente:", PORTRAIT_PATH)
-	else:
-		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
+	super._ready()
 	
 	abilities = [
 		UnitAbility.new(
@@ -76,35 +47,6 @@ func _ready():
 		),
 	]
 
-func play_idle():
-	if anim_player:
-		print(">>> play_idle CALLED <<<")
-		if anim_player.is_playing():
-			anim_player.stop()
-
-func play_move():
-	if anim_player:
-		print(">>> play_move CALLED <<<")
-		anim_player.play("Walking_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Walking_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
-
-func play_attack():
-	if anim_player:
-		print(">>> play_attack CALLED <<<")
-		anim_player.play("Charged_Spell_Cast_2_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Charged_Spell_Cast_2_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation. LOOP_NONE
-			
-func play_death():
-	if anim_player:
-		print(">>> play_death CALLED <<<")
-		anim_player. play("Dead_frame_rate_24_fbx")
-		var anim = anim_player. get_animation("Dead_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation. LOOP_NONE
 
 # 🔥 Animaciones de habilidades
 func play_area_defense_cast():
@@ -348,7 +290,7 @@ func _spawn_mental_control_effect(world_position: Vector3) -> void:
 		print("🗑️ Efecto de Mental Control eliminado")
 
 func _transfer_unit_control(target: Entity) -> void:
-	if target. player_owner == null or player_owner == null:
+	if target.player_owner == null or player_owner == null:
 		print("❌ No se puede transferir control: player_owner no válido")
 		return
 	
@@ -371,7 +313,7 @@ func _transfer_unit_control(target: Entity) -> void:
 		old_owner._update_units_labels()
 	
 	# 🔥 Agregar al nuevo dueño
-	target.player_owner = new_owner
+	target.set_player_owner(new_owner)
 	new_owner.add_unit(target)
 	
 	# Cancelar cualquier acción de la unidad

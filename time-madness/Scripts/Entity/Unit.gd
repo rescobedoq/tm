@@ -1,10 +1,18 @@
 extends Entity
 class_name Unit
 
+var portrait_path: String = ""
+
 @onready var anim_player = $model/AnimationPlayer 
 @onready var collision_shape = $CollisionShape3D
 @onready var selection_circle = $Selection
 @onready var aura_controller = $Aura  
+
+@export var anim_idle: String = ""
+@export var anim_move: String = ""
+@export var anim_attack: String = ""
+@export var anim_death: String = ""
+
 # ------------------------------------------
 # Tipo de unidad para lógica de terreno, ataques y pathfinding
 # ------------------------------------------
@@ -53,17 +61,33 @@ var death_timer: float = 0.0
 # ------------------------------------------
 # Animaciones
 # ------------------------------------------
-func play_idle() -> void:
-	pass
+func play_idle():
+	if anim_player and anim_idle != "":
+		anim_player.play(anim_idle)
+		var anim = anim_player.get_animation(anim_idle)
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR  # Idle siempre loop
 
-func play_move() -> void:
-	pass
+func play_move():
+	if anim_player and anim_move != "":
+		anim_player.play(anim_move)
+		var anim = anim_player.get_animation(anim_move)
+		if anim:
+			anim.loop_mode = Animation.LOOP_LINEAR  # Movimiento siempre loop
 
-func play_attack() -> void:
-	pass
+func play_attack():
+	if anim_player and anim_attack != "":
+		anim_player.play(anim_attack)
+		var anim = anim_player.get_animation(anim_attack)
+		if anim:
+			anim.loop_mode = Animation.LOOP_NONE  # Ataque normalmente no loop
 
-func play_death() -> void:
-	pass
+func play_death():
+	if anim_player and anim_death != "":
+		anim_player.play(anim_death)
+		var anim = anim_player.get_animation(anim_death)
+		if anim:
+			anim.loop_mode = Animation.LOOP_NONE  # Muerte no loop
 
 
 class UnitAbility:
@@ -279,6 +303,16 @@ func _finish_death() -> void:
 
 func _ready() -> void:
 	super._ready()
+	_init_aura()
+	_init_stats()
+	
+	if portrait_path != "":
+		var tex := load(portrait_path)
+		if tex:
+			portrait = tex
+		else:
+			print("❌ ERROR: No se pudo cargar el retrato:", portrait_path)
+		
 	setup_collision_layers()
 	play_idle()
 
@@ -324,3 +358,45 @@ func setup_player_collision_layers(player_idx: int) -> void:
 
 func use_ability(ability):
 	print("Ejecutando habilidad de UNIDAD:", ability.name)
+	
+func _apply_stats(stats: Dictionary) -> void:
+	max_health = stats.get("max_health", 100)
+	current_health = stats.get("current_health", max_health)
+	attack_damage = stats.get("attack_damage", 10)
+	defense = stats.get("defense", 5)
+	move_speed = stats.get("move_speed", 10)
+	attack_range = stats.get("attack_range", 20)
+	max_magic = stats.get("max_magic", 50)
+	current_magic = max_magic
+
+func _init_stats():
+	if UnitStats == null:
+		push_error("UnitStats no cargado!")
+		return
+	
+	var base_stats = UnitStats.get_stats(unit_type)
+	_apply_stats(base_stats)
+
+func _init_aura() -> void:
+	if aura_controller == null:
+		aura_controller = get_node_or_null("Aura")
+
+	if aura_controller and player_owner:
+		if "player_index" in player_owner:
+			aura_controller.set_aura_color_from_player(player_owner.player_index)
+			print("✅ Aura configurada para jugador %d en %s" %
+				[player_owner.player_index, name])
+		else:
+			print("⚠️ player_owner no tiene player_index en %s" % name)
+	else:
+		if not aura_controller:
+			print("⚠️ No se encontró nodo Aura en %s" % name)
+		if not player_owner:
+			print("⚠️ player_owner es null en %s" % name)
+
+func set_player_owner(new_owner):
+	player_owner = new_owner
+
+	if aura_controller and "player_index" in player_owner:
+		aura_controller.set_aura_color_from_player(player_owner.player_index)
+		print("🔄 Aura actualizada para nuevo jugador")

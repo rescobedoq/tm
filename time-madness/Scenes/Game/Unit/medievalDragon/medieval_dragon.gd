@@ -1,9 +1,6 @@
 extends Unit
 class_name MedievalDragon
 
-
-
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalDragon.png"
 const FIRE_BALL_PROJECTILE := "res://Scenes/Utils/FireBall/FireBall.tscn"
 
 var selection_tween: Tween
@@ -14,42 +11,15 @@ var fire_ball_speed: float = 35.0
 var fire_ball_range: float = 60.0
 
 func _ready():
+	portrait_path = "res://Assets/Images/Portraits/Units/medievalDragon.png"
 	unit_category = "flying"
+	anim_idle = "Idle"
+	anim_move = "Flying"
+	anim_attack = "Attack"
+	anim_death = "GroundToFly"
 	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()
 	unit_type = "Medieval Dragon"
-	max_health = 200
-	current_health = max_health
-	max_magic = 100  # 🔥 Suficiente energía
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 20
-	attack_range = 40
-
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
-		print("Retrato cargado correctamente:", PORTRAIT_PATH)
-	else:
-		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
+	super._ready()
 	
 	abilities = [
 		UnitAbility.new(
@@ -60,37 +30,6 @@ func _ready():
 		),
 	]
 
-func play_idle():
-	if anim_player:
-		print(">>> play_idle CALLED <<<")
-		anim_player.play("Idle")
-		var anim = anim_player.get_animation("Idle")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
-
-func play_move():
-	if anim_player:
-		print(">>> play_move CALLED <<<")
-		anim_player.play("Flying")
-		var anim = anim_player.get_animation("Flying")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
-
-func play_attack():
-	if anim_player:
-		print(">>> play_attack CALLED <<<")
-		anim_player.play("Attack")
-		var anim = anim_player.get_animation("Attack")
-		if anim:
-			anim.loop_mode = Animation.LOOP_NONE
-
-func play_death():
-	if anim_player:
-		print(">>> play_death CALLED <<<")
-		anim_player. play("GroundToFly")
-		var anim = anim_player.get_animation("GroundToFly")
-		if anim:
-			anim.loop_mode = Animation. LOOP_NONE
 
 # ===================================================
 # 🔥 HABILIDAD: FIRE BALL

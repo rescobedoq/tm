@@ -1,9 +1,6 @@
 extends Unit
 class_name MedievalGolem
 
-
-
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalGolem.png"
 const PUNCH_EFFECT_SCENE := "res://Scenes/Utils/Punch/Punch.tscn"
 
 var selection_tween: Tween
@@ -20,44 +17,16 @@ var teleport_height_offset: float = 20.0
 var teleport_duration: float = 1.5
 
 func _ready():
+	portrait_path ="res://Assets/Images/Portraits/Units/medievalGolem.png"
 	unit_category = "ground"
-	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()
+	anim_idle   = "Idle"
+	anim_move   = "Walking_frame_rate_24_fbx"
+	anim_attack = "Right_Hand_Sword_Slash_frame_rate_24_fbx"
+	anim_death  = "Shot_and_Fall_Backward_frame_rate_24_fbx"
 	unit_type = "Medieval Golem"
-	max_health = 200
-	current_health = max_health
-	max_magic = 100  # 🔥 Suficiente para las habilidades
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 7
-	attack_range = 15.0
-	
+	super._ready()
 	original_move_speed = move_speed  # Guardar velocidad original
 
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
-		print("Retrato cargado correctamente:", PORTRAIT_PATH)
-	else:
-		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
 	
 	abilities = [
 		UnitAbility.new(
@@ -73,36 +42,6 @@ func _ready():
 			"spawn_ability" 
 		),
 	]
-
-func play_idle():
-	if anim_player:
-		print(">>> play_idle CALLED <<<")
-		if anim_player.is_playing():
-			anim_player.stop()
-
-func play_move():
-	if anim_player:
-		print(">>> play_move CALLED <<<")
-		anim_player.play("Walking_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Walking_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
-
-func play_attack():
-	if anim_player:
-		print(">>> play_attack CALLED <<<")
-		anim_player.play("Right_Hand_Sword_Slash_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Right_Hand_Sword_Slash_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation. LOOP_LINEAR
-
-func play_death():
-	if anim_player:
-		print(">>> play_death CALLED <<<")
-		anim_player.play("Shot_and_Fall_Backward_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Shot_and_Fall_Backward_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
 
 # 🔥 Animación de PUNCH
 func play_punch():

@@ -1,8 +1,6 @@
 extends Unit
 class_name MedievalDruid
 
-
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalDruid.png"
 const ROOT_EFFECT := "res://Scenes/Utils/Root/Root.tscn"
 const STEAL_LIFE_EFFECT := "res://Scenes/Utils/StealLife/StealLife.tscn"
 
@@ -18,43 +16,14 @@ var steal_life_damage: float = 40.0
 var steal_life_heal_percent: float = 1.0  # Cura el 100% del daño hecho
 
 func _ready():
+	portrait_path = "res://Assets/Images/Portraits/Units/medievalDruid.png";
 	unit_category = "ground"
-	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()
+	anim_idle   = "Idle_7_frame_rate_24_fbx"
+	anim_move   = "Walking_Woman_frame_rate_24_fbx"
+	anim_attack = "Charged_Spell_Cast_frame_rate_24_fbx"
+	anim_death  = "Fall_Dead_from_Abdominal_Injury_frame_rate_24_fbx"
 	unit_type = "Medieval Druid"
-	max_health = 200
-	current_health = max_health
-	max_magic = 100  # 🔥 Suficiente energía
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 20
-	attack_range = 30
-
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
-		print("Retrato cargado correctamente:", PORTRAIT_PATH)
-	else:
-		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
-
+	super._ready()
 	abilities = [
 		UnitAbility.new(
 			"res://Assets/Images/HUD/icons/rootIcon.png",

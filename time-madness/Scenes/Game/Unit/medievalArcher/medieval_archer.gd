@@ -1,7 +1,6 @@
 extends Unit
 class_name MedievalArcher
 
-const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalArcher.png"
 const ARROW_PROJECTILE := "res://Scenes/Utils/Arrows/Arrows.tscn"
 const TRAP_SCENE := "res://Scenes/Utils/Trap/Trap.tscn"
 
@@ -20,43 +19,14 @@ var trap_duration: float = 10.0
 var trap_trigger_radius: float = 2.0
 
 func _ready():
+	portrait_path =  "res://Assets/Images/Portraits/Units/medievalArcher.png"
 	unit_category = "ground"
-	
-	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
-	if aura_controller == null:
-		aura_controller = get_node_or_null("Aura")
-	
-	# 🔥 Configurar el aura con el color del jugador
-	if aura_controller and player_owner:
-		if "player_index" in player_owner:
-			aura_controller. set_aura_color_from_player(player_owner.player_index)
-			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
-		else:
-			print("⚠️ player_owner no tiene player_index en %s" % name)
-	else:
-		if not aura_controller:
-			print("⚠️ No se encontró nodo Aura en %s" % name)
-		if not player_owner:
-			print("⚠️ player_owner es null en %s" % name)
-	
-	super._ready()  # 🔥 Llamar DESPUÉS de configurar el aura
-	
+	anim_idle = "Idle_6_frame_rate_24_fbx"
+	anim_move = "RunFast_frame_rate_24_fbx"
+	anim_attack = "Archery_Shot_frame_rate_24_fbx"
+	anim_death = "dying_backwards_frame_rate_24_fbx"
 	unit_type = "Medieval Archer"
-	max_health = 200
-	current_health = max_health
-	max_magic = 100
-	current_magic = max_magic
-	attack_damage = 25
-	defense = 10
-	move_speed = 15
-	attack_range = 30.0
-
-	var tex := load(PORTRAIT_PATH)
-	if tex:
-		portrait = tex
-		print("Retrato cargado correctamente:", PORTRAIT_PATH)
-	else:
-		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
+	super._ready()  
 	
 	abilities = [
 		UnitAbility. new(
@@ -72,46 +42,6 @@ func _ready():
 			"trap_ability" 
 		),
 	]
-
-# 🔥 NUEVA FUNCIÓN: Actualizar color del aura si cambia el propietario
-func set_player_owner(new_owner: Node) -> void:
-	player_owner = new_owner
-	
-	if aura_controller and player_owner and "player_index" in player_owner:
-		aura_controller.set_aura_color_from_player(player_owner. player_index)
-		print("✅ Aura actualizada para nuevo propietario (jugador %d)" % player_owner.player_index)
-	
-func play_idle():
-	if anim_player:
-		print(">>> play_idle CALLED <<<")
-		anim_player.play("Idle_6_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Idle_6_frame_rate_24_fbx")
-		if anim:
-			anim. loop_mode = Animation.LOOP_LINEAR
-
-func play_move():
-	if anim_player:
-		print(">>> play_move CALLED <<<")
-		anim_player.play("RunFast_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("RunFast_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
-
-func play_attack():
-	if anim_player:
-		print(">>> play_attack CALLED <<<")
-		anim_player.play("Archery_Shot_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("Archery_Shot_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation.LOOP_NONE
-
-func play_death():
-	if anim_player:
-		print(">>> play_death CALLED <<<")
-		anim_player.play("dying_backwards_frame_rate_24_fbx")
-		var anim = anim_player.get_animation("dying_backwards_frame_rate_24_fbx")
-		if anim:
-			anim.loop_mode = Animation. LOOP_NONE
 
 func play_rapid_shot():
 	if anim_player:
