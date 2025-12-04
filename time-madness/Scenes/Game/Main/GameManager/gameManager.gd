@@ -113,7 +113,7 @@ func _setup_players() -> void:
 			
 			player_node.get_node("Name").text = player_data.player_name
 			player_node. get_node("Faction").text = player_data.race
-			player_node.get_node("ColorRect"). color = _get_team_color(player_data.team)
+			player_node.get_node("ColorRect"). color = Teams.get_team_color(i)
 			
 			var status_node = player_node.get_node("Status")
 			if status_node is Label:
@@ -129,15 +129,6 @@ func _setup_players() -> void:
 	
 	print("=".repeat(60) + "\n")
 
-func _get_team_color(team_id: int) -> Color:
-	match team_id:
-		0: return Color.RED
-		1: return Color.BLUE
-		2: return Color.GREEN
-		3: return Color. YELLOW
-		4: return Color. PURPLE
-		5: return Color.ORANGE
-		_: return Color.WHITE
 
 # === GESTIÓN DE STAGES ===
 func _start_stage_preparation() -> void:
@@ -570,7 +561,7 @@ func _create_battle_map_castles() -> void:
 		# 🔥 APLICAR COLOR DEL EQUIPO
 		if i < players_data.size():
 			var player_data = players_data[i]
-			var team_color = _get_team_color(player_data.team)
+			var team_color = Teams.get_team_color(player_data.team)
 			_apply_color_to_castle(castle, team_color)
 			print("  🎨 Color aplicado: %s (Equipo %d)" % [team_color, player_data.team])
 		

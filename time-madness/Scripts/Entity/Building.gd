@@ -168,27 +168,31 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		return
 	
 	var player = _get_player_owner()
+	
 	if player == null:
 		print("❌ No se encontró PlayerController para el edificio")
 		return
 	
 	if not _check_resources(player, cost):
 		print("⚠️ Recursos insuficientes para entrenar", unit_name)
-		return  
+		return
 	
-	# Deducir recursos
-	player.gold -= cost.gold
+	player.gold -= cost. gold
 	player.resources -= cost.resources
 	player.upkeep += cost.upkeep
 	player.update_team_hud()
 	
-	# Instanciar unidad
 	var new_unit = unit_scene.instantiate()
+	
+	# 🔥 ASIGNAR PLAYER_OWNER ANTES DE AÑADIR AL ÁRBOL
+	if new_unit is Entity:
+		new_unit.player_owner = player
+		print("✅ player_owner asignado a %s (jugador %d)" % [unit_name, player.player_index])
+	
 	var parent_node: Node
 	if GameStarter.is_battle_stage:
 		parent_node = GameStarter.battle_map_instance
 	else:
-		# Obtener BaseMap desde GameScene
 		var game_manager = player.get_parent()
 		var game_scene = game_manager.get_parent()
 		parent_node = game_scene.get_node_or_null("BaseMap")
@@ -202,7 +206,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	await get_tree().process_frame
 	
-	if new_unit.unit_category == "aquatic":
+	if new_unit. unit_category == "aquatic":
 		new_unit. global_position = _get_random_water_position()
 	else:
 		var min_dist := 20.0
@@ -213,12 +217,11 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		var spawn_offset := direction * distance
 		new_unit. global_position = global_position + spawn_offset
 	
-	# Agregar al jugador
 	if new_unit is Entity:
 		player.add_unit(new_unit)
 	
 	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)
-
+	
 func _get_player_owner() -> Node:
 	if player_owner != null:
 		return player_owner

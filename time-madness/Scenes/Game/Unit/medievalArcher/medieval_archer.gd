@@ -4,6 +4,7 @@ class_name MedievalArcher
 @onready var anim_player = $medievalArcher/AnimationPlayer
 @onready var collision_shape = $CollisionShape3D
 @onready var selection_circle = $Selection
+@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalArcher.png"
 const ARROW_PROJECTILE := "res://Scenes/Utils/Arrows/Arrows.tscn"
@@ -25,7 +26,26 @@ var trap_trigger_radius: float = 2.0
 
 func _ready():
 	unit_category = "ground"
-	super._ready()
+	
+	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
+	if aura_controller == null:
+		aura_controller = get_node_or_null("Aura")
+	
+	# 🔥 Configurar el aura con el color del jugador
+	if aura_controller and player_owner:
+		if "player_index" in player_owner:
+			aura_controller. set_aura_color_from_player(player_owner.player_index)
+			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
+		else:
+			print("⚠️ player_owner no tiene player_index en %s" % name)
+	else:
+		if not aura_controller:
+			print("⚠️ No se encontró nodo Aura en %s" % name)
+		if not player_owner:
+			print("⚠️ player_owner es null en %s" % name)
+	
+	super._ready()  # 🔥 Llamar DESPUÉS de configurar el aura
+	
 	unit_type = "Medieval Archer"
 	max_health = 200
 	current_health = max_health
@@ -44,7 +64,7 @@ func _ready():
 		print("ERROR: No se pudo cargar el retrato:", PORTRAIT_PATH)
 	
 	abilities = [
-		UnitAbility.new(
+		UnitAbility. new(
 			"res://Assets/Images/HUD/icons/arrowsIcon.jpg",
 			"Arrows",
 			"Shoot multiple arrows.\nCosto: 1 energia",
@@ -57,6 +77,14 @@ func _ready():
 			"trap_ability" 
 		),
 	]
+
+# 🔥 NUEVA FUNCIÓN: Actualizar color del aura si cambia el propietario
+func set_player_owner(new_owner: Node) -> void:
+	player_owner = new_owner
+	
+	if aura_controller and player_owner and "player_index" in player_owner:
+		aura_controller.set_aura_color_from_player(player_owner. player_index)
+		print("✅ Aura actualizada para nuevo propietario (jugador %d)" % player_owner.player_index)
 	
 func play_idle():
 	if anim_player:
@@ -64,7 +92,7 @@ func play_idle():
 		anim_player.play("Idle_6_frame_rate_24_fbx")
 		var anim = anim_player.get_animation("Idle_6_frame_rate_24_fbx")
 		if anim:
-			anim.loop_mode = Animation.LOOP_LINEAR
+			anim. loop_mode = Animation.LOOP_LINEAR
 
 func play_move():
 	if anim_player:
@@ -135,7 +163,7 @@ func _execute_arrows(target: Entity) -> void:
 		print("❌ Objetivo inválido para Arrows")
 		return
 	
-	if target.player_owner == player_owner:
+	if target. player_owner == player_owner:
 		print("⚠️ Solo puedes atacar enemigos con Arrows")
 		return
 	
@@ -146,7 +174,7 @@ func _execute_arrows(target: Entity) -> void:
 	
 	current_magic -= 1
 	print("🏹 ARROWS ACTIVADO!  Objetivo: %s" % target.name)
-	print("💙 Energía restante: %.1f" % current_magic)
+	print("💙 Energía restante: %. 1f" % current_magic)
 	
 	_shoot_arrow_barrage(target)
 
@@ -169,7 +197,7 @@ func _launch_arrow(target: Entity, arrow_index: int) -> void:
 		print("❌ No se pudo cargar Arrow projectile")
 		return
 	
-	var arrow = arrow_scene. instantiate()
+	var arrow = arrow_scene.instantiate()
 	get_tree().current_scene.add_child(arrow)
 	
 	var spawn_offset = Vector3(randf_range(-0.5, 0.5), 2, 1)
@@ -224,7 +252,7 @@ func _move_arrow_to_target(arrow: Node3D, target: Entity) -> void:
 		arrow.queue_free()
 
 # ===================================================
-# 🔥 HABILIDAD 2: TRAP (Trampa) - CORREGIDA
+# 🔥 HABILIDAD 2: TRAP (Trampa)
 # ===================================================
 func _start_trap_ability() -> void:
 	if current_magic < 1:
@@ -254,16 +282,13 @@ func _execute_trap(target_position: Vector3) -> void:
 	
 	print("🪤 Trampa colocada en: %v" % target_position)
 	
-	# 🔥 SISTEMA MEJORADO: Verificación continua por proximidad
 	var trap_active = true
-	var trapped_units = []  # Para no dañar la misma unidad múltiples veces
+	var trapped_units = []
 	
-	# Reproducir animación si tiene
 	var animated_sprite = trap.get_node_or_null("AnimatedSprite3D")
 	if animated_sprite and animated_sprite is AnimatedSprite3D:
 		animated_sprite.play()
 	
-	# 🔥 Loop de detección manual
 	var elapsed_time = 0.0
 	while trap_active and elapsed_time < trap_duration:
 		await get_tree().process_frame
@@ -272,20 +297,17 @@ func _execute_trap(target_position: Vector3) -> void:
 		if not is_instance_valid(trap):
 			break
 		
-		# 🔥 Buscar unidades cercanas manualmente
 		var space_state = get_world_3d().direct_space_state
 		var query = PhysicsShapeQueryParameters3D.new()
 		
-		# Crear esfera de detección
 		var sphere = SphereShape3D.new()
 		sphere.radius = trap_trigger_radius
 		query.shape = sphere
 		query.transform = Transform3D(Basis(), trap.global_position)
-		query.collision_mask = 1 << 1  # Layer 2: Unidades
+		query.collision_mask = 1 << 1
 		
 		var results = space_state.intersect_shape(query)
 		
-		# 🔥 Verificar cada resultado
 		for result in results:
 			var collider = result["collider"]
 			
@@ -294,26 +316,20 @@ func _execute_trap(target_position: Vector3) -> void:
 				
 				print("💥 TRAMPA ACTIVADA! Víctima: %s" % unit.name)
 				
-				# Aplicar daño
-				if unit. has_method("take_damage"):
+				if unit.has_method("take_damage"):
 					unit.take_damage(trap_damage)
 					print("🪤 Daño de trampa aplicado: %.1f a %s" % [trap_damage, unit.name])
 				
-				# Marcar como dañada
 				trapped_units.append(unit)
-				
-				# Desactivar trampa después del primer uso
 				trap_active = false
 				
-				# Esperar un momento y destruir
-				await get_tree(). create_timer(0.5).timeout
+				await get_tree().create_timer(0.5).timeout
 				if is_instance_valid(trap):
 					trap.queue_free()
 					print("🗑️ Trampa destruida después de activarse")
 				
-				return  # Salir del loop
+				return
 	
-	# 🔥 Si expiró sin activarse
 	if is_instance_valid(trap):
 		trap.queue_free()
 		print("🗑️ Trampa expirada sin activarse")

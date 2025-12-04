@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://behdh2aehcrhe"]
+[gd_scene load_steps=6 format=3 uid="uid://behdh2aehcrhe"]
 
 [ext_resource type="Script" uid="uid://7y8mvw3dlr6l" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.gd" id="1_sueet"]
 [ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="1_x5dp3"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_sueet"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_sueet"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_fct7o"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fct7o"]
 radius = 1.6655273
@@ -20,3 +21,5 @@ shape = SubResource("CapsuleShape3D_fct7o")
 
 [node name="Selection" parent="." instance=ExtResource("2_sueet")]
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_fct7o")]

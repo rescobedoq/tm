@@ -4,6 +4,7 @@ class_name ShipGhost
 @onready var anim_player = $medievalShipGhost/AnimationPlayer
 @onready var collision_shape = $CollisionShape3D
 @onready var selection_circle = $Selection
+@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalShipGhost.png"
 
@@ -11,6 +12,24 @@ var selection_tween: Tween
 
 func _ready():
 	unit_category = "aquatic"
+	
+	# 🔥 CONFIGURAR AURA ANTES DE LLAMAR A super._ready()
+	if aura_controller == null:
+		aura_controller = get_node_or_null("Aura")
+	
+	# 🔥 Configurar el aura con el color del jugador
+	if aura_controller and player_owner:
+		if "player_index" in player_owner:
+			aura_controller. set_aura_color_from_player(player_owner.player_index)
+			print("✅ Aura configurada para jugador %d en %s" % [player_owner. player_index, name])
+		else:
+			print("⚠️ player_owner no tiene player_index en %s" % name)
+	else:
+		if not aura_controller:
+			print("⚠️ No se encontró nodo Aura en %s" % name)
+		if not player_owner:
+			print("⚠️ player_owner es null en %s" % name)
+	
 	super._ready()
 
 	unit_type = "Medieval Ship Ghost"

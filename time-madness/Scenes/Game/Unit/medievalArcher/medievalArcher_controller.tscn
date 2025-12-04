@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://o84jnoqtoo4s"]
+[gd_scene load_steps=6 format=3 uid="uid://o84jnoqtoo4s"]
 
 [ext_resource type="PackedScene" uid="uid://bhlr25173sb04" path="res://Scenes/Game/Unit/medievalArcher/medievalArcher.tscn" id="1_hf3u2"]
 [ext_resource type="Script" uid="uid://bx44ntsqmcnyx" path="res://Scenes/Game/Unit/medievalArcher/medieval_archer.gd" id="2_320jk"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_y3ll6"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_y3ll6"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_320jk"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_320jk"]
 radius = 1.6655273
@@ -19,3 +20,5 @@ shape = SubResource("CapsuleShape3D_320jk")
 
 [node name="Selection" parent="." instance=ExtResource("2_y3ll6")]
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_320jk")]

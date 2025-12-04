@@ -168,11 +168,11 @@ func _create_player_controllers() -> void:
 		var player_data = configured_players[i]
 		
 		# 🔥 ELEGIR ESCENA SEGÚN SI ES BOT O NO
-		var controller_scene: PackedScene
-		if player_data.is_bot:
-			controller_scene = preload("res://Scripts/Player/BotPlayer/BotPlaver.tscn")
-		else:
-			controller_scene = preload("res://Scripts/Player/PlayerController/PlayerController.tscn")
+		#var controller_scene: PackedScene
+		#if player_data.is_bot:
+		#	controller_scene = preload("res://Scripts/Player/BotPlayer/BotPlaver.tscn")
+		#else:
+		var controller_scene = preload("res://Scripts/Player/PlayerController/PlayerController.tscn")
 		
 		# Instanciar
 		var controller = controller_scene. instantiate()

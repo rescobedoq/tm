@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://diiboocsqj2qg"]
 
 [ext_resource type="Texture2D" uid="uid://bnw60tflempku" path="res://Assets/Images/GUI/Box2/Box2.png" id="1_3nmla"]
-[ext_resource type="Script" uid="uid://c0y5dh5pfodck" path="res://Scenes/playerBox/player_box.gd" id="1_uei72"]
+[ext_resource type="Script" uid="uid://c0y5dh5pfodck" path="res://Scenes/GUI/PlayerBox/player_box.gd" id="1_uei72"]
 [ext_resource type="FontFile" uid="uid://uuvlepr3a5y1" path="res://Assets/Fonts/NicerNightie.ttf" id="2_sx58d"]
 [ext_resource type="Texture2D" uid="uid://2dg7n4kjqovx" path="res://Assets/Images/GUI/Icons/colors/red (1).png" id="3_4x48k"]
 [ext_resource type="Texture2D" uid="uid://btx61mjljpefi" path="res://Assets/Images/GUI/Icons/colors/blue (1).png" id="4_uei72"]

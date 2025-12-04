@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dui74fqii7tdj"]
+[gd_scene load_steps=6 format=3 uid="uid://dui74fqii7tdj"]
 
 [ext_resource type="PackedScene" uid="uid://bws2gias2gldj" path="res://Scenes/Game/Unit/medievalShipNormal/medievalShipNormal.tscn" id="1_8e5yc"]
 [ext_resource type="Script" uid="uid://cgtxo50kkjtyf" path="res://Scenes/Game/Unit/medievalShipNormal/medieval_ship_normal.gd" id="1_aiu8r"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_aiu8r"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_aiu8r"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_7l0s1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7l0s1"]
 radius = 1.3835
@@ -21,3 +22,5 @@ shape = SubResource("CapsuleShape3D_7l0s1")
 [node name="Selection" parent="." instance=ExtResource("2_aiu8r")]
 transform = Transform3D(2.48, 0, 0, 0, 2.48, 0, 0, 0, 2.48, 0, 0, 0)
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_7l0s1")]

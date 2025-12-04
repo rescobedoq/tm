@@ -1,0 +1,75 @@
+[gd_scene load_steps=6 format=3 uid="uid://1qc4466q8x04"]
+
+[ext_resource type="Script" uid="uid://b6roxje4kffst" path="res://Scenes/Game/Main/GameScene/game_scene.gd" id="1_25uua"]
+[ext_resource type="PackedScene" uid="uid://3pbb2ky6xcrw" path="res://Scenes/Game/Main/GameManager/GameManager.tscn" id="2_iju77"]
+[ext_resource type="PackedScene" uid="uid://bx6q380fh4ngu" path="res://Scenes/Game/Map/BaseMap/baseMap.tscn" id="3_xofmc"]
+[ext_resource type="PackedScene" uid="uid://7x3dhs70f2fg" path="res://Scenes/Game/Map/Map1/map1.tscn" id="4_ktee7"]
+[ext_resource type="Script" uid="uid://dhqbgiedelkfq" path="res://Scenes/Game/Main/GameScene/debug.gd" id="5_25uua"]
+
+[node name="GameScene" type="Node3D"]
+script = ExtResource("1_25uua")
+
+[node name="GameManager" parent="." instance=ExtResource("2_iju77")]
+
+[node name="BaseMap" parent="." instance=ExtResource("3_xofmc")]
+
+[node name="Map1" parent="." instance=ExtResource("4_ktee7")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("5_25uua")
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer"]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 289.0
+offset_bottom = 303.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Debug theme"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Jugador Activo: "
+
+[node name="CurrentPlayerLabel" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "current player label"
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Cambiar a: "
+
+[node name="Player1Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
+
+[node name="Player2Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 2
+"
+
+[node name="Player3Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
+
+[node name="Player4Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
+
+[node name="Player5Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
+
+[node name="Player6Button" type="Button" parent="CanvasLayer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Player 1"
