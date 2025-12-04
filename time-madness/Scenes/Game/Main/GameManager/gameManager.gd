@@ -134,8 +134,8 @@ func _get_team_color(team_id: int) -> Color:
 		0: return Color.RED
 		1: return Color.BLUE
 		2: return Color.GREEN
-		3: return Color. YELLOW
-		4: return Color. PURPLE
+		3: return Color.YELLOW
+		4: return Color.PURPLE
 		5: return Color.ORANGE
 		_: return Color.WHITE
 

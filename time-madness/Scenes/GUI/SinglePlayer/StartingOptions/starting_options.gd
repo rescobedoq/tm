@@ -17,19 +17,7 @@ var alert_starting_instance: Window
 var bot_boxes: Array[playerBox] = []
 
 # 🔥 Estructura de datos para cada jugador
-class PlayerData:
-	var player_name: String
-	var race: String
-	var difficulty: String
-	var team: int
-	var is_bot: bool
-	
-	func _init(name: String, race_val: String, diff: String, team_val: int, bot: bool):
-		player_name = name
-		race = race_val
-		difficulty = diff
-		team = team_val
-		is_bot = bot
+
 
 func _ready() -> void:
 	# Botón de volver
@@ -168,7 +156,7 @@ func _on_start_button_pressed() -> void:
 	GameStarter.start_game(players_data)
 	
 func _on_game_starting(players: Array) -> void:
-	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameManager/GameManager.tscn")
+	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameScene/GameScene.tscn")
 	
 func _on_back_button_pressed() -> void:
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
