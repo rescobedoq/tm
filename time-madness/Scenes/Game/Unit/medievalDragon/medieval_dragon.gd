@@ -1,10 +1,7 @@
 extends Unit
 class_name MedievalDragon
 
-@onready var anim_player = $Dragon2/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
+
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalDragon.png"
 const FIRE_BALL_PROJECTILE := "res://Scenes/Utils/FireBall/FireBall.tscn"

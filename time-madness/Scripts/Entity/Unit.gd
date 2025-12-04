@@ -1,6 +1,10 @@
 extends Entity
 class_name Unit
 
+@onready var anim_player = $model/AnimationPlayer 
+@onready var collision_shape = $CollisionShape3D
+@onready var selection_circle = $Selection
+@onready var aura_controller = $Aura  
 # ------------------------------------------
 # Tipo de unidad para lógica de terreno, ataques y pathfinding
 # ------------------------------------------

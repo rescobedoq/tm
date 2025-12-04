@@ -1,11 +1,6 @@
 extends Unit
 class_name ShipKraken
 
-@onready var anim_player = $medievalShipKraken/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
-
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalShipKraken.png"
 
 var selection_tween: Tween

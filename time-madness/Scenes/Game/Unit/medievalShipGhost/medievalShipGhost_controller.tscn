@@ -12,7 +12,7 @@ height = 5.296753
 [node name="MedievalShipGhostController" type="CharacterBody3D"]
 script = ExtResource("1_jdepb")
 
-[node name="medievalShipGhost" parent="." instance=ExtResource("1_4dltx")]
+[node name="model" parent="." instance=ExtResource("1_4dltx")]
 transform = Transform3D(-5.68248e-07, 0, 13, 0, 13, 0, -13, 0, -5.68248e-07, 0, 8.975, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

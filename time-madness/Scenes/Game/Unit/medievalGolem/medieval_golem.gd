@@ -1,10 +1,7 @@
 extends Unit
 class_name MedievalGolem
 
-@onready var anim_player = $medievalGolem/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
+
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalGolem.png"
 const PUNCH_EFFECT_SCENE := "res://Scenes/Utils/Punch/Punch.tscn"

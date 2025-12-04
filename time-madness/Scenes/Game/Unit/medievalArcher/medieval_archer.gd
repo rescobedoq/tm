@@ -1,11 +1,6 @@
 extends Unit
 class_name MedievalArcher
 
-@onready var anim_player = $medievalArcher/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
-
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalArcher.png"
 const ARROW_PROJECTILE := "res://Scenes/Utils/Arrows/Arrows.tscn"
 const TRAP_SCENE := "res://Scenes/Utils/Trap/Trap.tscn"

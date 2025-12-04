@@ -1,11 +1,6 @@
 extends Unit
 class_name Sorcerer
 
-@onready var anim_player = $medievalSorcerer/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
-
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSorcerer.png"
 const AREA_DEFENSE_EFFECT := "res://Scenes/Utils/AreaDefense/AreaDefense.tscn"
 const HEAL_EFFECT := "res://Scenes/Utils/Heal/Heal.tscn"

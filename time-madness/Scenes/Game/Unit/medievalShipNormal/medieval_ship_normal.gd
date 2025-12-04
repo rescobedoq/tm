@@ -1,10 +1,6 @@
 extends Unit
 class_name ShipNormal
 
-@onready var anim_player = $medievalShipNormal/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalShipNormal.png"
 const GHOST_SHIP_SCENE := "res://Scenes/Game/Unit/medievalShipGhost/medievalShipGhost_controller.tscn"

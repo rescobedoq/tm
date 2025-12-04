@@ -1,11 +1,6 @@
 extends Unit
 class_name ShipGhost
 
-@onready var anim_player = $medievalShipGhost/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
-
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalShipGhost.png"
 
 var selection_tween: Tween

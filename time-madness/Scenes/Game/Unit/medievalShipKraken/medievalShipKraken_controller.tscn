@@ -12,7 +12,7 @@ height = 5.296753
 [node name="MedievalShipKrakenController" type="CharacterBody3D"]
 script = ExtResource("1_86c5y")
 
-[node name="medievalShipKraken" parent="." instance=ExtResource("1_sjqgh")]
+[node name="model" parent="." instance=ExtResource("1_sjqgh")]
 transform = Transform3D(-5.68248e-07, 0, 13, 0, 13, 0, -13, 0, -5.68248e-07, 0, 9.55, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

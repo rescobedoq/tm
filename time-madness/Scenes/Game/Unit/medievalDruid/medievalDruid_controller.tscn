@@ -12,7 +12,7 @@ height = 5.296753
 [node name="MedievalDruidController" type="CharacterBody3D"]
 script = ExtResource("1_tgny6")
 
-[node name="medievalDruid" parent="." instance=ExtResource("1_bvw3h")]
+[node name="model" parent="." instance=ExtResource("1_bvw3h")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

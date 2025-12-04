@@ -1,10 +1,6 @@
 extends Unit
 class_name MedievalSoldier
 
-@onready var anim_player = $medievalSoldier/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalSoldier.png"
 const CHARGE_IMPACT_SCENE := "res://Scenes/Utils/Charge/Charge.tscn"

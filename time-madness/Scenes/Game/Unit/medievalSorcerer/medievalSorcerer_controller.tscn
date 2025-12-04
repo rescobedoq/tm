@@ -12,7 +12,7 @@ height = 5.296753
 [node name="MedievalSorcererController" type="CharacterBody3D"]
 script = ExtResource("1_82xms")
 
-[node name="medievalSorcerer" parent="." instance=ExtResource("1_u317n")]
+[node name="model" parent="." instance=ExtResource("1_u317n")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]

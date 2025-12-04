@@ -1,10 +1,6 @@
 extends Unit
 class_name MagicSoldier
 
-@onready var anim_player = $medievalMagicSoldier/AnimationPlayer
-@onready var collision_shape = $CollisionShape3D
-@onready var selection_circle = $Selection
-@onready var aura_controller = $Aura  # 🔥 Referencia directa al nodo Aura
 
 const PORTRAIT_PATH := "res://Assets/Images/Portraits/Units/medievalMagicSoldier.png"
 const MAGIC_BALL_PROJECTILE := "res://Scenes/Utils/MagicBall/MagicBall.tscn"
