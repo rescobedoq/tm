@@ -270,6 +270,9 @@ func _handle_building_placement() -> void:
 	await get_tree().process_frame
 	add_building(final_build)
 	
+	if final_build.building_type == "farm":
+		maxUpKeep += 5
+	
 	var cost = BuildingCosts.get_cost(final_build.building_type)
 	if cost and cost.size() > 0:
 		gold -= cost.gold
@@ -728,7 +731,13 @@ func _update_workers_label() -> void:
 		workers_label.text = "Workers: " + str(workers)
 
 func add_worker() -> void:
+	var cost = UnitCosts.get_cost("worker")
+	if gold < cost.gold or resources < cost.resources or (upkeep + cost.upkeep > maxUpKeep):
+		menu_hud._show_resource_not()
+		return
 	workers += 1
+	gold -= cost.gold
+	upkeep += cost.upkeep
 	_update_workers_label()
 
 func _on_second_tick(time_left: int) -> void:

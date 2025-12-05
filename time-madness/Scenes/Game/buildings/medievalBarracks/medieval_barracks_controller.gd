@@ -3,7 +3,6 @@ extends Building
 class_name Barracks
 
 func _ready():
-	print("HOLAAAAAAAAAAAAAAAAAAAAAAAAA SOY EL READY!")
 	building_type = "barracks"
 	super._ready() 
 

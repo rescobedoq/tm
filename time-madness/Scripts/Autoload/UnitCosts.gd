@@ -1,6 +1,7 @@
 extends Node
 
 var costs := {
+	"worker": {"gold": 1, "resources": 0, "upkeep": 1},
 	"train_soldier": {"gold": 1, "resources": 0, "upkeep": 1},
 	"train_archer": {"gold": 1, "resources": 25, "upkeep": 1},
 	"train_cavalry": {"gold": 1, "resources": 50, "upkeep": 2},

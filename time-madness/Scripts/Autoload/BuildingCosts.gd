@@ -4,7 +4,7 @@ extends Node
 # 🏗️ COSTOS DE EDIFICIOS
 # ==============================
 var costs := {
-	"barracks": {"gold": 1000, "resources": 50, "upkeep": 0},
+	"barracks": {"gold": 10, "resources": 50, "upkeep": 0},
 	"dragon": {"gold": 500, "resources": 300, "upkeep": 0},
 	"farm": {"gold": 50, "resources": 20, "upkeep": 0},
 	"harbor": {"gold": 200, "resources": 100, "upkeep": 0},

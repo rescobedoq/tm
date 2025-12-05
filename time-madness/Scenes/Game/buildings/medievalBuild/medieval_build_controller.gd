@@ -178,7 +178,6 @@ func _remove_physics_recursive(node: Node):
 			_remove_physics_recursive(child)
 
 func get_build() -> Node3D:
-	print("WASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	if building_type == "":
 		push_warning("get_build: building_type vacío")
 		return null

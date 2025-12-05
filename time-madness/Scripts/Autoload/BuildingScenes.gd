@@ -3,14 +3,14 @@ extends Node
 
 # Diccionario de rutas de escenas por tipo de edificio
 var scenes := {
-	"barracks": "res://Scenes/Game/Buildings/medievalBarracks/medieval_barracks_controller.gd",
-	"dragon": "res://Scenes/Game/buildings/medievalHatchery/medievalHatchery_controller.tscn",
+	"barracks": "res://Scenes/Game/Buildings/medievalBarracks/medievalBarracks_controller.tscn",
+	"dragon": "res://Scenes/Game/Buildings/medievalHatchery/medievalHatchery_controller.tscn",
 	"farm": "res://Scenes/Game/Buildings/medivalFarm/medievalFarm_controller.tscn",
-	"harbor": "res://Scenes/Game/buildings/medievalHarbor/medievalHarbor_controller.tscn",
-	"magic": "res://Scenes/Game/buildings/medievalMagic/medievalMagic_controller.tscn",
-	"shrine": "res://Scenes/Game/buildings/medievalShrine/medievalShrine_controller.tscn",
-	"smithy": "res://Scenes/Game/buildings/medievalSmithy/medievalSmithy_controller.tscn",
-	"tower": "res://Scenes/Game/buildings/medievalTower/medievalTower_controller.tscn"
+	"harbor": "res://Scenes/Game/Buildings/medievalHarbor/medievalHarbor_controller.tscn",
+	"magic": "res://Scenes/Game/Buildings/medievalMagic/medievalMagic_controller.tscn",
+	"shrine": "res://Scenes/Game/Buildings/medievalShrine/medievalShrine_controller.tscn",
+	"smithy": "res://Scenes/Game/Buildings/medievalSmithy/medievalSmithy_controller.tscn",
+	"tower": "res://Scenes/Game/Buildings/medievalTower/medievalTower_controller.tscn"
 }
 
 # Devuelve la ruta de la escena según el tipo de edificio

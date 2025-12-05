@@ -219,7 +219,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		print("⚠️ Recursos insuficientes para entrenar", unit_name)
 		return
 	
-	player.gold -= cost. gold
+	player.gold -= cost.gold
 	player.resources -= cost.resources
 	player.upkeep += cost.upkeep
 	player.update_team_hud()
@@ -276,15 +276,12 @@ func _get_player_owner() -> Node:
 	
 	print("❌ No se pudo encontrar PlayerController para:", name)
 	return null
-	
+
 func _check_resources(player: Node, cost: Dictionary) -> bool:
-	if player.gold < cost.gold:
+	if player.gold < cost.gold or player.resources < cost.resources or player.upkeep + cost.upkeep > player.maxUpKeep:
+		player.menu_hud._show_resource_not()
 		return false
-	if player.resources < cost.resources:
-		return false
-	if player.upkeep + cost.upkeep > player.maxUpKeep:
-		print("⚠️ Límite de mantenimiento alcanzado")
-		return false
+		
 	return true
 	
 func _get_random_water_position() -> Vector3:
