@@ -5,6 +5,13 @@ signal health_changed(current_health: float, max_health: float)
 signal energy_changed(current_magic: float, max_magic: float)
 
 var portrait_path: String = ""
+# ------------------------------------------
+# 🔄 Sistema de patrulla
+# ------------------------------------------
+var is_patrolling: bool = false
+var patrol_start_point: Vector3 = Vector3.ZERO
+var patrol_end_point: Vector3 = Vector3.ZERO
+var patrol_target_index: int = 0  # 0 = ir a end_point, 1 = volver a start_point
 
 @onready var anim_player = $model/AnimationPlayer 
 @onready var collision_shape = $CollisionShape3D
@@ -134,6 +141,7 @@ func move_to(target: Vector3, custom_radius: float = -1.0) -> void:
 	# Cancelar ataque si estábamos atacando
 	attack_target_entity = null
 	is_attacking = false
+	is_patrolling = false
 
 	move_target = target
 	has_move_target = true
@@ -199,6 +207,10 @@ func _physics_process(delta: float) -> void:
 	# 🔥 MODO ATAQUE: Perseguir y atacar
 	if is_attacking and attack_target_entity != null:
 		_handle_attack_behavior(delta)
+		return
+		
+	if is_patrolling:
+		_handle_patrol_behavior(delta)
 		return
 	
 	# MODO MOVIMIENTO NORMAL
@@ -482,3 +494,73 @@ func _set_abilities(ability_ids: Array) -> void:
 
 		abilities.append(ua)
 	
+# ------------------------------------------
+# 🔄 Iniciar patrulla entre posición actual y objetivo
+# ------------------------------------------
+func start_patrol(target: Vector3) -> void:
+	if not is_alive:
+		return
+	
+	# Cancelar ataque
+	attack_target_entity = null
+	is_attacking = false
+	
+	# Configurar patrulla
+	patrol_start_point = global_position
+	patrol_end_point = target
+	patrol_target_index = 0  # Empezar yendo al punto objetivo
+	is_patrolling = true
+	has_move_target = true
+	move_target = patrol_end_point
+	
+	print("🔄 %s iniciando patrulla entre %v y %v" % [name, patrol_start_point, patrol_end_point])
+
+# ------------------------------------------
+# 🛑 Detener completamente la unidad
+# ------------------------------------------
+func stop() -> void:
+	if not is_alive:
+		return
+	
+	# Cancelar todo
+	attack_target_entity = null
+	is_attacking = false
+	is_patrolling = false
+	has_move_target = false
+	is_moving = false
+	velocity = Vector3.ZERO
+	
+	play_idle()
+	print("🛑 %s detenido" % name)
+# ------------------------------------------
+# 🔄 Comportamiento de patrulla
+# ------------------------------------------
+func _handle_patrol_behavior(delta: float) -> void:
+	var direction = move_target - global_position
+	direction.y = 0
+	var distance = direction.length()
+	
+	# Si llegamos al punto objetivo
+	if distance <= arrival_radius:
+		# Cambiar al siguiente punto
+		patrol_target_index = 1 - patrol_target_index  # Alternar entre 0 y 1
+		
+		if patrol_target_index == 0:
+			move_target = patrol_end_point
+			print("🔄 %s llegó al punto inicial, volviendo al objetivo" % name)
+		else:
+			move_target = patrol_start_point
+			print("🔄 %s llegó al objetivo, volviendo al punto inicial" % name)
+		
+		return
+	
+	# Moverse hacia el punto objetivo actual
+	var target_rot = atan2(direction.x, direction.z)
+	rotation.y = lerp_angle(rotation. y, target_rot, rotation_speed * delta)
+	
+	if not is_moving:
+		is_moving = true
+		play_move()
+	
+	velocity = direction.normalized() * move_speed
+	move_and_slide()

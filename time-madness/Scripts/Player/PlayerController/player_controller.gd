@@ -60,6 +60,7 @@ var building_to_build: String = ""
 var ability_source_unit: Unit = null
 var ability_id_pending: String = ""
 var ability_terrain_max_range: float = 0.0
+var is_selecting_patrol_target: bool = false
 
 # ==============================
 # 🎥 CONFIGURACIÓN DE CÁMARA
@@ -200,7 +201,7 @@ func _process(delta: float) -> void:
 
 func _update_cursor_position() -> void:
 	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or 
-		is_selecting_ability_terrain or is_selecting_ability_ally) and select_cursor_instance:
+		is_selecting_ability_terrain or is_selecting_ability_ally or is_selecting_patrol_target) and select_cursor_instance:
 		var mouse_pos = get_viewport(). get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
@@ -245,6 +246,8 @@ func _unhandled_input(event):
 		_handle_ability_ally_selection(mouse_pos)
 	elif is_selecting_objective:
 		_handle_attack_target_selection(mouse_pos)
+	elif is_selecting_patrol_target:
+		_handle_patrol_target_selection(mouse_pos)
 	elif is_selecting_terrain:
 		_handle_terrain_movement_selection(mouse_pos)
 	else:
@@ -852,6 +855,23 @@ func _cleanup_cursors() -> void:
 	
 	is_selecting_terrain = false
 	is_selecting_objective = false
+	is_selecting_patrol_target = false
+	is_placing_building = false
+	_cleanup_ability_selection()
+	
+	if build_placeholder and is_instance_valid(build_placeholder):
+		build_placeholder.queue_free()
+		build_placeholder = null
+	
+	if selected_unit:
+		selected_unit.deselect()
+		selected_unit = null
+	
+	selected_building = null
+	_clear_abilities()
+	
+	is_selecting_terrain = false
+	is_selecting_objective = false
 	is_placing_building = false
 	_cleanup_ability_selection()
 
@@ -1222,20 +1242,29 @@ func _hide_all_ui() -> void:
 # 🔌 CONEXIÓN DE BOTONES
 # ==============================
 func _connect_ui_buttons() -> void:
-	if moveButton. pressed. is_connected(_on_move_button_pressed):
-		moveButton. pressed.disconnect(_on_move_button_pressed)
+	if moveButton. pressed.is_connected(_on_move_button_pressed):
+		moveButton.pressed.disconnect(_on_move_button_pressed)
 	if attackButton.pressed.is_connected(_on_attack_button_pressed):
 		attackButton.pressed.disconnect(_on_attack_button_pressed)
+	if keepPosButton.pressed.is_connected(_on_keep_pos_button_pressed):
+		keepPosButton.pressed.disconnect(_on_keep_pos_button_pressed)
+	if stopButton.pressed.is_connected(_on_stop_button_pressed):
+		stopButton.pressed.disconnect(_on_stop_button_pressed)
 	
 	moveButton.pressed.connect(_on_move_button_pressed)
 	attackButton.pressed.connect(_on_attack_button_pressed)
+	keepPosButton.pressed.connect(_on_keep_pos_button_pressed)
+	stopButton.pressed.connect(_on_stop_button_pressed)
 
 func _disconnect_ui_buttons() -> void:
 	if moveButton.pressed. is_connected(_on_move_button_pressed):
 		moveButton.pressed.disconnect(_on_move_button_pressed)
 	if attackButton.pressed.is_connected(_on_attack_button_pressed):
 		attackButton.pressed. disconnect(_on_attack_button_pressed)
-
+	if keepPosButton.pressed.is_connected(_on_keep_pos_button_pressed):
+		keepPosButton.pressed.disconnect(_on_keep_pos_button_pressed)
+	if stopButton.pressed.is_connected(_on_stop_button_pressed):
+		stopButton. pressed.disconnect(_on_stop_button_pressed)
 # ==============================
 # 🔧 UTILIDADES NODE3D
 # ==============================
@@ -1312,3 +1341,34 @@ func _restore_camera_state() -> void:
 			elevation.  rotation. x = saved_camera_rotation
 			
 			print("  🔍 Zoom restaurado: %. 1f, rotación: %.2f" % [saved_camera_zoom, saved_camera_rotation])
+# ==============================
+# 🎯 BOTONES DE ACCIÓN (actualizar las existentes)
+# ==============================
+func _on_keep_pos_button_pressed() -> void:
+	if is_selecting_patrol_target or selected_unit == null or not selected_unit is Unit:
+		return
+	
+	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+	if not select_scene:
+		return
+	
+	_spawn_cursor(select_scene)
+	is_selecting_patrol_target = true
+	print("🔄 Selecciona el punto de patrulla")
+
+func _on_stop_button_pressed() -> void:
+	if selected_unit == null or not selected_unit is Unit:
+		return
+	
+	var unit = selected_unit as Unit
+	unit.stop()
+	print("🛑 Unidad detenida")
+func _handle_patrol_target_selection(mouse_pos: Vector2) -> void:
+	var target_pos = _get_terrain_position(mouse_pos)
+	
+	if selected_unit and selected_unit is Unit:
+		(selected_unit as Unit).start_patrol(target_pos)
+		print("🔄 Patrulla iniciada hacia:", target_pos)
+	
+	is_selecting_patrol_target = false
+	_cleanup_cursor()
