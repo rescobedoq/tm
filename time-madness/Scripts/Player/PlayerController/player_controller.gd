@@ -1,6 +1,94 @@
 extends Node3D
 class_name PlayerController
+# ==============================
+# 🎮 COMANDOS (COMMAND PATTERN)
+# ==============================
 
+class MoveCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.is_selecting_terrain:
+			return
+		
+		# 🔥 LIMPIAR CURSORES ANTERIORES
+		controller._cleanup_cursor()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_terrain = true
+		print("🔄 [MoveCommand] Modo movimiento activado")
+
+class AttackCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller. selected_unit == null or not controller. selected_unit is Unit:
+			return
+			
+		if controller.is_selecting_objective:
+			return
+		
+		# 🔥 LIMPIAR CURSORES ANTERIORES
+		controller._cleanup_cursor()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_objective = true
+		print("⚔️ [AttackCommand] Modo ataque activado")
+
+class StopCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_unit == null or not controller.selected_unit is Unit:
+			return
+		
+		var unit = controller.selected_unit as Unit
+		unit. stop()
+		print("🛑 [StopCommand] Unidad detenida")
+
+class PatrolCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_unit == null or not controller. selected_unit is Unit:
+			return
+			
+		if controller.is_selecting_patrol_target:
+			return
+		
+		# 🔥 LIMPIAR CURSORES ANTERIORES
+		controller._cleanup_cursor()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_patrol_target = true
+		print("🔄 [PatrolCommand] Selecciona el punto de patrulla")
 # ==============================
 # 🎮 CONFIGURACIÓN DEL JUGADOR
 # ==============================
@@ -29,7 +117,10 @@ var is_invulnerable: bool = false
 var invulnerability_timer: float = 0.0
 const INVULNERABILITY_DURATION: float = 2.0
 var battle_life_bar = null
-
+# ==============================
+# ⌨️ SISTEMA DE COMANDOS
+# ==============================
+var command_invoker: UnitCommandInvoker = UnitCommandInvoker.new()
 # ==============================
 # 🎯 UNIDADES Y EDIFICIOS
 # ==============================
@@ -136,6 +227,23 @@ func _ready() -> void:
 	_setup_camera()
 	if menu_hud and menu_hud.has_signal("resource_not"):
 		resource_not.connect(menu_hud._show_resource_not)
+		_setup_input_actions()
+
+func _setup_input_actions() -> void:
+	# Verificar que las acciones existan en Project Settings
+	# Si no existen, las creamos programáticamente
+	_ensure_input_action("unit_move", KEY_Z)
+	_ensure_input_action("unit_attack", KEY_X)
+	_ensure_input_action("unit_stop", KEY_C)
+	_ensure_input_action("unit_patrol", KEY_V)
+	
+func _ensure_input_action(action_name: String, key: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		var event = InputEventKey.new()
+		event.keycode = key
+		InputMap.action_add_event(action_name, event)
+		print("✅ Hotkey creada: %s = %s" % [action_name, OS.get_keycode_string(key)])
 		
 func _setup_signals() -> void:
 	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
@@ -824,6 +932,15 @@ func _spawn_cursor(scene: PackedScene) -> void:
 # ==============================
 # 🧹 LIMPIEZA
 # ==============================
+func _cancel_all_selection_modes() -> void:
+	is_selecting_terrain = false
+	is_selecting_objective = false
+	is_selecting_patrol_target = false
+	is_selecting_ability_terrain = false
+	is_selecting_ability_target = false
+	is_selecting_ability_ally = false
+	is_placing_building = false
+
 func _cleanup_ability_selection() -> void:
 	is_selecting_ability_terrain = false
 	is_selecting_ability_target = false
@@ -874,7 +991,7 @@ func _cleanup_cursors() -> void:
 	is_selecting_objective = false
 	is_placing_building = false
 	_cleanup_ability_selection()
-
+	_cancel_all_selection_modes()
 # ==============================
 # ⚔️ BATTLE MAP
 # ==============================
@@ -1372,3 +1489,38 @@ func _handle_patrol_target_selection(mouse_pos: Vector2) -> void:
 	
 	is_selecting_patrol_target = false
 	_cleanup_cursor()
+
+# ==============================
+# ⌨️ INPUT DE HOTKEYS
+# ==============================
+func _input(event: InputEvent) -> void:
+	if is_defeated or not is_active_player:
+		return
+	
+	# Solo procesar teclas presionadas (no liberadas)
+	if not event.is_pressed() or event.is_echo():
+		return
+	
+	# Z - Move
+	if event.is_action_pressed("unit_move"):
+		var cmd = MoveCommand.new(self)
+		command_invoker.execute_command(cmd)
+		get_viewport().set_input_as_handled()
+	
+	# X - Attack
+	elif event.is_action_pressed("unit_attack"):
+		var cmd = AttackCommand.new(self)
+		command_invoker. execute_command(cmd)
+		get_viewport().set_input_as_handled()
+	
+	# C - Stop
+	elif event.is_action_pressed("unit_stop"):
+		var cmd = StopCommand.new(self)
+		command_invoker.execute_command(cmd)
+		get_viewport().set_input_as_handled()
+	
+	# V - Patrol
+	elif event.is_action_pressed("unit_patrol"):
+		var cmd = PatrolCommand.new(self)
+		command_invoker.execute_command(cmd)
+		get_viewport().set_input_as_handled()
