@@ -245,7 +245,7 @@ func _unhandled_input(event):
 		_handle_entity_selection(mouse_pos)
 
 func _handle_building_placement() -> void:
-	if not build_placeholder. is_valid_placement:
+	if not build_placeholder.is_valid_placement:
 		print("❌ No se puede construir aquí: muy cerca de otro edificio")
 		return
 	
@@ -260,10 +260,16 @@ func _handle_building_placement() -> void:
 	if parent_node == null:
 		print("❌ No se pudo obtener el mapa activo")
 		return
-	
 	parent_node.add_child(final_build)
 	await get_tree().process_frame
 	add_building(final_build)
+	
+	var cost = BuildingCosts.get_cost(final_build.building_type)
+	if cost and cost.size() > 0:
+		gold -= cost.gold
+		resources -= cost.resources
+		update_team_hud()
+
 	
 	build_placeholder. queue_free()
 	build_placeholder = null
@@ -586,6 +592,16 @@ func _on_ability_pressed(building, ability) -> void:
 func _start_build_mode(building_name: String) -> void:
 	building_to_build = building_name
 	
+	var cost = BuildingCosts.get_cost(building_to_build)
+	
+	if not cost or cost.size() == 0:
+		print("⚠️ No se encontró el costo para: %s" % building_to_build)
+		return
+
+	if gold < cost.gold or resources < cost.resources:
+		print("⚠️ No tienes recursos suficientes para construir %s" % building_to_build)
+		return
+		
 	var controller_scene = load("res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn")
 	if controller_scene == null:
 		return

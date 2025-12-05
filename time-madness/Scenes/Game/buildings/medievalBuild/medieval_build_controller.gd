@@ -178,36 +178,30 @@ func _remove_physics_recursive(node: Node):
 			_remove_physics_recursive(child)
 
 func get_build() -> Node3D:
+	print("WASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
 	if building_type == "":
-		return null
-		
-	var scene_path := ""
-
-	match building_type:
-		"barracks":
-			scene_path = "res://Scenes/Game/buildings/medievalBarracks/medievalBarracks_controller.tscn"
-		"dragon":
-			scene_path = "res://Scenes/Game/buildings/medievalHatchery/medievalHatchery_controller.tscn"
-		"farm":
-			scene_path = "res://Scenes/Game/buildings/medivalFarm/medievalFarm_controller.tscn"
-		"harbor":
-			scene_path = "res://Scenes/Game/buildings/medievalHarbor/medievalHarbor_controller.tscn"
-		"magic":
-			scene_path = "res://Scenes/Game/buildings/medievalMagic/medievalMagic_controller.tscn"
-		"shrine":
-			scene_path = "res://Scenes/Game/buildings/medievalShrine/medievalShrine_controller.tscn"
-		"smithy":
-			scene_path = "res://Scenes/Game/buildings/medievalSmithy/medievalSmithy_controller.tscn"
-		"tower":
-			scene_path = "res://Scenes/Game/buildings/medievalTower/medievalTower_controller.tscn"
-		_:
-			return null
-
-	var scene = load(scene_path)
-	if not scene:
+		push_warning("get_build: building_type vacío")
 		return null
 
-	return scene.instantiate()
+	var path = BuildingScenes.get_building_path(building_type)
+	if path == "":
+		return null
+
+	var scene_res = load(path)
+	if scene_res == null:
+		push_warning("get_build: no se pudo cargar la escena para %s" % building_type)
+		return null
+
+	var building_instance = scene_res.instantiate()
+	
+	print("El nomasdasdasdbre de eso es: ", building_type);
+	
+	if building_instance == null:
+		push_warning("get_build: no se pudo instanciar la escena de %s" % building_type)
+		return null
+
+	return building_instance
+
 
 
 # 🔥 NUEVA FUNCIÓN: Verificar si la posición actual es válida
