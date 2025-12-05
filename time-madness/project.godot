@@ -23,6 +23,9 @@ GameStarter="*res://Scripts/Autoload/GameStarter.gd"
 Teams="*res://Scripts/Autoload/Teams.gd"
 UnitStats="*res://Scripts/Autoload/UnitStats.gd"
 UnitAbilities="*res://Scripts/Autoload/UnitAbilities.gd"
+BuildingAbilities="*res://Scripts/Autoload/BuildingAbilities.gd"
+UnitCosts="*res://Scripts/Autoload/UnitCosts.gd"
+UnitScenes="*res://Scripts/Autoload/UnitScenes.gd"
 
 [display]
 
