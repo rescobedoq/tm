@@ -119,6 +119,9 @@ var saved_camera_rotation: float = 0.0
 @onready var attackUnits_label: Label = $InfoHud/unitsAttack
 @onready var defenseUnits_label: Label = $InfoHud/unitsDefense
 
+signal resource_not
+signal energy_not
+
 var lose_screen_instance: Control = null
 var win_screen_instance: Control = null
 
@@ -126,10 +129,13 @@ var win_screen_instance: Control = null
 # 🔄 INICIALIZACIÓN
 # ==============================
 func _ready() -> void:
+
 	_hide_all_ui()
 	_setup_signals()
 	_setup_camera()
-
+	if menu_hud and menu_hud.has_signal("resource_not"):
+		resource_not.connect(menu_hud._show_resource_not)
+		
 func _setup_signals() -> void:
 	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
 	GameStarter.battle_mode_ended.connect(_on_battle_mode_ended)
@@ -586,9 +592,14 @@ func _on_ability_pressed(building, ability) -> void:
 	if building.has_method("use_ability"):
 		building.use_ability(ability)
 
+func _show_energy_not() -> void:
+	menu_hud._show_energy_not()
+
+
 # ==============================
 # 🏗️ SISTEMA DE CONSTRUCCIÓN
 # ==============================
+
 func _start_build_mode(building_name: String) -> void:
 	building_to_build = building_name
 	
@@ -599,6 +610,7 @@ func _start_build_mode(building_name: String) -> void:
 		return
 
 	if gold < cost.gold or resources < cost.resources:
+		menu_hud._show_resource_not()
 		print("⚠️ No tienes recursos suficientes para construir %s" % building_to_build)
 		return
 		

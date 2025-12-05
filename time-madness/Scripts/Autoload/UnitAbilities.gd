@@ -109,7 +109,7 @@ var abilities: Dictionary = {
 		"name": "Area Defense",
 		"description": "Increase defense of nearby allies.",
 		"animation_scene": "res://Scenes/Utils/AreaDefense/AreaDefense.tscn",
-		"energy_cost": 1
+		"energy_cost": 1000
 	},
 	"heal_ability": {
 		"icon": "res://Assets/Images/HUD/icons/healIcon.jpg",

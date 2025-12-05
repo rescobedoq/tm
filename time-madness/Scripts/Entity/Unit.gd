@@ -401,6 +401,8 @@ func _can_use_ability(ability: UnitAbility) -> bool:
 	if current_magic < ability.energy_cost:
 		print("⚠️ No hay suficiente energía para %s (necesita %d, tienes %. 1f)" % 
 			[ability.name, ability.energy_cost, current_magic])
+		if player_owner and player_owner.has_method("_show_energy_not"):
+			player_owner._show_energy_not()
 		return false
 	
 	return true
