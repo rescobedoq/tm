@@ -419,13 +419,40 @@ func select_unit(entity: Entity) -> void:
 	
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
-	
+		_disconnect_unit_signals(selected_unit)
+		
 	selected_building = null
 	_clear_abilities()
 	selected_unit = entity
+	if selected_unit is Unit:
+		var u = selected_unit as Unit
+		u.connect("health_changed", Callable(self, "_on_unit_health_changed"))
+		u.connect("energy_changed", Callable(self, "_on_unit_energy_changed"))
 	selected_unit.select()
 	
 	_update_unit_hud(entity)
+
+func _on_unit_health_changed(current_health: float, max_health: float) -> void:
+	if hud_health:
+		hud_health.max_value = max_health
+		hud_health.value = current_health
+
+func _on_unit_energy_changed(current_magic: float, max_magic: float) -> void:
+	if hud_energy:
+		hud_energy.max_value = max_magic
+		hud_energy.value = current_magic
+		
+func _disconnect_unit_signals(unit: Unit) -> void:
+	var health_callable = Callable(self, "_on_unit_health_changed")
+	if unit.is_connected("health_changed", health_callable):
+		unit.disconnect("health_changed", health_callable)
+
+	var energy_callable = Callable(self, "_on_unit_energy_changed")
+	if unit.is_connected("energy_changed", energy_callable):
+		unit.disconnect("energy_changed", energy_callable)
+
+
+
 
 func _update_unit_hud(entity: Entity) -> void:
 	if entity. portrait and hud_portrait:
@@ -481,17 +508,31 @@ func _update_building_hud(building: Building) -> void:
 
 func _setup_ability_button(button: TextureButton, ability, callback: Callable) -> void:
 	if button and ability:
+		
 		var icon_texture = load(ability.icon)
+		
+		
 		if icon_texture:
-			button. texture_normal = icon_texture
+			button.texture_normal = icon_texture
 			button.visible = true
 			button.disabled = false
 			button.tooltip_text = ability.name + "\n" + ability.description
-			
+
+			# Desconectar señales previas
 			for connection in button.pressed.get_connections():
 				button.pressed.disconnect(connection["callable"])
 			
-			button.pressed.connect(callback)
+			# Conectar nueva señal
+			button.pressed. connect(callback)
+			print("     ✅ Señal conectada")
+		else:
+			print("     ❌ ERROR: No se pudo cargar la textura del ícono")
+	else:
+		print("     ❌ ERROR: button o ability son null")
+		if not button:
+			print("        - button es null")
+		if not ability:
+			print("        - ability es null")
 
 func _clear_spell_buttons(buttons: Array) -> void:
 	for button in buttons:
@@ -513,6 +554,7 @@ func _reset_hud_stats() -> void:
 
 func deselect_current_unit() -> void:
 	if selected_unit != null:
+		_disconnect_unit_signals(selected_unit) 
 		selected_unit. deselect()
 		selected_unit = null
 	

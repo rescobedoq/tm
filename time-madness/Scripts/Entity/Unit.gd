@@ -1,6 +1,9 @@
 extends Entity
 class_name Unit
 
+signal health_changed(current_health: float, max_health: float)
+signal energy_changed(current_magic: float, max_magic: float)
+
 var portrait_path: String = ""
 
 @onready var anim_player = $model/AnimationPlayer 
@@ -91,17 +94,21 @@ func play_death():
 
 
 class UnitAbility:
-	var icon: String 
+	var icon: String
 	var name: String
 	var description: String
-	var ability_id: String  
+	var ability_id: String
+	var animation_scene: String
+	var energy_cost: int
 	
-	func _init(p_icon: String, p_name: String, p_description: String, p_ability_id: String = ""):
+	func _init(p_icon: String, p_name: String, p_description: String, p_ability_id: String = "", p_animation_scene: String = "", p_energy_cost: int = 0):
 		icon = p_icon
 		name = p_name
 		description = p_description
 		ability_id = p_ability_id
-		
+		animation_scene = p_animation_scene
+		energy_cost = p_energy_cost
+
 var abilities: Array[UnitAbility] = []
 
 
@@ -143,7 +150,8 @@ func take_damage(amount: float) -> void:
 	
 	var actual_damage = max(0, amount - defense)
 	current_health -= actual_damage
-	
+	emit_signal("health_changed", current_health, max_health)
+
 	print("💥 %s recibió %.1f de daño (vida: %.1f/%.1f)" % [name, actual_damage, current_health, max_health])
 	
 	# 💀 Verificar si murió
@@ -305,6 +313,16 @@ func _ready() -> void:
 	super._ready()
 	_init_aura()
 	_init_stats()
+		# 🔥 Cargar habilidades automáticamente desde UnitStats
+	if UnitStats != null:
+		var base_stats = UnitStats.get_stats(unit_type)
+		if base_stats.has("abilities"):
+			_set_abilities(base_stats.abilities)
+			print("✅ Habilidades cargadas automáticamente para %s: %s" % [name, base_stats.abilities])
+		else:
+			print("⚠️ No hay habilidades definidas en UnitStats para %s" % name)
+	else:
+		push_error("❌ UnitStats no está cargado! No se pudieron inicializar habilidades.")
 	
 	if portrait_path != "":
 		var tex := load(portrait_path)
@@ -315,6 +333,8 @@ func _ready() -> void:
 		
 	setup_collision_layers()
 	play_idle()
+	print("🟢 [Unit._ready()] FIN - abilities.size() en %s: %d" % [name, abilities.size()])
+
 
 func setup_collision_layers() -> void:
 	# Por defecto, capa 2 (Player 1)
@@ -356,8 +376,47 @@ func setup_player_collision_layers(player_idx: int) -> void:
 	
 	print("✅ [%s] Capas configuradas - Layer: %d, Mask: %d (Jugador %d)" % [name, player_layer, collision_mask, player_idx])
 
-func use_ability(ability):
-	print("Ejecutando habilidad de UNIDAD:", ability.name)
+# ===================================================
+# 🔥 SISTEMA GENÉRICO DE HABILIDADES
+# ===================================================
+func use_ability(ability: UnitAbility) -> void:
+	# 🔥 Validación de energía
+	if not _can_use_ability(ability):
+		return
+	
+	# 🔥 Consumir energía y notificar
+	_consume_ability_energy(ability)
+	
+	# 🔥 Llamar implementación específica (override en subclases)
+	_execute_ability(ability)
+
+# ===================================================
+# 🔥 VALIDACIÓN Y CONSUMO (Genérico)
+# ===================================================
+func _can_use_ability(ability: UnitAbility) -> bool:
+	if ability == null:
+		push_error("❌ Habilidad es null")
+		return false
+	
+	if current_magic < ability.energy_cost:
+		print("⚠️ No hay suficiente energía para %s (necesita %d, tienes %. 1f)" % 
+			[ability.name, ability.energy_cost, current_magic])
+		return false
+	
+	return true
+
+func _consume_ability_energy(ability: UnitAbility) -> void:
+	current_magic -= ability.energy_cost
+	emit_signal("energy_changed", current_magic, max_magic)
+	print("⚡ %s usado - Energía restante: %.1f" % [ability.name, current_magic])
+
+# ===================================================
+# 🔥 EJECUCIÓN (Override en subclases)
+# ===================================================
+func _execute_ability(ability: UnitAbility) -> void:
+	# Implementación por defecto (vacía)
+	# Las subclases deben hacer override
+	push_warning("⚠️ _execute_ability no implementado en %s" % get_class())
 	
 func _apply_stats(stats: Dictionary) -> void:
 	max_health = stats.get("max_health", 100)
@@ -400,3 +459,24 @@ func set_player_owner(new_owner):
 	if aura_controller and "player_index" in player_owner:
 		aura_controller.set_aura_color_from_player(player_owner.player_index)
 		print("🔄 Aura actualizada para nuevo jugador")
+
+
+func _set_abilities(ability_ids: Array) -> void:
+	abilities.clear()  # Limpiar habilidades existentes
+	
+	for ability_id in ability_ids:
+		var data = UnitAbilities.get_ability(ability_id)
+		if data.size() == 0:
+			continue  # O saltar si no se encuentra la habilidad
+			
+		var ua = UnitAbility.new(
+			data.icon,
+			data.name,
+			data.description,
+			ability_id,
+			data.animation_scene,
+			data.energy_cost
+		)
+
+		abilities.append(ua)
+	

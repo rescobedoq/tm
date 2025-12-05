@@ -18,7 +18,6 @@ offset_top = 929.99994
 offset_right = -669.4474
 offset_bottom = -90.13159
 scale = Vector2(1.52, 1.52)
-script = null
 
 [node name="TeamHud" parent="." instance=ExtResource("4_f0pu7")]
 offset_left = 969.0

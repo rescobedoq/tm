@@ -1,7 +1,6 @@
 extends Unit
 class_name ShipNormal
 
-
 const GHOST_SHIP_SCENE := "res://Scenes/Game/Unit/medievalShipGhost/medievalShipGhost_controller.tscn"
 const KRAKEN_SHIP_SCENE := "res://Scenes/Game/Unit/medievalShipKraken/medievalShipKraken_controller.tscn"
 
@@ -9,23 +8,12 @@ var selection_tween: Tween
 
 func _ready():
 	unit_category = "aquatic"
-	portrait_path =  "res://Assets/Images/Portraits/Units/medievalShipNormal.png"
+	portrait_path = "res://Assets/Images/Portraits/Units/medievalShipNormal.png"
 	unit_type = "Medieval Ship Normal"
+	
 	super._ready()
-	abilities = [
-		UnitAbility. new(
-			"res://Assets/Images/HUD/icons/ghostIcon.jpg",
-			"Ghost Ship",
-			"Evolve into Ghost Ship.\nCosto: 1 energia",
-			"ghostShip_ability" 
-		),
-		UnitAbility.new(
-			"res://Assets/Images/HUD/icons/krakenIcon.png",
-			"Kraken Ship",
-			"Evolve into Kraken Ship.\nCosto: 1 energia",
-			"krakenShip_ability" 
-		),
-	]
+	
+	_set_abilities(["ghostShip_ability", "krakenShip_ability"])
 
 func play_idle():
 	print(">>> play_idle CALLED <<<")
@@ -40,34 +28,26 @@ func play_death():
 	print(">>> play_death CALLED <<<")
 
 # ===================================================
+# 🔥 OVERRIDE: EJECUTAR HABILIDADES
+# ===================================================
+func _execute_ability(ability: UnitAbility) -> void:
+	match ability.ability_id:
+		"ghostShip_ability":
+			_evolve_to_ghost_ship()
+		"krakenShip_ability":
+			_evolve_to_kraken_ship()
+		_:
+			super._execute_ability(ability)
+
+# ===================================================
 # 🔥 HABILIDADES DE EVOLUCIÓN
 # ===================================================
-func use_ability(ability: UnitAbility) -> void:
-	if ability. ability_id == "ghostShip_ability":
-		_evolve_to_ghost_ship()
-	elif ability.ability_id == "krakenShip_ability":
-		_evolve_to_kraken_ship()
-	else:
-		super.use_ability(ability)
-
 func _evolve_to_ghost_ship() -> void:
-	if current_magic < 1:
-		print("⚠️ No hay suficiente energía para Ghost Ship")
-		return
-	
-	current_magic -= 1
 	print("👻 EVOLUCIONANDO A GHOST SHIP!")
-	
 	_perform_evolution(GHOST_SHIP_SCENE, "Ghost Ship")
 
 func _evolve_to_kraken_ship() -> void:
-	if current_magic < 1:
-		print("⚠️ No hay suficiente energía para Kraken Ship")
-		return
-	
-	current_magic -= 1
 	print("🐙 EVOLUCIONANDO A KRAKEN SHIP!")
-	
 	_perform_evolution(KRAKEN_SHIP_SCENE, "Kraken Ship")
 
 func _perform_evolution(evolution_scene_path: String, evolution_name: String) -> void:
@@ -87,8 +67,8 @@ func _perform_evolution(evolution_scene_path: String, evolution_name: String) ->
 	
 	# Tween de hundimiento
 	var disappear_tween = create_tween()
-	disappear_tween.set_parallel(true)
-	disappear_tween.tween_property(self, "global_position:y", saved_position.y - 5.0, 0.5)
+	disappear_tween. set_parallel(true)
+	disappear_tween.tween_property(self, "global_position:y", saved_position. y - 5.0, 0.5)
 	disappear_tween.tween_property(self, "rotation_degrees:z", rotation_degrees.z + 15, 0.5)
 	await disappear_tween.finished
 	
@@ -98,7 +78,7 @@ func _perform_evolution(evolution_scene_path: String, evolution_name: String) ->
 			saved_owner.units.erase(self)
 		if self in saved_owner.attack_units:
 			saved_owner.attack_units.erase(self)
-		if self in saved_owner.defense_units:
+		if self in saved_owner. defense_units:
 			saved_owner.defense_units.erase(self)
 		if saved_owner.has_method("_update_units_labels"):
 			saved_owner._update_units_labels()
@@ -114,22 +94,22 @@ func _perform_evolution(evolution_scene_path: String, evolution_name: String) ->
 	await get_tree().process_frame
 	
 	# Posicionar más alto y escalar pequeño al inicio
-	var start_position = saved_position + Vector3(0, 8.0, 0) # +8 unidades en Y
+	var start_position = saved_position + Vector3(0, 8.0, 0)
 	evolved_ship.global_position = start_position
 	evolved_ship.rotation = saved_rotation
-	evolved_ship.scale = Vector3(0.5, 0.5, 0.5)  # empezar más pequeño
+	evolved_ship.scale = Vector3(0.5, 0.5, 0.5)
 	
 	# Asignar propietario y agregar al owner
 	if saved_owner and evolved_ship is Unit:
 		evolved_ship.player_owner = saved_owner
-		saved_owner.add_unit(evolved_ship)
+		saved_owner. add_unit(evolved_ship)
 	
 	# Tween para emerger + scale
 	var appear_tween = evolved_ship.create_tween()
 	appear_tween.set_parallel(true)
 	appear_tween.tween_property(evolved_ship, "global_position:y", saved_position.y, 0.7)
 	appear_tween.tween_property(evolved_ship, "scale", Vector3(1, 1, 1), 0.7)
-	await appear_tween.finished
+	await appear_tween. finished
 	
 	# Eliminar barco original
 	queue_free()

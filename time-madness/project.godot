@@ -22,6 +22,7 @@ GlobalUser="*res://GlobalUser.gd"
 GameStarter="*res://Scripts/Autoload/GameStarter.gd"
 Teams="*res://Scripts/Autoload/Teams.gd"
 UnitStats="*res://Scripts/Autoload/UnitStats.gd"
+UnitAbilities="*res://Scripts/Autoload/UnitAbilities.gd"
 
 [display]
 

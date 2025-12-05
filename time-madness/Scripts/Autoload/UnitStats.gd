@@ -1,6 +1,4 @@
 # UnitStats.gd
-# Script singleton o de recurso que contiene los stats base de cada unidad
-
 extends Node
 
 var stats: Dictionary = {
@@ -11,7 +9,8 @@ var stats: Dictionary = {
 		"defense": 10,
 		"move_speed": 50,
 		"attack_range": 40,
-		"max_magic": 100
+		"max_magic": 1000,
+		"abilities": ["fireBall_ability"]
 	},
 	"Medieval Druid": {
 		"max_health": 200,
@@ -20,7 +19,8 @@ var stats: Dictionary = {
 		"defense": 10,
 		"move_speed": 20,
 		"attack_range": 30,
-		"max_magic": 100
+		"max_magic": 1000,
+		"abilities": ["rootUnit_ability", "stealLife_ability"]
 	},
 	"Medieval Golem": {
 		"max_health": 350,
@@ -29,7 +29,8 @@ var stats: Dictionary = {
 		"defense": 20,
 		"move_speed": 10,
 		"attack_range": 10,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": ["punch_ability", "spawn_ability"]
 	},
 	"Medieval Soldier": {
 		"max_health": 150,
@@ -38,7 +39,8 @@ var stats: Dictionary = {
 		"defense": 5,
 		"move_speed": 25,
 		"attack_range": 10,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": ["charge_ability"]
 	},
 	"Medieval Archer": {
 		"max_health": 120,
@@ -47,7 +49,8 @@ var stats: Dictionary = {
 		"defense": 3,
 		"move_speed": 20,
 		"attack_range": 50,
-		"max_magic": 50
+		"max_magic": 1000,
+		"abilities": ["arrows_ability", "trap_ability"]
 	},
 	"Medieval Cavalry": {
 		"max_health": 180,
@@ -56,7 +59,8 @@ var stats: Dictionary = {
 		"defense": 8,
 		"move_speed": 40,
 		"attack_range": 15,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": ["thrust_ability"]
 	},
 	"Medieval Sorcerer": {
 		"max_health": 200,
@@ -65,7 +69,8 @@ var stats: Dictionary = {
 		"defense": 10,
 		"move_speed": 7,
 		"attack_range": 30,
-		"max_magic": 150
+		"max_magic": 1000,
+		"abilities": ["areaDefense_ability", "heal_ability", "mentalControl_ability"]
 	},
 	"Medieval Magic Soldier": {
 		"max_health": 180,
@@ -74,7 +79,8 @@ var stats: Dictionary = {
 		"defense": 8,
 		"move_speed": 15,
 		"attack_range": 25,
-		"max_magic": 50
+		"max_magic": 1000,
+		"abilities": ["magicBall_ability"]
 	},
 	"Medieval Ship Ghost": {
 		"max_health": 250,
@@ -83,7 +89,8 @@ var stats: Dictionary = {
 		"defense": 10,
 		"move_speed": 15,
 		"attack_range": 35,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": []
 	},
 	"Medieval Ship Kraken": {
 		"max_health": 400,
@@ -92,7 +99,8 @@ var stats: Dictionary = {
 		"defense": 20,
 		"move_speed": 10,
 		"attack_range": 30,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": []
 	},
 	"Medieval Ship Normal": {
 		"max_health": 300,
@@ -101,10 +109,10 @@ var stats: Dictionary = {
 		"defense": 12,
 		"move_speed": 12,
 		"attack_range": 25,
-		"max_magic": 0
+		"max_magic": 1000,
+		"abilities": ["ghostShip_ability", "krakenShip_ability"]
 	}
 }
-
 
 func get_stats(unit_type: String) -> Dictionary:
 	if stats.has(unit_type):

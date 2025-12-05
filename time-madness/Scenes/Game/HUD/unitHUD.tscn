@@ -1,6 +1,5 @@
-[gd_scene load_steps=16 format=3 uid="uid://bd32dmikxffxd"]
+[gd_scene load_steps=15 format=3 uid="uid://bd32dmikxffxd"]
 
-[ext_resource type="Script" uid="uid://dwpkp2dmtxgb2" path="res://Scenes/Game/HUD/unit_hud.gd" id="1_5wg7h"]
 [ext_resource type="Texture2D" uid="uid://clwt1r4aqldqq" path="res://Assets/Images/HUD/unitInformation.png" id="1_bdrow"]
 [ext_resource type="Texture2D" uid="uid://cqniajy7ptnjg" path="res://Assets/Images/HUD/icons/moveIcon.png" id="2_4rmug"]
 [ext_resource type="Texture2D" uid="uid://cncfkc6n804ig" path="res://Assets/Images/HUD/icons/attackIcon.png" id="2_8erm8"]
@@ -26,7 +25,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_5wg7h")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 scale = Vector2(1.0304687, 1)
