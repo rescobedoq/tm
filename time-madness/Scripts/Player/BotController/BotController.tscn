@@ -1,6 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://2jhw1dsxrqkf"]
+[gd_scene load_steps=3 format=3 uid="uid://2jhw1dsxrqkf"]
 
 [ext_resource type="Script" uid="uid://bsc5ygm746qlr" path="res://Scripts/Player/BotController/bot_controller.gd" id="1_xd3sr"]
+[ext_resource type="Script" uid="uid://bumxh5wjxsj4f" path="res://Scripts/Player/BotController/AIBrain.gd" id="2_356rm"]
 
 [node name="BotController" type="Node3D"]
 script = ExtResource("1_xd3sr")
+
+[node name="AIBrain" type="Node" parent="."]
+script = ExtResource("2_356rm")
