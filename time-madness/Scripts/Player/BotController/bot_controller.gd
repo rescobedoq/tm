@@ -52,7 +52,7 @@ func _ready() -> void:
 	# 🔥 Crear 1 cuartel al iniciar
 	for i in range(1):
 		create_building("barracks")
-	for i in range(100):
+	for i in range(1):
 		create_unit("train_soldier")
 	print("🏢 Buildings del bot: ", buildings)
 	print("🏢 Unidades del bot: ", units)

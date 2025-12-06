@@ -28,6 +28,7 @@ UnitCosts="*res://Scripts/Autoload/UnitCosts.gd"
 UnitScenes="*res://Scripts/Autoload/UnitScenes.gd"
 BuildingCosts="*res://Scripts/Autoload/BuildingCosts.gd"
 BuildingScenes="*res://Scripts/Autoload/BuildingScenes.gd"
+LLMService="*res://Scripts/Services/LLMService.gd"
 
 [display]
 

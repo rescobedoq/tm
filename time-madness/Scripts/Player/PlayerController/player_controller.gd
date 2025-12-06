@@ -915,7 +915,7 @@ func _update_workers_label() -> void:
 		workers_label.text = "Workers: " + str(workers)
 
 func add_worker() -> void:
-	var cost = UnitCosts.get_cost("worker")
+	var cost = UnitCosts.get_cost("train_slave")
 	if gold < cost.gold or resources < cost. resources or (upkeep + cost.upkeep > maxUpKeep):
 		menu_hud._show_resource_not()
 		return

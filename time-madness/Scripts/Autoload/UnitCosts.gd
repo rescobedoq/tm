@@ -1,15 +1,15 @@
 extends Node
 
 var costs := {
-	"worker": {"gold": 1, "resources": 0, "upkeep": 1},
-	"train_soldier": {"gold": 1, "resources": 0, "upkeep": 1},
-	"train_archer": {"gold": 1, "resources": 25, "upkeep": 1},
-	"train_cavalry": {"gold": 1, "resources": 50, "upkeep": 2},
-	"train_dragon": {"gold": 1, "resources": 200, "upkeep": 5},
-	"train_druid": {"gold": 1, "resources": 50, "upkeep": 2},
-	"train_golem": {"gold": 1, "resources": 100, "upkeep": 3},
-	"train_magic_soldier": {"gold": 1, "resources": 60, "upkeep": 2},
-	"train_sorcerer": {"gold": 1, "resources": 80, "upkeep": 3},
+	"train_slave": {"gold": 100, "resources": 0, "upkeep": 1},
+	"train_soldier": {"gold": 100, "resources": 0, "upkeep": 1},
+	"train_archer": {"gold": 100, "resources": 25, "upkeep": 1},
+	"train_cavalry": {"gold": 100, "resources": 50, "upkeep": 2},
+	"train_dragon": {"gold": 100, "resources": 200, "upkeep": 5},
+	"train_druid": {"gold": 100, "resources": 50, "upkeep": 2},
+	"train_golem": {"gold": 100, "resources": 100, "upkeep": 3},
+	"train_magic_soldier": {"gold": 100, "resources": 60, "upkeep": 2},
+	"train_sorcerer": {"gold": 100, "resources": 80, "upkeep": 3},
 
 	# Barcos
 	"build_ship": {"gold": 200, "resources": 100, "upkeep": 2},

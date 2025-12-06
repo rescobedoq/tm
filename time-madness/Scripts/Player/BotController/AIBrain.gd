@@ -7,23 +7,6 @@ func _ready():
 	bot = get_parent() # BotController es el padre
 	print("🧠 AIBrain conectado al bot:", bot.player_name)
 
-var time_accumulator: float = 0.0
-
-func _process(delta: float):
-	time_accumulator += delta
-	if time_accumulator >= 1.0:
-		time_accumulator = 0.0
-		
-		# Manejo de errores simple para GDScript
-		var available_actions = get_available_actions()
-		if available_actions != null and available_actions.size() > 0:
-			print("\n🧠 [AIBrain] Acciones disponibles para %s:" % bot.player_name)
-			print("Total acciones: ", available_actions.size())
-			for i in range(available_actions.size()):
-				print("  %d. %s" % [i + 1, available_actions[i]])
-		else:
-			print("⚠️ No se pudieron obtener acciones disponibles")
-
 # 🔥 FUNCIÓN PRINCIPAL: Obtener todas las acciones disponibles
 func get_available_actions() -> Array[String]:
 	var actions: Array[String] = []
@@ -47,7 +30,7 @@ func get_available_actions() -> Array[String]:
 		if _can_build(building_type):
 			var cost = BuildingCosts.get_cost(building_type)
 			if cost != null:
-				actions.append("BUILD: %s (Gold: %d, Resources: %d)" % [building_type, cost.gold, cost.resources])
+				actions.append("BUILD: %s (Gold: %d, Resources: %d)" % [building_type, cost. gold, cost.resources])
 	
 	# ========================================
 	# 🪖 ENTRENAMIENTO DE UNIDADES
@@ -91,12 +74,12 @@ func get_available_actions() -> Array[String]:
 		if enemies.size() > 0:
 			# Para cada unidad propia, puede atacar a cualquier enemigo
 			for own_unit in bot.battle_units:
-				if not is_instance_valid(own_unit) or not own_unit.is_alive:
+				if not is_instance_valid(own_unit) or not own_unit. is_alive:
 					continue
 				
 				# Encontrar enemigo más cercano
 				if bot.has_method("get_nearest_enemy_unit"):
-					var nearest_enemy = bot.get_nearest_enemy_unit(own_unit.global_position)
+					var nearest_enemy = bot.get_nearest_enemy_unit(own_unit. global_position)
 					if nearest_enemy:
 						actions.append("ATTACK: Unit %s → Enemy %s (Distance: %.1f)" % [
 							own_unit.unit_type,
@@ -127,7 +110,7 @@ func _get_map_context() -> Array[String]:
 	if bot.battle_units != null:
 		for unit in bot.battle_units:
 			if is_instance_valid(unit) and unit.is_alive:
-				context.append("  Unit: %s | Position: (%.1f, %.1f, %.1f) | HP: %.0f/%.0f" % [
+				context.append("  Unit: %s | Position: (%.1f, %.1f, %.1f) | HP: %. 0f/%.0f" % [
 					unit.unit_type,
 					unit.global_position.x,
 					unit.global_position.y,
@@ -143,13 +126,13 @@ func _get_map_context() -> Array[String]:
 		for unit in GameStarter.all_battle_units:
 			if is_instance_valid(unit) and unit.is_alive:
 				if unit.player_owner and unit.player_owner != bot:
-					var owner_name = unit.player_owner.player_name if unit.player_owner else "Unknown"
+					var owner_name = unit.player_owner. player_name if unit.player_owner else "Unknown"
 					context.append("  Unit: %s | Owner: %s | Position: (%.1f, %.1f, %.1f) | HP: %.0f/%.0f" % [
 						unit.unit_type,
 						owner_name,
-						unit.global_position.x,
+						unit.global_position. x,
 						unit.global_position.y,
-						unit.global_position.z,
+						unit. global_position.z,
 						unit.current_health,
 						unit.max_health
 					])
@@ -221,7 +204,7 @@ func _can_train_unit(unit_id: String) -> bool:
 		return false
 	
 	# Verificar recursos
-	if bot.gold < cost.gold:
+	if bot.gold < cost. gold:
 		return false
 	
 	if bot.resources < cost.resources:
