@@ -514,3 +514,57 @@ func enable_node_3d_recursive(node: Node) -> void:
 	pass
 	
 	
+# 🔥 NUEVO: Obtener la unidad del bot más cercana a una posición
+func get_nearest_own_unit(target_position: Vector3) -> Entity:
+	if battle_units.size() == 0:
+		print("⚠️ [BotController] No hay unidades propias en batalla")
+		return null
+	
+	var nearest_unit: Entity = null
+	var nearest_distance: float = INF
+	
+	for unit in battle_units:
+		if not is_instance_valid(unit) or not unit.is_alive:
+			continue
+		
+		var distance = unit.global_position.distance_to(target_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_unit = unit
+	
+	if nearest_unit:
+		print("🤖 [BotController] Unidad propia más cercana: %s a %. 2f unidades" % [nearest_unit.name, nearest_distance])
+	else:
+		print("⚠️ [BotController] No se encontró unidad propia válida")
+	
+	return nearest_unit
+
+# 🔥 NUEVO: Obtener la unidad enemiga más cercana a una posición
+func get_nearest_enemy_unit(target_position: Vector3) -> Entity:
+	var enemies: Array[Entity] = []
+	
+	# Filtrar enemigos de GameStarter. all_battle_units
+	for unit in GameStarter.all_battle_units:
+		if is_instance_valid(unit) and unit.is_alive:
+			if unit.player_owner and unit.player_owner != self:
+				enemies.append(unit)
+	
+	if enemies.size() == 0:
+		print("⚠️ [BotController] No hay unidades enemigas disponibles")
+		return null
+	
+	var nearest_enemy: Entity = null
+	var nearest_distance: float = INF
+	
+	for enemy in enemies:
+		var distance = enemy.global_position. distance_to(target_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_enemy = enemy
+	
+	if nearest_enemy:
+		print("🤖 [BotController] Enemigo más cercano: %s a %.2f unidades" % [nearest_enemy.name, nearest_distance])
+	else:
+		print("⚠️ [BotController] No se encontró enemigo válido")
+	
+	return nearest_enemy
