@@ -13,12 +13,11 @@ class_name BotController
 # ==============================
 # 💰 RECURSOS
 # ==============================
-@export var gold: int = 500
-@export var resources: int = 500
+@export var gold: int = 50000
+@export var resources: int = 50000
 @export var upkeep: int = 0
-@export var maxUpKeep: int = 10
+@export var maxUpKeep: int = 100
 var workers: int = 0
-
 # ==============================
 # 🎯 UNIDADES Y EDIFICIOS
 # ==============================
@@ -43,7 +42,6 @@ const INVULNERABILITY_DURATION: float = 2.0  # 🔥 AGREGADO
 var max_lives: int = 6
 var current_lives: int = 6
 var battle_life_bar = null
-
 # ==============================
 # 🔄 INICIALIZACIÓN
 # ==============================
@@ -51,14 +49,77 @@ func _ready() -> void:
 	print("🤖 [BotController] Bot '%s' inicializado (Player %d)" % [player_name, player_index])
 	create_building("castle")
 
-	# 🔥 Crear 1 cuarteles al iniciar
+	# 🔥 Crear 1 cuartel al iniciar
 	for i in range(1):
 		create_building("barracks")
-	for i in range(2):
+	for i in range(100):
 		create_unit("train_soldier")
 	print("🏢 Buildings del bot: ", buildings)
 	print("🏢 Unidades del bot: ", units)
+	
+	# 🔥 Conectar señal de battle mode
+	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
 
+# 🔥 NUEVO: Cuando inicia el modo batalla
+func _on_battle_mode_started() -> void:
+	is_battle_mode = true
+	print("🤖 [BotController] Modo batalla iniciado para %s" % player_name)
+	
+	# Esperar a que las unidades se transfieran al mapa
+	await get_tree(). create_timer(1.0).timeout
+	
+	# 🔥 Ejecutar comportamiento de prueba
+	_test_battle_behavior()
+
+# 🔥 NUEVO: Comportamiento de prueba en batalla
+func _test_battle_behavior() -> void:
+	if battle_units.size() == 0:
+		print("⚠️ [BotController] No hay unidades en batalla")
+		return
+	
+	# Seleccionar una unidad aleatoria
+	var random_unit = battle_units[randi() % battle_units.size()]
+	
+	if not is_instance_valid(random_unit) or not random_unit. is_alive:
+		print("⚠️ [BotController] La unidad seleccionada no es válida")
+		return
+	
+	print("🤖 [BotController] === INICIANDO COMPORTAMIENTO DE PRUEBA ===")
+	
+	# 1. Mover a posición aleatoria
+	var random_position = Vector3(
+		randf_range(-100, 100),
+		0,
+		randf_range(-100, 100)
+	)
+	
+	print("🤖 [BotController] Paso 1: Moviendo unidad %s a posición aleatoria %v" % [random_unit. name, random_position])
+	move_unit_to_position(random_unit, random_position)
+	
+	# 2.  Esperar 2 segundos
+	await get_tree().create_timer(2.0).timeout
+	# 3. Obtener enemigos filtrando all_battle_units
+	var enemies: Array[Entity] = []
+	for unit in GameStarter.all_battle_units:
+		if is_instance_valid(unit) and unit. is_alive:
+			if unit.player_owner and unit.player_owner != self:
+				enemies.append(unit)
+		
+	if enemies.size() == 0:
+		print("⚠️ [BotController] No hay enemigos disponibles")
+		return
+	
+	# Seleccionar enemigo aleatorio
+	var random_enemy = enemies[randi() % enemies. size()]
+	
+	if not is_instance_valid(random_enemy) or not random_enemy. is_alive:
+		print("⚠️ [BotController] El enemigo seleccionado no es válido")
+		return
+	
+	print("🤖 [BotController] Paso 2: Atacando enemigo aleatorio %s" % random_enemy.name)
+	attack_enemy(random_unit, random_enemy)
+	
+	print("🤖 [BotController] === COMPORTAMIENTO DE PRUEBA COMPLETADO ===")
 
 func _process(delta: float) -> void:
 	if is_invulnerable:
@@ -159,6 +220,8 @@ func create_unit(unit_type: String) -> bool:
 	# Añadir a attack_units directamente
 	if new_unit is Entity:
 		attack_units.append(new_unit)
+		GameStarter.all_battle_units.erase(new_unit)
+
 		units.append(new_unit)
 		
 		# Descontar recursos
@@ -178,6 +241,7 @@ func add_unit(unit: Entity) -> void:
 		return
 	
 	units.append(unit)
+	GameStarter.all_battle_units.append(unit)
 	unit.player_owner = self
 	
 	if unit.has_method("setup_player_collision_layers"):
@@ -188,6 +252,80 @@ func add_unit(unit: Entity) -> void:
 	
 	print("🤖 [BotController] Unidad añadida: %s (Total: %d)" % [unit. name, units.size()])
 
+# 🔥 NUEVO: Mover una unidad a una posición específica
+func move_unit_to_position(unit: Entity, target_position: Vector3) -> void:
+	if unit == null or not is_instance_valid(unit):
+		print("❌ [BotController] Unidad inválida para mover")
+		return
+	
+	if not unit.is_alive:
+		print("⚠️ [BotController] Unidad %s está muerta, no puede moverse" % unit.name)
+		return
+	
+	# Verificar que la unidad pertenece a este bot
+	if unit.player_owner != self:
+		print("⚠️ [BotController] La unidad %s no pertenece a este bot" % unit.name)
+		return
+	
+	# Llamar al método move_to de la unidad
+	if unit.has_method("move_to"):
+		unit.move_to(target_position)
+		print("🤖 [BotController] Unidad %s moviéndose a %v" % [unit.name, target_position])
+	else:
+		print("❌ [BotController] La unidad %s no tiene método move_to" % unit.name)
+
+# 🔥 NUEVO: Mover todas las unidades de ataque a una posición
+func move_all_attack_units_to_position(target_position: Vector3) -> void:
+	if attack_units.size() == 0:
+		print("⚠️ [BotController] No hay unidades de ataque para mover")
+		return
+	
+	var moved_count = 0
+	for unit in attack_units:
+		if is_instance_valid(unit) and unit.is_alive:
+			move_unit_to_position(unit, target_position)
+			moved_count += 1
+	
+	print("🤖 [BotController] %d unidades de ataque moviéndose a %v" % [moved_count, target_position])
+
+# 🔥 NUEVO: Mover unidad hacia un enemigo
+func move_unit_to_enemy(unit: Entity, target_enemy: Entity) -> void:
+	if unit == null or not is_instance_valid(unit):
+		print("❌ [BotController] Unidad inválida")
+		return
+	
+	if target_enemy == null or not is_instance_valid(target_enemy):
+		print("❌ [BotController] Enemigo inválido")
+		return
+	
+	if not target_enemy.is_alive:
+		print("⚠️ [BotController] El enemigo objetivo está muerto")
+		return
+	
+	# Mover hacia la posición del enemigo
+	move_unit_to_position(unit, target_enemy.global_position)
+	print("🤖 [BotController] Unidad %s persiguiendo a %s" % [unit.name, target_enemy.name])
+
+# 🔥 NUEVO: Atacar a un enemigo específico
+func attack_enemy(unit: Entity, target_enemy: Entity) -> void:
+	if unit == null or not is_instance_valid(unit):
+		print("❌ [BotController] Unidad inválida")
+		return
+	
+	if target_enemy == null or not is_instance_valid(target_enemy):
+		print("❌ [BotController] Enemigo inválido")
+		return
+	
+	if not unit.is_alive or not target_enemy.is_alive:
+		print("⚠️ [BotController] La unidad o el enemigo está muerto")
+		return
+	
+	# Usar el método attack_target de la unidad
+	if unit.has_method("attack_target"):
+		unit.attack_target(target_enemy)
+		print("⚔️ [BotController] Unidad %s atacando a %s" % [unit.name, target_enemy.name])
+	else:
+		print("❌ [BotController] La unidad %s no tiene método attack_target" % unit.name)
 
 # ==============================
 # ⚔️ GESTIÓN DE BATALLA
@@ -360,6 +498,10 @@ func _destroy_battle_castle() -> void:
 		print("❤️ [BotController] Barra de vida eliminada")
 
 
+func _on_unit_died(unit: Entity) -> void:
+	units.erase(unit)
+	attack_units.erase(unit)
+	GameStarter.all_battle_units.erase(unit)
 # ==============================
 # 🧹 UTILIDADES (para compatibilidad con PlayerController)
 # ==============================
@@ -370,3 +512,5 @@ func disable_node_3d_recursive(node: Node) -> void:
 func enable_node_3d_recursive(node: Node) -> void:
 	# El bot no tiene nodos 3D que habilitar, pero necesita la función para compatibilidad
 	pass
+	
+	

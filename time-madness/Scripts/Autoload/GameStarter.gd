@@ -49,6 +49,9 @@ var battle_map_scene = preload("res://Scenes/Game/Map/Map1/map1.tscn")
 var player_controllers: Array = []
 var battle_map_instance: Node = null
 
+
+var all_battle_units: Array[Entity] = []
+
 func _ready():
 	_timer.one_shot = false
 	_timer.wait_time = 1.0

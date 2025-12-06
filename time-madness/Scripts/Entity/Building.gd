@@ -261,7 +261,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	if new_unit is Entity:
 		player.add_unit(new_unit)
-	
+
 	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)
 	
 func _get_player_owner() -> Node:

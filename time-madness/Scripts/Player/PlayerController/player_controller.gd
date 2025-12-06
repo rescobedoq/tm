@@ -866,6 +866,7 @@ func move_unit_to_attack(unit: Entity) -> void:
 	defense_units.erase(unit)
 	if unit not in attack_units:
 		attack_units.append(unit)
+		GameStarter.all_battle_units.append(unit)
 	_update_units_labels()
 
 func move_unit_to_defense(unit: Entity) -> void:
@@ -873,8 +874,11 @@ func move_unit_to_defense(unit: Entity) -> void:
 		return
 	
 	attack_units.erase(unit)
+	GameStarter.all_battle_units.erase(unit)
+
 	if unit not in defense_units:
 		defense_units.append(unit)
+
 	_update_units_labels()
 
 func _on_unit_died(unit: Entity) -> void:
