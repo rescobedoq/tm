@@ -321,7 +321,6 @@ func initialize_abilities() -> void:
 	if building_type == "":
 		push_warning("Building '%s' tiene building_type vacío" % name)
 		return
-	print("BXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXUILDING TYPE: ", building_type)
 	for ability_dict in BuildingAbilities.get_building_ability(building_type):
 		abilities.append(
 			BuildingAbility.new(

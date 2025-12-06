@@ -1,28 +1,25 @@
 extends Node3D
 
-
-
-
 func _ready():
 	print("\n==============================")
 	print("🚀 GameScene cargada")
 	print("==============================")
-	$Map1.disable_map()
+	$Map1. disable_map()
 	GameStarter.battle_map_instance = $Map1
 	
 	# Conectar señales importantes del GameStarter (autoload)
 	GameStarter.player_controllers_ready.connect(_on_player_controllers_ready)
-	GameStarter.stage_changed. connect(_on_stage_changed)
-	GameStarter.game_starting.connect(_on_game_starting)
+	GameStarter.stage_changed.connect(_on_stage_changed)
+	GameStarter.game_starting. connect(_on_game_starting)
 
-	# Crear configuración de 2 jugadores de prueba
+	# 🔥 Crear configuración: 1 humano + 1 bot
 	var players = [
-		PlayerData.new("Player1", "humans", "easy", 1, false),
-		PlayerData.new("AI Bot", "orcs", "normal", 2, true)
+		PlayerData.new("Player1", "humans", "easy", 1, false),    # 🎮 HUMANO
+		PlayerData.new("AI Bot", "orcs", "normal", 2, true)       # 🤖 BOT
 	]
 
 	# 🔥 Lanzar el inicio del juego con 2 jugadores
-	GameStarter. start_game(players)
+	GameStarter.start_game(players)
 
 
 func _on_game_starting(players):
@@ -31,7 +28,7 @@ func _on_game_starting(players):
 
 	# Activar el primer stage
 	_update_stage_visibility()
-	GameStarter. start_stage_timer()
+	GameStarter.start_stage_timer()
 
 
 func _on_player_controllers_ready(controllers):
@@ -43,11 +40,15 @@ func _on_player_controllers_ready(controllers):
 		game_manager.add_child(c)
 		print("  ➕ Añadido controller a GameManager: %s" % c.name)
 	
-	# 🔥 Configurar BaseMap con castillos para cada jugador
+	# 🔥 Configurar BaseMap SOLO para jugadores HUMANOS
 	var base_map = $BaseMap
 	for c in controllers:
-		if base_map.has_method("setup_for_player"):
+		# 🔥 Solo configurar BaseMap si NO es bot
+		if c.is_active_player and base_map.has_method("setup_for_player"):
 			base_map.setup_for_player(c)
+			print("  🏠 BaseMap configurado para jugador humano: %s" % c. player_name)
+		elif not c.is_active_player:
+			print("  🤖 Bot '%s' NO necesita BaseMap (solo usa arrays)" % c.player_name)
 
 	print("🎮 Todos los PlayerControllers añadidos a GameManager\n")
 
@@ -67,7 +68,7 @@ func _update_stage_visibility():
 		$BaseMap.visible = false
 		print("👁️ Map1 HABILITADO (Battle Stage)")
 	else:
-		$Map1. disable_map()
+		$Map1.disable_map()
 		$BaseMap.visible = true
 		print("👁️ Map1 DESHABILITADO (Base Stage)")
 

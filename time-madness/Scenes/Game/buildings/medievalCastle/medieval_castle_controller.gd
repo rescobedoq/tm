@@ -9,7 +9,7 @@ func _ready():
 
 
 func get_building_scale() -> int:
-	return Building.get_building_scale_value("barracks")
+	return Building.get_building_scale_value("castle")
 
 func get_building_portrait() -> String:
 	return Building.get_building_portrait_path("castle")

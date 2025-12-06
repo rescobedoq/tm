@@ -1515,11 +1515,9 @@ func _select_units_in_box(screen_rect: Rect2) -> void:
 	
 	print("✅ Unidades seleccionadas: %d (Modo: %s)" % [selected_units. size(), "BATTLE" if is_battle_mode else "BASE"])
 	
-	# 🔥 SI HAY MÁS DE UNA UNIDAD, LIMPIAR HUD
 	if selected_units. size() > 1:
 		_clear_selection_ui()
 	elif selected_units.size() == 1:
-		# Si solo hay una, mostrar su HUD
 		_update_unit_hud(selected_units[0])
 	else:
 		_clear_selection_ui()

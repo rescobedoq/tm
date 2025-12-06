@@ -26,8 +26,8 @@ UnitAbilities="*res://Scripts/Autoload/UnitAbilities.gd"
 BuildingAbilities="*res://Scripts/Autoload/BuildingAbilities.gd"
 UnitCosts="*res://Scripts/Autoload/UnitCosts.gd"
 UnitScenes="*res://Scripts/Autoload/UnitScenes.gd"
-BuildingScenes="*res://Scripts/Autoload/BuildingScenes.gd"
 BuildingCosts="*res://Scripts/Autoload/BuildingCosts.gd"
+BuildingScenes="*res://Scripts/Autoload/BuildingScenes.gd"
 
 [display]
 

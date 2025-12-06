@@ -3,6 +3,7 @@ extends Node
 
 # Diccionario de rutas de escenas por tipo de edificio
 var scenes := {
+	"castle": "res://Scenes/Game/Buildings/medievalCastle/medievalCastle_controller.tscn",
 	"barracks": "res://Scenes/Game/Buildings/medievalBarracks/medievalBarracks_controller.tscn",
 	"dragon": "res://Scenes/Game/Buildings/medievalHatchery/medievalHatchery_controller.tscn",
 	"farm": "res://Scenes/Game/Buildings/medivalFarm/medievalFarm_controller.tscn",

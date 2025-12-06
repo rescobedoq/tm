@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://d2fxww6ipc6vq"]
-
-[ext_resource type="Script" uid="uid://5v4nqjqtlog4" path="res://Scripts/Player/BotPlayer/bot_plaver.gd" id="1_4tacq"]
-
-[node name="BotPlaver" type="Node3D"]
-script = ExtResource("1_4tacq")
