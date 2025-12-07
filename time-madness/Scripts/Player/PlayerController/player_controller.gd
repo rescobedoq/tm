@@ -538,10 +538,33 @@ func _handle_attack_target_selection(mouse_pos: Vector2) -> void:
 	if result and result.collider is Entity:
 		var target = result.collider as Entity
 		if target.player_owner != self:
-			for unit in selected_units:
-				if is_instance_valid(unit) and unit. is_alive:
-					unit.attack_target(target)
-			print("⚔️ %d unidades atacando a %s" % [selected_units.size(), target.name])
+			var num_units = selected_units.size()
+			
+			# 🔥 Calcular posiciones en círculo alrededor del objetivo
+			var angle_step = (2.0 * PI) / num_units  # Dividir 360° entre las unidades
+			var surround_radius = 15.0  # Radio del círculo (ajustable)
+			
+			for i in range(num_units):
+				var unit = selected_units[i]
+				if not is_instance_valid(unit) or not unit.is_alive:
+					continue
+				
+				# 🔥 Calcular ángulo y posición alrededor del objetivo
+				var angle = angle_step * i
+				var offset = Vector3(
+					cos(angle) * surround_radius,
+					0,
+					sin(angle) * surround_radius
+				)
+				var surround_pos = target. global_position + offset
+				
+				# 🔥 Primero mover a la posición de rodeo
+				unit.move_to(surround_pos)
+				
+				# 🔥 Luego ordenar atacar (la unidad se acercará si está fuera de rango)
+				unit.attack_target(target)
+			
+			print("⚔️ %d unidades rodeando y atacando a %s (radio: %. 1f)" % [num_units, target.name, surround_radius])
 	
 	is_selecting_objective = false
 	_cleanup_cursor_only()
@@ -549,11 +572,23 @@ func _handle_attack_target_selection(mouse_pos: Vector2) -> void:
 func _handle_terrain_movement_selection(mouse_pos: Vector2) -> void:
 	var target_pos = _get_terrain_position(mouse_pos)
 	
+	# 🔥 NUEVO: Calcular área de distribución basada en cantidad de unidades
+	var num_units = selected_units.size()
+	var spread_radius = sqrt(num_units) * 3.0  # Radio aumenta con la raíz cuadrada del número de unidades
+	
 	for unit in selected_units:
 		if is_instance_valid(unit) and unit.is_alive:
-			unit.move_to(target_pos)
+			# 🔥 Generar posición aleatoria dentro del área
+			var random_offset = Vector3(
+				randf_range(-spread_radius, spread_radius),
+				0,
+				randf_range(-spread_radius, spread_radius)
+			)
+			var unit_target = target_pos + random_offset
+			
+			unit.move_to(unit_target)
 	
-	print("📍 Moviendo %d unidades a: %v" % [selected_units.size(), target_pos])
+	print("📍 Moviendo %d unidades a área alrededor de: %v (radio: %. 1f)" % [selected_units.size(), target_pos, spread_radius])
 	
 	_cleanup_cursor_only()
 

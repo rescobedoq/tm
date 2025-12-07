@@ -9,30 +9,6 @@
 
 [node name="PlayerController" type="Node3D"]
 script = ExtResource("1_ailik")
-player_name = null
-player_index = null
-is_active_player = null
-difficult_bot = null
-faction = null
-gold = null
-resources = null
-upkeep = null
-maxUpKeep = null
-movement_speed = null
-rotation_speed = null
-zoom_speed = null
-min_zoom = null
-max_zoom = null
-min_elevation_angle = null
-max_elevation_angle = null
-edge_margin = null
-allow_rotation = null
-allow_zoom = null
-allow_pan = null
-min_x = null
-max_x = null
-min_z = null
-max_z = null
 
 [node name="RtsController" parent="." instance=ExtResource("2_lpwxd")]
 

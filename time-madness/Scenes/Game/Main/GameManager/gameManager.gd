@@ -106,7 +106,7 @@ func _setup_players() -> void:
 			
 			player_node.get_node("Name").text = player_data.player_name
 			player_node. get_node("Faction").text = player_data.race
-			player_node.get_node("ColorRect"). color = Teams.get_team_color(i)
+			player_node.get_node("ColorRect").color = Teams.get_team_color(player_data.team)
 			
 			var status_node = player_node.get_node("Status")
 			if status_node is Label:

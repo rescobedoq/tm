@@ -6,7 +6,6 @@ var selection_tween: Tween
 # 🔥 Variables de PUNCH
 var is_punching: bool = false
 var punch_stun_duration: float = 2.0
-var original_move_speed: float = 0.0
 
 # 🔥 Variables de SPAWN (Teleport)
 var is_teleporting: bool = false
