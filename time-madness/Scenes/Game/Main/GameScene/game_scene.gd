@@ -13,9 +13,14 @@ func _ready():
 	GameStarter.game_starting. connect(_on_game_starting)
 
 	# 🔥 Crear configuración: 1 humano + 1 bot
+	# 🔥 Crear configuración: 1 humano + 5 bots
 	var players = [
-		PlayerData.new("Player1", "humans", "easy", 1, false),    # 🎮 HUMANO
-		PlayerData.new("AI Bot", "orcs", "normal", 2, true)       # 🤖 BOT
+		PlayerData.new("Player1", "humans", "easy", 1, false),     # 🎮 HUMANO
+		PlayerData.new("Bot1", "orcs", "normal", 2, true),         # 🤖 BOT
+		PlayerData.new("Bot2", "elves", "hard", 3, true),          # 🤖 BOT
+		PlayerData.new("Bot3", "undead", "easy", 4, true),         # 🤖 BOT
+		PlayerData.new("Bot4", "dwarves", "normal", 5, true),      # 🤖 BOT
+		PlayerData.new("Bot5", "demons", "hard", 6, true)          # 🤖 BOT
 	]
 
 	# 🔥 Lanzar el inicio del juego con 2 jugadores

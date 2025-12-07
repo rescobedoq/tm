@@ -1,8 +1,6 @@
 extends Node
 class_name GameManager
 
-
-
 # === REFERENCIAS DE NODOS ===
 @onready var video_player: VideoStreamPlayer = $VideoStreamPlayer
 @onready var battle_log_node = $Node
@@ -528,7 +526,7 @@ func _create_battle_map_castles() -> void:
 		
 		# Instanciar castillo
 		var castle = CASTLE_SCENE.instantiate()
-		castle. name = "BattleCastle_Player%d" % (i + 1)
+		castle.name = "BattleCastle_Player%d" % (i + 1)
 		
 		# Posicionar en el marker con offset en Y
 		var spawn_pos = marker.global_position
@@ -538,7 +536,7 @@ func _create_battle_map_castles() -> void:
 		
 		# Agregar al Battle Map
 		battle_map.add_child(castle)
-		
+		GameStarter.all_battle_builds.append(castle)		
 		await get_tree().process_frame
 		
 		# Configurar posición después de agregar
@@ -659,7 +657,7 @@ func check_victory_conditions() -> void:
 	print("⚔️ Aún hay %d equipos en competencia.  El juego continúa." % alive_teams.size())
 
 # 🔥 NUEVA FUNCIÓN: Obtener PlayerData de un controller
-func _get_player_data_for_controller(controller: PlayerController) -> PlayerData:
+func _get_player_data_for_controller(controller) -> PlayerData:  # 🔥 SIN TIPO ESPECÍFICO
 	var players_data = GameStarter.configured_players
 	var controllers = GameStarter.get_player_controllers()
 	
@@ -706,14 +704,14 @@ func _on_game_draw() -> void:
 		active_controller._show_lose_screen()
 
 # 🔥 MODIFICAR: Guardar referencia
-func _show_victory_screen_for_player(controller: PlayerController) -> void:
+func _show_victory_screen_for_player(controller) -> void:  # 🔥 SIN TIPO ESPECÍFICO
 	print("🏆 Mostrando pantalla de victoria para: %s" % controller.player_name)
 	
-	# 🔥 Llamar a la función del controller
-	if controller.has_method("_show_victory_screen"):
+	# 🔥 Solo mostrar pantalla si es PlayerController (humano)
+	if controller.has_method("_show_victory_screen") and not controller.is_bot:
 		controller._show_victory_screen()
-	else:
-		# Fallback
+	elif not controller.is_bot:
+		# Fallback solo para humanos
 		var win_scene = load("res://Scenes/Game/Main/WinScene/WinScene.tscn")
 		if win_scene == null:
 			print("❌ No se pudo cargar WinScene.tscn")
@@ -724,3 +722,5 @@ func _show_victory_screen_for_player(controller: PlayerController) -> void:
 		win_instance.z_index = 100
 		
 		print("✅ Pantalla de victoria mostrada")
+	else:
+		print("🤖 Bot ganador, no se muestra pantalla de victoria")

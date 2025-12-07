@@ -28,7 +28,7 @@ signal battle_mode_ended
 
 const LAYER_BATTLE_UNITS = 8
 
-var stage_duration := 60
+var stage_duration := 100
 var stage_time_left := stage_duration
 var _timer := Timer.new()
 var _timer_is_running := false
@@ -51,6 +51,7 @@ var battle_map_instance: Node = null
 
 
 var all_battle_units: Array[Entity] = []
+var all_battle_builds: Array = []
 
 func _ready():
 	_timer.one_shot = false
@@ -170,8 +171,8 @@ func _create_player_controllers() -> void:
 		controller.player_name = player_data.player_name
 		controller.is_active_player = not player_data.is_bot
 		controller.faction = player_data.race
-		controller.gold = 500
-		controller.resources = 500
+		controller.gold = 2000
+		controller.resources = 2000
 		controller.player_index = i
 		
 		# Posicionar
