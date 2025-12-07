@@ -8,7 +8,8 @@ func _ready():
 		print("❌ ERROR: No hay jugadores configurados")
 		print("⚠️ Asegúrate de pasar por el lobby primero")
 		return
-		print("✅ Jugadores recibidos desde el lobby:")
+	
+	print("✅ Jugadores recibidos desde el lobby:")
 	for i in range(GameStarter.configured_players.size()):
 		var p = GameStarter.configured_players[i]
 		print("  [%d] %s | Raza: %s | Equipo: %d | Bot: %s" % [i+1, p.player_name, p.race, p.team, p.is_bot])

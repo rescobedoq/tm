@@ -15,6 +15,9 @@ var alert_starting_instance: Window
 
 var bot_boxes: Array[playerBox] = []
 
+# 🔥 Estructura de datos para cada jugador
+
+
 func _ready() -> void:
 	if not back_button. is_connected("pressed", Callable(self, "_on_back_button_pressed")):
 		back_button.connect("pressed", Callable(self, "_on_back_button_pressed"))
