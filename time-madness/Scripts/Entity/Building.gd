@@ -1,6 +1,8 @@
 # Building.gd
 extends CharacterBody3D  # ← Debe extender CharacterBody3D, no Entity
 class_name Building
+@export var building_type: String = ""  # ej: "barracks", "harbor", etc.
+
 
 class BuildingAbility:
 	var icon: String 
@@ -59,6 +61,7 @@ func get_building_portrait() -> String:
 	return ""
 
 func _ready():
+	initialize_abilities()
 	pass
 	#_setup_building()
 
@@ -146,19 +149,58 @@ func _on_area_body_entered(body: Node3D):
 
 func _on_area_body_exited(body: Node3D):
 	print("🔴 [%s] Area3D detectó SALIDA: %s" % [name, body.name])
+	
 func use_ability(ability: BuildingAbility) -> void:
 	print("🏰 Usando habilidad:", ability.name, "en edificio:", get_class())
-	
-	var method_name = "_" + ability.ability_id
-	
-	if has_method(method_name):
-		call(method_name)
-	else:
-		print("⚠️ Habilidad no implementada:", ability.ability_id, "- Método esperado:", method_name)
+
+	# Caso especial para trabajadores ("slave")
+	if ability.ability_id == "train_slave":
+		_train_slave()
+		return  # ya ejecutamos, no hace falta seguir
+
+	# Para todas las demás unidades que usan singletones
+	train_unit_from_ability(ability.ability_id)
+
+
+func _train_slave() -> void:
+	var player = _get_player_owner()
+	if player == null:
+		print("❌ No se encontró PlayerController")
+		return
+
+	if not player.has_method("add_worker"):
+		print("❌ PlayerController no tiene método add_worker()")
+		return
+
+	player.add_worker()
+	print("✅ Worker entrenado para el jugador:", player.player_name if "player_name" in player else player)
 
 # ==============================
 # 🔥 FUNCIÓN GENÉRICA DE ENTRENAMIENTO
 # ==============================
+func train_unit_from_ability(ability_id: String) -> void:
+	if building_type == "":
+		push_warning("Building '%s' tiene building_type vacío" % name)
+		return
+	
+	var ability_list = BuildingAbilities.get_building_ability(building_type)
+	
+	for ability in ability_list:
+		if ability["id"] == ability_id:
+			var unit_key = ability["id"]  # si estás usando id como clave para UnitScenes/UnitCosts
+			var scene_path = UnitScenes.get_scene(unit_key) # devuelve un string
+			var scene = load(scene_path) as PackedScene
+			var cost = UnitCosts.get_cost(unit_key)
+			var display_name = ability["name"]
+			#Invalid type in function '_train_unit' in base 'CharacterBody3D (Barracks)'. Cannot convert argument 1 from String to Object.
+			print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, ", unit_key);
+			print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX, ", scene_path);
+			_train_unit(scene, cost, display_name)
+			return
+	
+	print("❌ Ability '%s' not found for building '%s'" % [ability_id, building_type])
+
+
 @onready var col_shape: CollisionShape3D = get_node("CollisionShape3D")
 
 func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -> void:
@@ -168,27 +210,31 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		return
 	
 	var player = _get_player_owner()
+	
 	if player == null:
 		print("❌ No se encontró PlayerController para el edificio")
 		return
 	
 	if not _check_resources(player, cost):
 		print("⚠️ Recursos insuficientes para entrenar", unit_name)
-		return  
+		return
 	
-	# Deducir recursos
 	player.gold -= cost.gold
 	player.resources -= cost.resources
 	player.upkeep += cost.upkeep
 	player.update_team_hud()
 	
-	# Instanciar unidad
 	var new_unit = unit_scene.instantiate()
+	
+	# 🔥 ASIGNAR PLAYER_OWNER ANTES DE AÑADIR AL ÁRBOL
+	if new_unit is Entity:
+		new_unit.player_owner = player
+		print("✅ player_owner asignado a %s (jugador %d)" % [unit_name, player.player_index])
+	
 	var parent_node: Node
 	if GameStarter.is_battle_stage:
 		parent_node = GameStarter.battle_map_instance
 	else:
-		# Obtener BaseMap desde GameScene
 		var game_manager = player.get_parent()
 		var game_scene = game_manager.get_parent()
 		parent_node = game_scene.get_node_or_null("BaseMap")
@@ -202,7 +248,7 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 	
 	await get_tree().process_frame
 	
-	if new_unit.unit_category == "aquatic":
+	if new_unit. unit_category == "aquatic":
 		new_unit. global_position = _get_random_water_position()
 	else:
 		var min_dist := 20.0
@@ -213,12 +259,11 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		var spawn_offset := direction * distance
 		new_unit. global_position = global_position + spawn_offset
 	
-	# Agregar al jugador
 	if new_unit is Entity:
 		player.add_unit(new_unit)
-	
-	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)
 
+	print("✅", unit_name, "entrenado exitosamente en", new_unit.global_position)
+	
 func _get_player_owner() -> Node:
 	if player_owner != null:
 		return player_owner
@@ -231,15 +276,12 @@ func _get_player_owner() -> Node:
 	
 	print("❌ No se pudo encontrar PlayerController para:", name)
 	return null
-	
+
 func _check_resources(player: Node, cost: Dictionary) -> bool:
-	if player.gold < cost.gold:
+	if player.gold < cost.gold or player.resources < cost.resources or player.upkeep + cost.upkeep > player.maxUpKeep:
+		player.menu_hud._show_resource_not()
 		return false
-	if player.resources < cost.resources:
-		return false
-	if player.upkeep + cost.upkeep > player.maxUpKeep:
-		print("⚠️ Límite de mantenimiento alcanzado")
-		return false
+		
 	return true
 	
 func _get_random_water_position() -> Vector3:
@@ -274,3 +316,17 @@ func _get_random_water_position() -> Vector3:
 		-1.0,
 		center.z + randf_range(-half_z, half_z)
 	)
+func initialize_abilities() -> void:
+	abilities.clear()
+	if building_type == "":
+		push_warning("Building '%s' tiene building_type vacío" % name)
+		return
+	for ability_dict in BuildingAbilities.get_building_ability(building_type):
+		abilities.append(
+			BuildingAbility.new(
+				ability_dict["icon"],
+				ability_dict["name"],
+				ability_dict["description"],
+				ability_dict["id"]
+			)
+		)

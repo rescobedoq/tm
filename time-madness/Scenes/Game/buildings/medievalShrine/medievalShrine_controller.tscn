@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cyf5ixpb8nlbi"]
 
 [ext_resource type="PackedScene" uid="uid://l3bvhlhaefr8" path="res://Assets/Models/Buildings/medievalForestShrine/medievalForestShrine.fbx" id="1_8gvyg"]
-[ext_resource type="Script" uid="uid://bsdjba5kasnvl" path="res://Scenes/Game/buildings/medievalShrine/medieval_shrine_controller.gd" id="1_f5ppr"]
+[ext_resource type="Script" uid="uid://bsdjba5kasnvl" path="res://Scenes/Game/Buildings/medievalShrine/medieval_shrine_controller.gd" id="1_f5ppr"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_f5ppr"]
 size = Vector3(1, 0.765, 1)

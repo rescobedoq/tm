@@ -3,7 +3,6 @@ extends Node3D
 const CASTLE_SCENE = preload("res://Scenes/Game/buildings/medievalCastle/medievalCastle_controller.tscn")
 
 var player_castle: Building = null
-
 func _ready() -> void:
 	# El castillo se creará cuando se asigne el player_owner
 	pass

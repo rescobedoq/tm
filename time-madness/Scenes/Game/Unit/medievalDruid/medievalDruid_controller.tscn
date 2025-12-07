@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://cp3vs6wvdq356"]
+[gd_scene load_steps=6 format=3 uid="uid://cp3vs6wvdq356"]
 
 [ext_resource type="PackedScene" uid="uid://dhpigemc3lol0" path="res://Scenes/Game/Unit/medievalDruid/medieval_druid.tscn" id="1_bvw3h"]
 [ext_resource type="Script" uid="uid://bdikwakntli02" path="res://Scenes/Game/Unit/medievalDruid/medieval_druid.gd" id="1_tgny6"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_tgny6"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_tgny6"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_fluap"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fluap"]
 radius = 1.6655273
@@ -11,12 +12,14 @@ height = 5.296753
 [node name="MedievalDruidController" type="CharacterBody3D"]
 script = ExtResource("1_tgny6")
 
-[node name="medievalDruid" parent="." instance=ExtResource("1_bvw3h")]
+[node name="model" parent="." instance=ExtResource("1_bvw3h")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(2.04, 0, 0, 0, 2.04, 0, 0, 0, 2.04, 0, 3.855, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.855, 0)
 shape = SubResource("CapsuleShape3D_fluap")
 
 [node name="Selection" parent="." instance=ExtResource("2_tgny6")]
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_fluap")]

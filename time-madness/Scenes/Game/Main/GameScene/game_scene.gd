@@ -4,8 +4,6 @@ func _ready():
 	print("\n==============================")
 	print("🚀 GameScene cargada")
 	print("==============================")
-	
-	# 🔥 VERIFICAR que los jugadores ya fueron configurados desde el lobby
 	if GameStarter.configured_players.size() == 0:
 		print("❌ ERROR: No hay jugadores configurados")
 		print("⚠️ Asegúrate de pasar por el lobby primero")
@@ -16,14 +14,11 @@ func _ready():
 		var p = GameStarter.configured_players[i]
 		print("  [%d] %s | Raza: %s | Equipo: %d | Bot: %s" % [i+1, p.player_name, p.race, p.team, p.is_bot])
 	
-	# Configurar referencias
-	$Map1. disable_map()
-	GameStarter.battle_map_instance = $Map1
+	$Map1.disable_map()
 	
-	# 🔥 Los PlayerControllers ya fueron creados por GameStarter. start_game()
-	# Solo necesitamos añadirlos al GameManager
+	GameStarter.battle_map_instance = $Map1
+		
 	_setup_player_controllers()
-
 
 func _setup_player_controllers():
 	"""
@@ -32,7 +27,7 @@ func _setup_player_controllers():
 	var game_manager = $GameManager
 	var controllers = GameStarter.get_player_controllers()
 	
-	print("\n🎮 Añadiendo %d PlayerControllers al GameManager..." % controllers.size())
+	print("\n🎮 Añadiendo %d Jugador al GameManager..." % controllers.size())
 	
 	for controller in controllers:
 		if is_instance_valid(controller) and controller.get_parent() == null:
@@ -42,7 +37,7 @@ func _setup_player_controllers():
 	# 🔥 Configurar BaseMap para cada jugador
 	var base_map = $BaseMap
 	for controller in controllers:
-		if base_map.has_method("setup_for_player"):
+		if controller.is_active_player and base_map.has_method("setup_for_player"):
 			base_map.setup_for_player(controller)
 	
 	print("✅ Todos los PlayerControllers configurados\n")

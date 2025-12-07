@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cmqyhtbql1ms0"]
 
 [ext_resource type="PackedScene" uid="uid://c7mkufmohvhfw" path="res://Assets/Models/Buildings/medievalMagicSchool/medievalMagicSchool.fbx" id="1_ou1kl"]
-[ext_resource type="Script" uid="uid://bdp6u0elhq0wq" path="res://Scenes/Game/buildings/medievalMagic/medieval_magic_controller.gd" id="1_vf0dq"]
+[ext_resource type="Script" uid="uid://bdp6u0elhq0wq" path="res://Scenes/Game/Buildings/medievalMagic/medieval_magic_controller.gd" id="1_vf0dq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vf0dq"]
 

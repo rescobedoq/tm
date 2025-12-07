@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://doecriit5rn13"]
 
-[ext_resource type="Script" uid="uid://cqqiysrj5yada" path="res://Scenes/Game/buildings/medievalTower/medieval_tower_controller.gd" id="1_iv722"]
+[ext_resource type="Script" uid="uid://cqqiysrj5yada" path="res://Scenes/Game/Buildings/medievalTower/medieval_tower_controller.gd" id="1_iv722"]
 [ext_resource type="PackedScene" uid="uid://dxmwa0d5kmd3g" path="res://Assets/Models/Buildings/medievalTower/medievalTower.fbx" id="1_mnsa5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_iv722"]

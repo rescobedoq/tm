@@ -1,26 +1,20 @@
 extends Building
 class_name Castle
 
-const SOLDIER_COST = {"gold": 50, "resources": 0, "upkeep": 1}
 
 func _ready():
+	building_type = "castle"
 	super._ready() 
-	abilities = [
-		BuildingAbility.new(
-			"res://Assets/Images/Portraits/Units/medievalSlave.png",
-			"Entrenar Esclavo",
-			"Entrena un Esclavo, obtiene oro y recursos.\nCosto: 30 oro",
-			"train_slave" 
-		),
-	]
+
 
 
 func get_building_scale() -> int:
-	return Building.get_building_scale_value("barracks")
+	return Building.get_building_scale_value("castle")
 
 func get_building_portrait() -> String:
 	return Building.get_building_portrait_path("castle")
-	
+		
+
 func _train_slave() -> void:
 	var player = _get_player_owner()
 	if player == null:

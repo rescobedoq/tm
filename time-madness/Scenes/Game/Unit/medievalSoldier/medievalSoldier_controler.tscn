@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://prn7yngh7jse"]
+[gd_scene load_steps=6 format=3 uid="uid://prn7yngh7jse"]
 
 [ext_resource type="Script" uid="uid://bdllktt5igx23" path="res://Scenes/Game/Unit/medievalSoldier/medieval_soldier.gd" id="1_onu1i"]
 [ext_resource type="PackedScene" uid="uid://ctj1taql4qcdr" path="res://Scenes/Game/Unit/medievalSoldier/medieval_soldier.tscn" id="2_peahs"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="3_peahs"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="3_peahs"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_eoa73"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onu1i"]
 radius = 1.4777527
@@ -12,13 +13,15 @@ height = 2.9555054
 collision_layer = 2
 script = ExtResource("1_onu1i")
 
-[node name="medievalSoldier" parent="." instance=ExtResource("2_peahs")]
+[node name="model" parent="." instance=ExtResource("2_peahs")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(2.365, 0, 0, 0, 2.365, 0, 0, 0, 2.365, 0, 3.7685254, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7685254, 0)
 shape = SubResource("CapsuleShape3D_onu1i")
 
 [node name="Selection" parent="." instance=ExtResource("3_peahs")]
 transform = Transform3D(1.485, 0, 0, 0, 1.485, 0, 0, 0, 1.485, 0, 0, 0)
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_eoa73")]

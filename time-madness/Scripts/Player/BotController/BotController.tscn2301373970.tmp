@@ -1,0 +1,585 @@
+[gd_scene load_steps=4 format=3 uid="uid://2jhw1dsxrqkf"]
+
+[ext_resource type="Script" uid="uid://bsc5ygm746qlr" path="res://Scripts/Player/BotController/BotController.gd" id="1_xd3sr"]
+[ext_resource type="Script" uid="uid://bumxh5wjxsj4f" path="res://Scripts/Player/BotController/AIBrain.gd" id="2_356rm"]
+
+[sub_resource type="GDScript" id="GDScript_356rm"]
+script/source = "extends Node
+class_name BotAction
+
+var bot: BotController
+var ai_brain: AIBrain
+
+# ==============================
+# 🎮 ESTADOS DEL BOT
+# ==============================
+enum State {
+	# FASE BASE
+	BASE_BOOTSTRAP,          # Inicio: construir economía básica (workers + farm)
+	BASE_MILITARY_SETUP,     # Construir edificios militares (barracks, harbor, etc)
+	BASE_PRODUCTION,         # Producción continua de unidades y economía
+	BASE_TECH_ADVANCE,       # Avanzar en el árbol tecnológico (smithy -> magic -> shrine -> dragon)
+	BASE_FINAL_PUSH,         # Preparación final antes de batalla
+	
+	# FASE BATALLA
+	BATTLE_DEPLOY,           # Primer momento: desplegar unidades del spawn
+	BATTLE_ESTABLISH_DEFENSE,# Establecer perímetro defensivo
+	BATTLE_SCOUT,            # Explorar y evaluar amenazas
+	BATTLE_ENGAGE,           # Combate activo contra enemigos
+	BATTLE_PUSH_OBJECTIVES,  # Atacar castillos enemigos
+	BATTLE_RETREAT,          # Retroceder si estamos perdiendo
+	BATTLE_DEFEND_BASE       # Defensa desesperada del castillo
+}
+
+var current_state: State = State.BASE_BOOTSTRAP
+var time_accumulator: float = 0.0
+var action_interval: float = 1.0
+
+# ==============================
+# 📊 MÉTRICAS Y DECISIONES
+# ==============================
+var decision_timer: float = 0.0
+var decision_interval: float = 3.0  # Reevaluar estrategia cada 3 segundos
+
+# Contadores de construcción
+var workers_count: int = 0
+var military_units_count: int = 0
+
+# Estado de batalla
+var initial_deployment_done: bool = false
+var defense_line_position: Vector3 = Vector3. ZERO
+var current_objective_castle: Node3D = null
+
+func _ready():
+	bot = get_parent()
+	ai_brain = bot.get_node(\"AIBrain\")
+	
+	if ai_brain == null:
+		push_error(\"❌ BotAction: No se encontró AIBrain\")
+		return
+	
+	print(\"🤖 BotAction inicializado para: %s\" % bot.player_name)
+	
+	# Conectar señal de batalla
+	if GameStarter:
+		GameStarter.battle_mode_started.connect(_on_battle_started)
+
+func _on_battle_started():
+	print(\"⚔️ [BotAction] BATALLA INICIADA - Cambiando a BATTLE_DEPLOY\")
+	current_state = State.BATTLE_DEPLOY
+	initial_deployment_done = false
+
+func _process(delta: float):
+	time_accumulator += delta
+	decision_timer += delta
+	
+	# Ejecutar acciones cada intervalo
+	if time_accumulator >= action_interval:
+		time_accumulator = 0.0
+		_execute_state_action()
+	
+	# Reevaluar estrategia periódicamente
+	if decision_timer >= decision_interval:
+		decision_timer = 0.0
+		_evaluate_state_transition()
+
+# ==============================
+# 🔄 EVALUACIÓN Y TRANSICIONES
+# ==============================
+func _evaluate_state_transition():
+	# Solo evaluar transiciones en fase base
+	if bot.is_battle_mode:
+		_evaluate_battle_transitions()
+		return
+	
+	match current_state:
+		State. BASE_BOOTSTRAP:
+			# Transicionar cuando tengamos economía básica
+			if _has_building(\"farm\") and workers_count >= 2:
+				print(\"➡️ Transición: BOOTSTRAP -> MILITARY_SETUP\")
+				current_state = State.BASE_MILITARY_SETUP
+		
+		State.BASE_MILITARY_SETUP:
+			# Transicionar cuando tengamos edificios militares
+			if _has_building(\"barracks\"):
+				print(\"➡️ Transición: MILITARY_SETUP -> PRODUCTION\")
+				current_state = State.BASE_PRODUCTION
+		
+		State.BASE_PRODUCTION:
+			# Transicionar si tenemos suficientes unidades y queremos avanzar tech
+			if bot.attack_units.size() >= 4 and _has_building(\"barracks\"):
+				print(\"➡️ Transición: PRODUCTION -> TECH_ADVANCE\")
+				current_state = State.BASE_TECH_ADVANCE
+		
+		State.BASE_TECH_ADVANCE:
+			# Continuar produciendo mientras avanzamos tech
+			# Volver a producción si necesitamos más unidades
+			if bot.attack_units.size() < 3:
+				print(\"➡️ Transición: TECH_ADVANCE -> PRODUCTION\")
+				current_state = State.BASE_PRODUCTION
+
+func _evaluate_battle_transitions():
+	var my_castle = _get_my_castle()
+	
+	match current_state:
+		State. BATTLE_DEPLOY:
+			if initial_deployment_done:
+				print(\"➡️ Transición: DEPLOY -> ESTABLISH_DEFENSE\")
+				current_state = State. BATTLE_ESTABLISH_DEFENSE
+		
+		State.BATTLE_ESTABLISH_DEFENSE:
+			if defense_line_position != Vector3.ZERO:
+				print(\"➡️ Transición: ESTABLISH_DEFENSE -> SCOUT\")
+				current_state = State.BATTLE_SCOUT
+		
+		State.BATTLE_SCOUT:
+			# Si encontramos enemigos, engagear
+			var enemies = _get_all_enemies()
+			if enemies. size() > 0:
+				print(\"➡️ Transición: SCOUT -> ENGAGE\")
+				current_state = State. BATTLE_ENGAGE
+		
+		State.BATTLE_ENGAGE:
+			# Si tenemos ventaja, push objectives
+			if bot.battle_units.size() >= 3 and bot.current_lives > 3:
+				print(\"➡️ Transición: ENGAGE -> PUSH_OBJECTIVES\")
+				current_state = State.BATTLE_PUSH_OBJECTIVES
+			# Si estamos perdiendo, retroceder
+			elif bot.current_lives <= 2:
+				print(\"➡️ Transición: ENGAGE -> RETREAT\")
+				current_state = State.BATTLE_RETREAT
+		
+		State.BATTLE_PUSH_OBJECTIVES:
+			# Si perdemos vidas, retroceder
+			if bot.current_lives <= 2:
+				print(\"➡️ Transición: PUSH_OBJECTIVES -> RETREAT\")
+				current_state = State.BATTLE_RETREAT
+		
+		State.BATTLE_RETREAT:
+			# Si solo nos queda 1 vida, defensa total
+			if bot.current_lives <= 1:
+				print(\"➡️ Transición: RETREAT -> DEFEND_BASE\")
+				current_state = State. BATTLE_DEFEND_BASE
+
+# ==============================
+# 🎯 EJECUCIÓN DE ESTADOS
+# ==============================
+func _execute_state_action():
+	match current_state:
+		# === FASE BASE ===
+		State. BASE_BOOTSTRAP:
+			_state_base_bootstrap()
+		State.BASE_MILITARY_SETUP:
+			_state_base_military_setup()
+		State. BASE_PRODUCTION:
+			_state_base_production()
+		State.BASE_TECH_ADVANCE:
+			_state_base_tech_advance()
+		State.BASE_FINAL_PUSH:
+			_state_base_final_push()
+		
+		# === FASE BATALLA ===
+		State.BATTLE_DEPLOY:
+			_state_battle_deploy()
+		State. BATTLE_ESTABLISH_DEFENSE:
+			_state_battle_establish_defense()
+		State. BATTLE_SCOUT:
+			_state_battle_scout()
+		State.BATTLE_ENGAGE:
+			_state_battle_engage()
+		State.BATTLE_PUSH_OBJECTIVES:
+			_state_battle_push_objectives()
+		State.BATTLE_RETREAT:
+			_state_battle_retreat()
+		State. BATTLE_DEFEND_BASE:
+			_state_battle_defend_base()
+
+# ==============================
+# 🏗️ ESTADOS DE FASE BASE
+# ==============================
+
+func _state_base_bootstrap():
+	print(\"💼 [BOOTSTRAP] Construyendo economía inicial...\")
+	
+	# Prioridad 1: Farm (aumentar upkeep)
+	if not _has_building(\"farm\"):
+		if bot.create_building(\"farm\"):
+			print(\"✅ Farm construido\")
+			return
+	
+	# Prioridad 2: Workers (hasta 3)
+	if workers_count < 3 and bot.gold >= 50:
+		if bot.create_unit(\"train_slave\"):
+			workers_count += 1
+			print(\"✅ Worker %d/3 construido\" % workers_count)
+			return
+	
+	# Si tenemos farm y workers, ya podemos transicionar
+	# (la transición se maneja en _evaluate_state_transition)
+
+func _state_base_military_setup():
+	print(\"🏰 [MILITARY_SETUP] Construyendo infraestructura militar...\")
+	
+	# Barracks primero
+	if not _has_building(\"barracks\"):
+		if bot.create_building(\"barracks\"):
+			print(\"✅ Barracks construido\")
+			return
+	
+	# Harbor si tenemos recursos
+	if _has_building(\"barracks\") and not _has_building(\"harbor\") and bot.gold >= 150:
+		if bot.create_building(\"harbor\"):
+			print(\"✅ Harbor construido\")
+			return
+	
+	# Empezar a crear unidades básicas mientras
+	if bot.attack_units.size() < 2:
+		if bot.create_unit(\"train_soldier\"):
+			print(\"✅ Soldado de setup creado\")
+			return
+
+func _state_base_production():
+	print(\"⚔️ [PRODUCTION] Producción continua...\")
+	
+	# Balancear economía y militar
+	var gold_ratio = float(bot.gold) / max(1.0, float(bot.resources))
+	var upkeep_usage = float(bot.upkeep) / float(bot.maxUpKeep)
+	
+	# Si estamos cerca del límite de upkeep, construir farm
+	if upkeep_usage > 0.8:
+		if bot.create_building(\"farm\"):
+			print(\"✅ Farm adicional para upkeep\")
+			return
+	
+	# Si tenemos mucho oro, priorizar unidades
+	if gold_ratio > 2.0 and bot.upkeep < bot.maxUpKeep:
+		# Alternar entre soldados y arqueros
+		if bot.attack_units.size() % 2 == 0:
+			if bot.create_unit(\"train_soldier\"):
+				print(\"✅ Soldado producido\")
+				return
+		else:
+			if bot.create_unit(\"train_archer\"):
+				print(\"✅ Arquero producido\")
+				return
+	
+	# Si tenemos pocos workers, crear más
+	if workers_count < 5 and bot.gold >= 50:
+		if bot.create_unit(\"train_slave\"):
+			workers_count += 1
+			print(\"✅ Worker adicional producido\")
+			return
+
+func _state_base_tech_advance():
+	print(\"🔬 [TECH_ADVANCE] Avanzando en tecnología...\")
+	
+	# Árbol tecnológico: barracks -> smithy -> magic -> shrine -> dragon
+	
+	# Smithy (requiere barracks)
+	if not _has_building(\"smithy\") and _has_building(\"barracks\"):
+		if bot.create_building(\"smithy\"):
+			print(\"✅ Smithy construido\")
+			return
+	
+	# Tower (defensa)
+	if not _has_building(\"tower\") and _has_building(\"barracks\") and bot.gold >= 200:
+		if bot.create_building(\"tower\"):
+			print(\"✅ Tower construido\")
+			return
+	
+	# Magic (requiere smithy)
+	if not _has_building(\"magic\") and _has_building(\"smithy\"):
+		if bot.create_building(\"magic\"):
+			print(\"✅ Magic School construido\")
+			return
+	
+	# Shrine (requiere magic)
+	if not _has_building(\"shrine\") and _has_building(\"magic\"):
+		if bot.create_building(\"shrine\"):
+			print(\"✅ Shrine construido\")
+			return
+	
+	# Dragon (requiere shrine)
+	if not _has_building(\"dragon\") and _has_building(\"shrine\"):
+		if bot.create_building(\"dragon\"):
+			print(\"✅ Dragon Lair construido\")
+			return
+	
+	# Mientras avanzamos tech, seguir produciendo unidades
+	if bot.upkeep < bot.maxUpKeep and bot.gold >= 100:
+		if bot.create_unit(\"train_soldier\"):
+			print(\"✅ Unidad mientras tech avanza\")
+			return
+
+func _state_base_final_push():
+	print(\"🚀 [FINAL_PUSH] Preparación final...\")
+	# Este estado sería para la preparación justo antes de batalla
+	# Por ahora solo producir lo máximo posible
+
+# ==============================
+# ⚔️ ESTADOS DE FASE BATALLA
+# ==============================
+
+func _state_battle_deploy():
+	print(\"📍 [DEPLOY] Desplegando unidades desde spawn...\")
+	
+	if bot.battle_units.size() == 0:
+		print(\"⚠️ Esperando unidades en batalla...\")
+		return
+	
+	var my_castle = _get_my_castle()
+	if not my_castle:
+		print(\"⚠️ No se encontró castillo propio\")
+		return
+	
+	# Mover todas las unidades fuera del spawn hacia una posición inicial
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit.is_alive:
+			continue
+		
+		# Posición inicial: 30 unidades delante del castillo
+		var deploy_pos = my_castle.global_position + Vector3(
+			randf_range(-20, 20),
+			0,
+			30
+		)
+		bot.move_unit_to_position(unit, deploy_pos)
+		print(\"📍 %s desplegado\" % unit.unit_type)
+	
+	initial_deployment_done = true
+
+func _state_battle_establish_defense():
+	print(\"🛡️ [ESTABLISH_DEFENSE] Estableciendo línea defensiva...\")
+	
+	var my_castle = _get_my_castle()
+	if not my_castle:
+		return
+	
+	# Establecer línea defensiva 40 unidades delante del castillo
+	defense_line_position = my_castle.global_position + Vector3(0, 0, 40)
+	
+	# Posicionar 30-40% de las unidades en defensa
+	var total_units = bot.battle_units.size()
+	var defenders_needed = max(1, int(total_units * 0.35))
+	var defenders_positioned = 0
+	
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit. is_alive:
+			continue
+		
+		if defenders_positioned < defenders_needed:
+			var def_pos = defense_line_position + Vector3(
+				randf_range(-25, 25),
+				0,
+				randf_range(-10, 10)
+			)
+			bot.move_unit_to_position(unit, def_pos)
+			defenders_positioned += 1
+			print(\"🛡️ Defensor %d/%d posicionado\" % [defenders_positioned, defenders_needed])
+
+func _state_battle_scout():
+	print(\"👁️ [SCOUT] Explorando el campo de batalla...\")
+	
+	# Enviar 1-2 unidades rápidas a explorar
+	var scouts_sent = 0
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit. is_alive:
+			continue
+		
+		if scouts_sent < 2:
+			# Mover hacia el centro del mapa
+			var scout_pos = Vector3(
+				randf_range(-50, 50),
+				0,
+				0  # Centro
+			)
+			bot.move_unit_to_position(unit, scout_pos)
+			scouts_sent += 1
+			print(\"👁️ Scout %d enviado\" % scouts_sent)
+		else:
+			break
+
+func _state_battle_engage():
+	print(\"⚔️ [ENGAGE] Combate activo...\")
+	
+	var enemies = _get_all_enemies()
+	
+	if enemies.size() == 0:
+		print(\"⚠️ No hay enemigos visibles\")
+		return
+	
+	# Cada unidad ataca al enemigo más cercano
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit.is_alive:
+			continue
+		
+		var nearest_enemy = bot.get_nearest_enemy_unit(unit.global_position)
+		
+		if nearest_enemy:
+			var distance = unit.global_position.distance_to(nearest_enemy.global_position)
+			
+			# Si está cerca, atacar
+			if distance < 50.0:
+				bot.attack_enemy(unit, nearest_enemy)
+				print(\"⚔️ %s atacando %s\" % [unit.unit_type, nearest_enemy.unit_type])
+			else:
+				# Si está lejos, acercarse
+				bot.move_unit_to_position(unit, nearest_enemy.global_position)
+				print(\"🏃 %s persiguiendo enemigo\" % unit.unit_type)
+
+func _state_battle_push_objectives():
+	print(\"🎯 [PUSH_OBJECTIVES] Atacando castillos enemigos...\")
+	
+	# Seleccionar castillo objetivo si no tenemos
+	if not current_objective_castle or not is_instance_valid(current_objective_castle):
+		current_objective_castle = _get_nearest_enemy_castle()
+	
+	if not current_objective_castle:
+		print(\"⚠️ No hay castillos enemigos\")
+		return
+	
+	# Enviar 70% de unidades al castillo objetivo
+	var attackers_needed = max(2, int(bot.battle_units.size() * 0.7))
+	var attackers_sent = 0
+	
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit. is_alive:
+			continue
+		
+		if attackers_sent < attackers_needed:
+			# Si hay enemigos en el camino, atacarlos
+			var nearest_enemy = bot.get_nearest_enemy_unit(unit.global_position)
+			if nearest_enemy and unit.global_position.distance_to(nearest_enemy.global_position) < 30.0:
+				bot.attack_enemy(unit, nearest_enemy)
+				print(\"⚔️ %s limpiando enemigos hacia objetivo\" % unit.unit_type)
+			else:
+				# Ir directo al castillo
+				var attack_pos = current_objective_castle.global_position + Vector3(
+					randf_range(-15, 15),
+					0,
+					randf_range(-15, 15)
+				)
+				bot. move_unit_to_position(unit, attack_pos)
+				print(\"🎯 %s atacando castillo\" % unit.unit_type)
+			
+			attackers_sent += 1
+
+func _state_battle_retreat():
+	print(\"🏃 [RETREAT] Retrocediendo a posiciones defensivas...\")
+	
+	var my_castle = _get_my_castle()
+	if not my_castle:
+		return
+	
+	# Todas las unidades vuelven cerca del castillo
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit. is_alive:
+			continue
+		
+		var retreat_pos = my_castle.global_position + Vector3(
+			randf_range(-20, 20),
+			0,
+			randf_range(15, 30)
+		)
+		bot. move_unit_to_position(unit, retreat_pos)
+		print(\"🏃 %s retrocediendo\" % unit. unit_type)
+
+func _state_battle_defend_base():
+	print(\"🏰 [DEFEND_BASE] ¡Defensa desesperada del castillo!\")
+	
+	var my_castle = _get_my_castle()
+	if not my_castle:
+		return
+	
+	# Todas las unidades defienden el castillo
+	for unit in bot.battle_units:
+		if not is_instance_valid(unit) or not unit. is_alive:
+			continue
+		
+		# Buscar enemigos cerca del castillo
+		var nearest_enemy = bot.get_nearest_enemy_unit(my_castle.global_position)
+		
+		if nearest_enemy:
+			var distance_to_castle = nearest_enemy.global_position.distance_to(my_castle.global_position)
+			
+			# Si el enemigo está cerca del castillo, atacarlo
+			if distance_to_castle < 60.0:
+				bot.attack_enemy(unit, nearest_enemy)
+				print(\"🛡️ %s defendiendo contra %s\" % [unit.unit_type, nearest_enemy.unit_type])
+			else:
+				# Posicionarse alrededor del castillo
+				var defense_pos = my_castle. global_position + Vector3(
+					randf_range(-15, 15),
+					0,
+					randf_range(10, 25)
+				)
+				bot. move_unit_to_position(unit, defense_pos)
+
+# ==============================
+# 🔍 FUNCIONES AUXILIARES
+# ==============================
+
+func _has_building(building_type: String) -> bool:
+	if bot.buildings == null:
+		return false
+	
+	for building in bot.buildings:
+		if is_instance_valid(building) and building.building_type == building_type:
+			return true
+	return false
+
+func _get_my_castle() -> Node3D:
+	if not GameStarter or not GameStarter.all_battle_builds:
+		return null
+	
+	var expected_name = \"BattleCastle_Player%d\" % (bot.player_index + 1)
+	for building in GameStarter.all_battle_builds:
+		if is_instance_valid(building) and building.name == expected_name:
+			return building
+	
+	return null
+
+func _get_nearest_enemy_castle() -> Node3D:
+	if not GameStarter or not GameStarter. all_battle_builds:
+		return null
+	
+	var my_castle = _get_my_castle()
+	if not my_castle:
+		return null
+	
+	var nearest_castle: Node3D = null
+	var nearest_distance: float = INF
+	
+	for building in GameStarter.all_battle_builds:
+		if not is_instance_valid(building) or building == my_castle:
+			continue
+		
+		var distance = my_castle.global_position.distance_to(building.global_position)
+		if distance < nearest_distance:
+			nearest_distance = distance
+			nearest_castle = building
+	
+	return nearest_castle
+
+func _get_all_enemies() -> Array[Entity]:
+	var enemies: Array[Entity] = []
+	
+	if not GameStarter or not GameStarter.all_battle_units:
+		return enemies
+	
+	for unit in GameStarter. all_battle_units:
+		if is_instance_valid(unit) and unit.is_alive:
+			if unit.player_owner and unit.player_owner != bot:
+				enemies.append(unit)
+	
+	return enemies
+"
+
+[node name="BotController" type="Node3D"]
+script = ExtResource("1_xd3sr")
+
+[node name="AIBrain" type="Node" parent="."]
+script = ExtResource("2_356rm")
+
+[node name="BotAction" type="Node" parent="."]
+script = SubResource("GDScript_356rm")

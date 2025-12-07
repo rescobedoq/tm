@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://dfsqt0imxcvg6"]
+[gd_scene load_steps=16 format=3 uid="uid://dfsqt0imxcvg6"]
 
 [ext_resource type="Texture2D" uid="uid://cd2hob11jspts" path="res://Assets/Images/HUD/playerInformation.png" id="1_634y2"]
 [ext_resource type="Script" uid="uid://p0jh2tdpf0hg" path="res://Scenes/Game/HUD/player_hud.gd" id="1_cyh1c"]
@@ -11,6 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://dmrkljbaaxlq2" path="res://Assets/Images/Portraits/Buildings/medievalForestShrine.jpg" id="9_amxdt"]
 [ext_resource type="Texture2D" uid="uid://fu3nhfpu58k1" path="res://Assets/Images/Portraits/Buildings/medievalBarracks.jpg" id="10_ch33g"]
 [ext_resource type="Texture2D" uid="uid://dall37w5ufa34" path="res://Assets/Images/Portraits/Buildings/medievalFarm.jpg" id="11_7ep1p"]
+[ext_resource type="Texture2D" uid="uid://lva2djtfosyx" path="res://Assets/Images/alertBuild.png" id="12_kk5qp"]
+[ext_resource type="Texture2D" uid="uid://dmudoaxi5n4qw" path="res://Assets/Images/alertEnergy.png" id="13_g0itf"]
 
 [sub_resource type="FontFile" id="FontFile_ov7p4"]
 subpixel_positioning = 0
@@ -212,12 +214,13 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="TextureRect/Control/magicButton"]
 layout_mode = 0
-offset_left = 12.0
-offset_top = 43.0
-offset_right = 88.0
-offset_bottom = 100.0
+offset_left = 9.0
+offset_top = 20.0
+offset_right = 96.0
+offset_bottom = 98.0
 text = "Magic
-50/40"
+50 gold
+40 res"
 label_settings = SubResource("LabelSettings_g0itf")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -300,12 +303,12 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="TextureRect/Control/barracksButton"]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 43.0
-offset_right = 96.0
+offset_top = 22.0
+offset_right = 101.0
 offset_bottom = 100.0
 text = "Barracks
-250/40"
+250 gold
+40 res"
 label_settings = SubResource("LabelSettings_g0itf")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -322,12 +325,31 @@ stretch_mode = 0
 
 [node name="Label" type="Label" parent="TextureRect/Control/farmButton"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 43.0
-offset_right = 86.0
+offset_left = 4.0
+offset_top = 22.0
+offset_right = 97.0
 offset_bottom = 100.0
 text = "Farm
-50/40"
+50 gold
+40 res"
 label_settings = SubResource("LabelSettings_g0itf")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="ResourceNot" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -2276.0
+offset_top = 468.0
+offset_right = -1942.0
+offset_bottom = 697.0
+texture = ExtResource("12_kk5qp")
+expand_mode = 1
+
+[node name="EnergyNot" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = -2277.0
+offset_top = 235.0
+offset_right = -1943.0
+offset_bottom = 464.0
+texture = ExtResource("13_g0itf")
+expand_mode = 1

@@ -2,6 +2,95 @@ extends Node3D
 class_name PlayerController
 
 # ==============================
+# 🎮 COMANDOS (COMMAND PATTERN)
+# ==============================
+
+class MoveCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_units.is_empty():
+			return
+		if controller.is_selecting_terrain:
+			return
+		
+		controller._cleanup_cursor_only()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_terrain = true
+		print("🔄 [MoveCommand] Modo movimiento activado (%d unidades)" % controller.selected_units.size())
+
+class AttackCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_units.is_empty():
+			return
+		if controller.is_selecting_objective:
+			return
+		
+		controller._cleanup_cursor_only()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_objective = true
+		print("⚔️ [AttackCommand] Modo ataque activado (%d unidades)" % controller. selected_units.size())
+
+class StopCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_units. is_empty():
+			return
+		
+		for unit in controller.selected_units:
+			if is_instance_valid(unit) and unit.is_alive:
+				unit.stop()
+		
+		print("🛑 [StopCommand] %d unidades detenidas" % controller.selected_units.size())
+
+class PatrolCommand extends UnitCommand:
+	var controller: PlayerController
+	
+	func _init(p_controller: PlayerController):
+		controller = p_controller
+	
+	func execute() -> void:
+		if controller.selected_units.is_empty():
+			return
+		if controller.is_selecting_patrol_target:
+			return
+		
+		controller._cleanup_cursor_only()
+		controller._cancel_all_selection_modes()
+		
+		var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
+		if not select_scene:
+			return
+		
+		controller._spawn_cursor(select_scene)
+		controller.is_selecting_patrol_target = true
+		print("🔄 [PatrolCommand] Patrulla activada (%d unidades)" % controller.selected_units.size())
+
+# ==============================
 # 🎮 CONFIGURACIÓN DEL JUGADOR
 # ==============================
 @export var player_name: String = "Jugador"
@@ -20,6 +109,16 @@ class_name PlayerController
 var workers: int = 0
 
 # ==============================
+# 🎯 SELECCIÓN MÚLTIPLE
+# ==============================
+var selected_units: Array[Unit] = []
+var is_box_selecting: bool = false
+var selection_box: SelectionBox = null
+var box_selection_start: Vector2 = Vector2. ZERO
+var is_dragging_selection: bool = false
+const MIN_DRAG_DISTANCE: float = 100
+
+# ==============================
 # ❤️ SISTEMA DE VIDAS (BATTLE)
 # ==============================
 var max_lives: int = 6
@@ -29,6 +128,11 @@ var is_invulnerable: bool = false
 var invulnerability_timer: float = 0.0
 const INVULNERABILITY_DURATION: float = 2.0
 var battle_life_bar = null
+
+# ==============================
+# ⌨️ SISTEMA DE COMANDOS
+# ==============================
+var command_invoker: UnitCommandInvoker = UnitCommandInvoker.new()
 
 # ==============================
 # 🎯 UNIDADES Y EDIFICIOS
@@ -51,6 +155,7 @@ var is_selecting_objective: bool = false
 var is_selecting_ability_target: bool = false
 var is_selecting_ability_terrain: bool = false
 var is_selecting_ability_ally: bool = false
+var is_selecting_patrol_target: bool = false
 
 # ==============================
 # 🖱️ CURSORES Y SELECCIÓN
@@ -81,11 +186,10 @@ var ability_terrain_max_range: float = 0.0
 @export var min_z: float = -5000
 @export var max_z: float = 1000
 
-
 # ==============================
-# 🎥 ESTADO DE CÁMARA (guardado al desactivar)
+# 🎥 ESTADO DE CÁMARA
 # ==============================
-var saved_camera_position: Vector3 = Vector3. ZERO
+var saved_camera_position: Vector3 = Vector3.ZERO
 var saved_camera_zoom: float = 50.0
 var saved_camera_rotation: float = 0.0
 
@@ -120,6 +224,9 @@ var saved_camera_rotation: float = 0.0
 @onready var attackUnits_label: Label = $InfoHud/unitsAttack
 @onready var defenseUnits_label: Label = $InfoHud/unitsDefense
 
+signal resource_not
+signal energy_not
+
 var lose_screen_instance: Control = null
 var win_screen_instance: Control = null
 
@@ -130,6 +237,33 @@ func _ready() -> void:
 	_hide_all_ui()
 	_setup_signals()
 	_setup_camera()
+	if menu_hud and menu_hud.has_signal("resource_not"):
+		resource_not.connect(menu_hud._show_resource_not)
+	_setup_input_actions()
+	_create_selection_box()
+
+func _create_selection_box() -> void:
+	selection_box = SelectionBox.new()
+	selection_box.name = "SelectionBox"
+	selection_box.set_anchors_preset(Control. PRESET_FULL_RECT)
+	selection_box.visible = false
+	selection_box. mouse_filter = Control.MOUSE_FILTER_IGNORE
+	selection_box.z_index = 100
+	add_child(selection_box)
+
+func _setup_input_actions() -> void:
+	_ensure_input_action("unit_move", KEY_Z)
+	_ensure_input_action("unit_attack", KEY_X)
+	_ensure_input_action("unit_stop", KEY_C)
+	_ensure_input_action("unit_patrol", KEY_V)
+
+func _ensure_input_action(action_name: String, key: int) -> void:
+	if not InputMap.has_action(action_name):
+		InputMap.add_action(action_name)
+		var event = InputEventKey.new()
+		event. keycode = key
+		InputMap.action_add_event(action_name, event)
+		print("✅ Hotkey creada: %s = %s" % [action_name, OS.get_keycode_string(key)])
 
 func _setup_signals() -> void:
 	GameStarter.battle_mode_started.connect(_on_battle_mode_started)
@@ -139,24 +273,21 @@ func _setup_signals() -> void:
 func _setup_camera() -> void:
 	var rts = $RtsController
 	
-	# 🔥 SOLO el primer jugador activo inicia con cámara
-	# Los demás (incluido el bot) se activan con _on_activated()
 	if is_active_player:
-		# Configurar parámetros
 		rts.movement_speed = movement_speed
-		rts. rotation_speed = rotation_speed
+		rts.rotation_speed = rotation_speed
 		rts.zoom_speed = zoom_speed
-		rts. min_zoom = min_zoom
+		rts.min_zoom = min_zoom
 		rts.max_zoom = max_zoom
-		rts. min_elevation_angle = min_elevation_angle
-		rts. max_elevation_angle = max_elevation_angle
-		rts. edge_margin = edge_margin
+		rts.min_elevation_angle = min_elevation_angle
+		rts.max_elevation_angle = max_elevation_angle
+		rts.edge_margin = edge_margin
 		rts.allow_rotation = allow_rotation
-		rts. allow_zoom = allow_zoom
+		rts.allow_zoom = allow_zoom
 		rts.allow_pan = allow_pan
-		rts. min_x = min_x
+		rts.min_x = min_x
 		rts.max_x = max_x
-		rts. min_z = min_z
+		rts.min_z = min_z
 		rts.max_z = max_z
 		
 		camera.make_current()
@@ -165,12 +296,11 @@ func _setup_camera() -> void:
 		_update_units_labels()
 		_update_workers_label()
 	else:
-		# 🤖 BOT: Desactivar al inicio (se activará con _on_activated())
 		camera.current = false
 		rts.set_process(false)
 		rts.set_physics_process(false)
 		rts.set_process_input(false)
-		rts. set_process_unhandled_input(false)
+		rts.set_process_unhandled_input(false)
 		rts.visible = false
 
 # ==============================
@@ -185,7 +315,6 @@ func _process(delta: float) -> void:
 		if invulnerability_timer <= 0:
 			is_invulnerable = false
 			invulnerability_timer = 0
-			print("  ✅ Invulnerabilidad de %s terminada" % player_name)
 	
 	if not is_active_player:
 		return
@@ -195,7 +324,7 @@ func _process(delta: float) -> void:
 
 func _update_cursor_position() -> void:
 	if (is_selecting_terrain or is_selecting_objective or is_selecting_ability_target or 
-		is_selecting_ability_terrain or is_selecting_ability_ally) and select_cursor_instance:
+		is_selecting_ability_terrain or is_selecting_ability_ally or is_selecting_patrol_target) and select_cursor_instance:
 		var mouse_pos = get_viewport(). get_mouse_position()
 		select_cursor_instance.position = mouse_pos
 		var animated_sprite = select_cursor_instance.get_node("AnimatedSprite2D")
@@ -214,40 +343,117 @@ func _update_build_placeholder_position() -> void:
 	build_placeholder.global_position = target_pos + Vector3(0, 2, 0)
 
 # ==============================
+# ⌨️ INPUT DE HOTKEYS
+# ==============================
+func _input(event: InputEvent) -> void:
+	if is_defeated or not is_active_player:
+		return
+	
+	if event is InputEventKey:
+		if not event.is_pressed() or event.is_echo():
+			return
+		
+		if event.is_action_pressed("unit_move"):
+			var cmd = MoveCommand.new(self)
+			command_invoker.execute_command(cmd)
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("unit_attack"):
+			var cmd = AttackCommand.new(self)
+			command_invoker. execute_command(cmd)
+			get_viewport().set_input_as_handled()
+		elif event.is_action_pressed("unit_stop"):
+			var cmd = StopCommand.new(self)
+			command_invoker.execute_command(cmd)
+			get_viewport().set_input_as_handled()
+		elif event. is_action_pressed("unit_patrol"):
+			var cmd = PatrolCommand.new(self)
+			command_invoker.execute_command(cmd)
+			get_viewport().set_input_as_handled()
+
+# ==============================
 # 🖱️ INPUT HANDLING
 # ==============================
 func _unhandled_input(event):
 	if is_defeated or not is_active_player:
 		return
 	
-	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
-		return
-	
 	if camera == null:
-		print("ERROR: No hay cámara asignada")
 		return
 	
-	var mouse_pos = event.position
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			_handle_left_click_pressed(event.position)
+		else:
+			_handle_left_click_released(event.position)
+		return
 	
+	if event is InputEventMouseMotion:
+		_handle_mouse_motion(event.position)
+		return
+func _handle_left_click_pressed(mouse_pos: Vector2) -> void:
 	# Procesar según el modo activo
 	if is_placing_building:
 		_handle_building_placement()
+		return  # 🔥 AGREGAR RETURN
 	elif is_selecting_ability_terrain:
 		_handle_ability_terrain_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
 	elif is_selecting_ability_target:
 		_handle_ability_target_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
 	elif is_selecting_ability_ally:
 		_handle_ability_ally_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
 	elif is_selecting_objective:
 		_handle_attack_target_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
+	elif is_selecting_patrol_target:
+		_handle_patrol_target_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
 	elif is_selecting_terrain:
 		_handle_terrain_movement_selection(mouse_pos)
+		return  # 🔥 AGREGAR RETURN
 	else:
+		# Solo iniciar selección de caja si estamos en modo libre
+		box_selection_start = mouse_pos
+		is_dragging_selection = false
+
+func _handle_left_click_released(mouse_pos: Vector2) -> void:
+	# 🔥 SI ESTAMOS EN MODO ACCIÓN, LIMPIAR Y SALIR
+	if is_selecting_terrain or is_selecting_objective or is_selecting_patrol_target:
+		is_selecting_terrain = false
+		is_selecting_objective = false
+		is_selecting_patrol_target = false
+		return  # 🔥 SALIR SIN EJECUTAR _handle_entity_selection()
+	
+	if is_box_selecting and selection_box:
+		var selection_rect = selection_box. end_selection()
+		is_box_selecting = false
+		_select_units_in_box(selection_rect)
+		return
+	
+	if not is_dragging_selection and _is_in_free_selection_mode():
 		_handle_entity_selection(mouse_pos)
+func _handle_mouse_motion(mouse_pos: Vector2) -> void:
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and _is_in_free_selection_mode():
+		var drag_distance = box_selection_start.distance_to(mouse_pos)
+		
+		if drag_distance > MIN_DRAG_DISTANCE:
+			is_dragging_selection = true
+			
+			if not is_box_selecting:
+				is_box_selecting = true
+				selection_box.start_selection(box_selection_start)
+			
+			selection_box.update_selection(mouse_pos)
+
+func _is_in_free_selection_mode() -> bool:
+	return not (is_placing_building or is_selecting_terrain or is_selecting_objective or
+				is_selecting_patrol_target or is_selecting_ability_terrain or
+				is_selecting_ability_target or is_selecting_ability_ally)
 
 func _handle_building_placement() -> void:
 	if not build_placeholder. is_valid_placement:
-		print("❌ No se puede construir aquí: muy cerca de otro edificio")
 		return
 	
 	var final_build = build_placeholder.get_build()
@@ -259,12 +465,19 @@ func _handle_building_placement() -> void:
 	
 	var parent_node = get_battle_map() if is_battle_mode else get_base_map()
 	if parent_node == null:
-		print("❌ No se pudo obtener el mapa activo")
 		return
-	
 	parent_node.add_child(final_build)
 	await get_tree().process_frame
 	add_building(final_build)
+	
+	if final_build.building_type == "farm":
+		maxUpKeep += 5
+	
+	var cost = BuildingCosts.get_cost(final_build.building_type)
+	if cost and cost. size() > 0:
+		gold -= cost.gold
+		resources -= cost.resources
+		update_team_hud()
 	
 	build_placeholder. queue_free()
 	build_placeholder = null
@@ -281,7 +494,7 @@ func _scale_building(building: Node3D, type: String) -> void:
 		"smithy": Vector3(18, 18, 18),
 		"tower": Vector3(25, 25, 25)
 	}
-	building.scale = scales. get(type, Vector3(10, 10, 10))
+	building.scale = scales.get(type, Vector3(10, 10, 10))
 
 func _handle_ability_terrain_selection(mouse_pos: Vector2) -> void:
 	var target_pos = _get_terrain_position(mouse_pos)
@@ -289,7 +502,6 @@ func _handle_ability_terrain_selection(mouse_pos: Vector2) -> void:
 	if ability_terrain_max_range > 0 and ability_source_unit:
 		var distance = ability_source_unit.global_position.distance_to(target_pos)
 		if distance > ability_terrain_max_range:
-			print("❌ Posición demasiado lejos (%.1f / %. 1f)" % [distance, ability_terrain_max_range])
 			_cleanup_ability_selection()
 			return
 	
@@ -306,10 +518,6 @@ func _handle_ability_target_selection(mouse_pos: Vector2) -> void:
 		if target.player_owner != self:
 			if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
 				ability_source_unit.on_ability_target_selected(ability_id_pending, target)
-		else:
-			print("⚠️ No puedes usar habilidades en tus propias unidades")
-	else:
-		print("❌ No se detectó ningún objetivo válido")
 	
 	_cleanup_ability_selection()
 
@@ -321,10 +529,6 @@ func _handle_ability_ally_selection(mouse_pos: Vector2) -> void:
 		if target.player_owner == self:
 			if ability_source_unit and ability_source_unit.has_method("on_ability_target_selected"):
 				ability_source_unit.on_ability_target_selected(ability_id_pending, target)
-		else:
-			print("⚠️ Solo puedes seleccionar aliados para esta habilidad")
-	else:
-		print("❌ No se detectó ningún aliado")
 	
 	_cleanup_ability_selection()
 
@@ -333,45 +537,53 @@ func _handle_attack_target_selection(mouse_pos: Vector2) -> void:
 	
 	if result and result.collider is Entity:
 		var target = result.collider as Entity
-		if target.player_owner != self and selected_unit is Unit:
-			(selected_unit as Unit).attack_target(target)
-			print("⚔️ %s persiguiendo a %s" % [selected_unit.name, target.name])
-		else:
-			print("⚠️ No puedes atacar a tus propias unidades")
-	else:
-		print("❌ No se detectó ningún enemigo")
+		if target.player_owner != self:
+			for unit in selected_units:
+				if is_instance_valid(unit) and unit. is_alive:
+					unit.attack_target(target)
+			print("⚔️ %d unidades atacando a %s" % [selected_units.size(), target.name])
 	
 	is_selecting_objective = false
-	_cleanup_cursor()
+	_cleanup_cursor_only()
 
 func _handle_terrain_movement_selection(mouse_pos: Vector2) -> void:
 	var target_pos = _get_terrain_position(mouse_pos)
 	
-	if selected_unit:
-		selected_unit.move_to(target_pos)
-		print("Moviendo unidad a:", target_pos)
+	for unit in selected_units:
+		if is_instance_valid(unit) and unit.is_alive:
+			unit.move_to(target_pos)
 	
-	is_selecting_terrain = false
-	_cleanup_cursor()
+	print("📍 Moviendo %d unidades a: %v" % [selected_units.size(), target_pos])
+	
+	_cleanup_cursor_only()
+
+func _handle_patrol_target_selection(mouse_pos: Vector2) -> void:
+	var target_pos = _get_terrain_position(mouse_pos)
+	
+	for unit in selected_units:
+		if is_instance_valid(unit) and unit.is_alive:
+			unit.start_patrol(target_pos)
+	
+	print("🔄 %d unidades patrullando hacia: %v" % [selected_units.size(), target_pos])
+	
+	is_selecting_patrol_target = false
+	_cleanup_cursor_only()
 
 func _handle_entity_selection(mouse_pos: Vector2) -> void:
-	print("\n🖱️ Click para seleccionar (Batalla: %s | Player: %s)" % [is_battle_mode, player_name])
-	
-	# Intentar seleccionar unidad
 	var result_unit = _raycast_entities(mouse_pos, false)
-	if result_unit and result_unit.collider is Entity:
+	if result_unit and result_unit. collider is Entity:
 		var entity = result_unit.collider as Entity
 		if entity.player_owner == self:
 			select_unit(entity)
 			return
 	
-	# Intentar seleccionar edificio
-	var result_building = _raycast_entities(mouse_pos, false)
-	if result_building and result_building.collider is Building:
-		var building = result_building.collider as Building
-		if building in buildings:
-			select_building(building)
-			return
+	if not is_battle_mode:
+		var result_building = _raycast_entities(mouse_pos, false)
+		if result_building and result_building.collider is Building:
+			var building = result_building.collider as Building
+			if building in buildings:
+				select_building(building)
+				return
 	
 	deselect_current_unit()
 
@@ -396,11 +608,11 @@ func _raycast_entities(mouse_pos: Vector2, detect_enemies: bool) -> Dictionary:
 			for i in range(6):
 				if i != player_index:
 					enemy_mask |= 1 << (2 + i)
-			params. collision_mask = enemy_mask
+			params.collision_mask = enemy_mask
 		else:
 			params.collision_mask = 1 << (2 + player_index)
 	
-	return get_world_3d().direct_space_state. intersect_ray(params)
+	return get_world_3d().direct_space_state.intersect_ray(params)
 
 func _get_terrain_position(mouse_pos: Vector2) -> Vector3:
 	var from = camera.project_ray_origin(mouse_pos)
@@ -408,7 +620,7 @@ func _get_terrain_position(mouse_pos: Vector2) -> Vector3:
 	var plane_y = 0.0
 	if dir.y == 0:
 		return from
-	var t = (plane_y - from.y) / dir. y
+	var t = (plane_y - from.y) / dir.y
 	return from + dir * t
 
 # ==============================
@@ -417,19 +629,48 @@ func _get_terrain_position(mouse_pos: Vector2) -> Vector3:
 func select_unit(entity: Entity) -> void:
 	if entity == null:
 		return
+		
+	_deselect_all_units()
 	
 	if selected_unit != null and selected_unit != entity:
 		selected_unit.deselect()
+		_disconnect_unit_signals(selected_unit)
 	
 	selected_building = null
 	_clear_abilities()
 	selected_unit = entity
-	selected_unit.select()
 	
+	if selected_unit is Unit:
+		var u = selected_unit as Unit
+		u.connect("health_changed", Callable(self, "_on_unit_health_changed"))
+		u.connect("energy_changed", Callable(self, "_on_unit_energy_changed"))
+		selected_units.clear()
+		selected_units.append(u)
+	
+	selected_unit.select()
 	_update_unit_hud(entity)
 
+func _on_unit_health_changed(current_health: float, max_health: float) -> void:
+	if hud_health:
+		hud_health.max_value = max_health
+		hud_health.value = current_health
+
+func _on_unit_energy_changed(current_magic: float, max_magic: float) -> void:
+	if hud_energy:
+		hud_energy. max_value = max_magic
+		hud_energy.value = current_magic
+
+func _disconnect_unit_signals(unit: Unit) -> void:
+	var health_callable = Callable(self, "_on_unit_health_changed")
+	if unit.is_connected("health_changed", health_callable):
+		unit.disconnect("health_changed", health_callable)
+	
+	var energy_callable = Callable(self, "_on_unit_energy_changed")
+	if unit.is_connected("energy_changed", energy_callable):
+		unit.disconnect("energy_changed", energy_callable)
+
 func _update_unit_hud(entity: Entity) -> void:
-	if entity. portrait and hud_portrait:
+	if entity.portrait and hud_portrait:
 		hud_portrait.texture = entity.portrait
 	else:
 		hud_portrait. texture = null
@@ -463,7 +704,6 @@ func select_building(building: Building) -> void:
 		selected_unit = null
 	
 	selected_building = building
-	
 	_update_building_hud(building)
 
 func _update_building_hud(building: Building) -> void:
@@ -488,11 +728,9 @@ func _setup_ability_button(button: TextureButton, ability, callback: Callable) -
 			button.visible = true
 			button.disabled = false
 			button.tooltip_text = ability.name + "\n" + ability.description
-			
 			for connection in button.pressed.get_connections():
 				button.pressed.disconnect(connection["callable"])
-			
-			button.pressed.connect(callback)
+			button.pressed. connect(callback)
 
 func _clear_spell_buttons(buttons: Array) -> void:
 	for button in buttons:
@@ -503,7 +741,7 @@ func _clear_spell_buttons(buttons: Array) -> void:
 			button.tooltip_text = ""
 
 func _reset_hud_stats() -> void:
-	hud_attack.text = "Attack: -"
+	hud_attack. text = "Attack: -"
 	hud_defense. text = "Defense: -"
 	hud_velocity.text = "Speed: -"
 	hud_health.max_value = 10000
@@ -513,7 +751,12 @@ func _reset_hud_stats() -> void:
 	hud_name. text = selected_building.get_class() if selected_building else ""
 
 func deselect_current_unit() -> void:
+	print("🔥🔥🔥 DESELECT_CURRENT_UNIT LLAMADO DESDE:")
+	print_stack()  # 🔥 ESTO TE DIRÁ EXACTAMENTE QUIÉN LO LLAMA
+	_deselect_all_units()
+	
 	if selected_unit != null:
+		_disconnect_unit_signals(selected_unit)
 		selected_unit. deselect()
 		selected_unit = null
 	
@@ -532,12 +775,15 @@ func _clear_abilities() -> void:
 # 🎮 CALLBACKS DE HABILIDADES
 # ==============================
 func _on_unit_ability_pressed(unit: Unit, ability) -> void:
-	if unit. has_method("use_ability"):
+	if unit.has_method("use_ability"):
 		unit.use_ability(ability)
 
 func _on_ability_pressed(building, ability) -> void:
 	if building.has_method("use_ability"):
 		building.use_ability(ability)
+
+func _show_energy_not() -> void:
+	menu_hud._show_energy_not()
 
 # ==============================
 # 🏗️ SISTEMA DE CONSTRUCCIÓN
@@ -545,16 +791,24 @@ func _on_ability_pressed(building, ability) -> void:
 func _start_build_mode(building_name: String) -> void:
 	building_to_build = building_name
 	
+	var cost = BuildingCosts.get_cost(building_to_build)
+	
+	if not cost or cost.size() == 0:
+		return
+	
+	if gold < cost.gold or resources < cost.resources:
+		menu_hud._show_resource_not()
+		return
+	
 	var controller_scene = load("res://Scenes/Game/buildings/medievalBuild/medievalBuild_controller.tscn")
 	if controller_scene == null:
 		return
 	
 	build_placeholder = controller_scene.instantiate()
-	build_placeholder.set_physics_process(false)
+	build_placeholder. set_physics_process(false)
 	
 	var parent_node = get_battle_map() if is_battle_mode else get_base_map()
 	if parent_node == null:
-		print("❌ No se pudo obtener el mapa activo")
 		return
 	
 	parent_node.add_child(build_placeholder)
@@ -587,7 +841,7 @@ func add_unit(unit: Entity) -> void:
 	units.append(unit)
 	unit.player_owner = self
 	
-	if unit.has_method("setup_player_collision_layers"):
+	if unit. has_method("setup_player_collision_layers"):
 		unit.setup_player_collision_layers(player_index)
 	
 	if unit not in defense_units:
@@ -604,8 +858,6 @@ func add_building(building: CharacterBody3D) -> void:
 	
 	if building. has_method("setup_player_collision_layers"):
 		building. setup_player_collision_layers(player_index)
-	
-	print("✅ Edificio agregado a %s: %s (Total: %d)" % [player_name, building.name, buildings.size()])
 
 func move_unit_to_attack(unit: Entity) -> void:
 	if unit == null or unit not in units:
@@ -614,6 +866,7 @@ func move_unit_to_attack(unit: Entity) -> void:
 	defense_units.erase(unit)
 	if unit not in attack_units:
 		attack_units.append(unit)
+		GameStarter.all_battle_units.append(unit)
 	_update_units_labels()
 
 func move_unit_to_defense(unit: Entity) -> void:
@@ -621,8 +874,11 @@ func move_unit_to_defense(unit: Entity) -> void:
 		return
 	
 	attack_units.erase(unit)
+	GameStarter.all_battle_units.erase(unit)
+
 	if unit not in defense_units:
 		defense_units.append(unit)
+
 	_update_units_labels()
 
 func _on_unit_died(unit: Entity) -> void:
@@ -642,7 +898,7 @@ func update_team_hud() -> void:
 	if upKeepLabel:
 		upKeepLabel. text = str(upkeep) + " / " + str(maxUpKeep)
 	if resourcesLabel:
-		resourcesLabel. text = str(resources)
+		resourcesLabel.text = str(resources)
 	if goldLabel:
 		goldLabel.text = str(gold)
 
@@ -659,7 +915,13 @@ func _update_workers_label() -> void:
 		workers_label.text = "Workers: " + str(workers)
 
 func add_worker() -> void:
+	var cost = UnitCosts.get_cost("train_slave")
+	if gold < cost.gold or resources < cost. resources or (upkeep + cost.upkeep > maxUpKeep):
+		menu_hud._show_resource_not()
+		return
 	workers += 1
+	gold -= cost.gold
+	upkeep += cost.upkeep
 	_update_workers_label()
 
 func _on_second_tick(time_left: int) -> void:
@@ -678,26 +940,20 @@ func format_hms(seconds: int) -> String:
 # 🎯 BOTONES DE ACCIÓN
 # ==============================
 func _on_move_button_pressed() -> void:
-	if is_selecting_terrain:
-		return
-	
-	var select_scene = load("res://Scenes/Utils/Select/SelectTerrain.tscn")
-	if not select_scene:
-		return
-	
-	_spawn_cursor(select_scene)
-	is_selecting_terrain = true
+	var cmd = MoveCommand.new(self)
+	command_invoker.execute_command(cmd)
 
 func _on_attack_button_pressed() -> void:
-	if is_selecting_objective or selected_unit == null or not selected_unit is Unit:
-		return
-	
-	var select_scene = load("res://Scenes/Utils/Target/TargetObjetive.tscn")
-	if not select_scene:
-		return
-	
-	_spawn_cursor(select_scene)
-	is_selecting_objective = true
+	var cmd = AttackCommand.new(self)
+	command_invoker.execute_command(cmd)
+
+func _on_keep_pos_button_pressed() -> void:
+	var cmd = PatrolCommand.new(self)
+	command_invoker.execute_command(cmd)
+
+func _on_stop_button_pressed() -> void:
+	var cmd = StopCommand.new(self)
+	command_invoker.execute_command(cmd)
 
 func _start_ability_target_selection(source_unit: Unit, ability_id: String) -> void:
 	ability_source_unit = source_unit
@@ -743,6 +999,21 @@ func _spawn_cursor(scene: PackedScene) -> void:
 # ==============================
 # 🧹 LIMPIEZA
 # ==============================
+func _cleanup_cursor_only() -> void:
+	if select_cursor_instance and is_instance_valid(select_cursor_instance):
+		select_cursor_instance.queue_free()
+		select_cursor_instance = null
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func _cancel_all_selection_modes() -> void:
+	is_selecting_terrain = false
+	is_selecting_objective = false
+	is_selecting_patrol_target = false
+	is_selecting_ability_terrain = false
+	is_selecting_ability_target = false
+	is_selecting_ability_ally = false
+	is_placing_building = false
+
 func _cleanup_ability_selection() -> void:
 	is_selecting_ability_terrain = false
 	is_selecting_ability_target = false
@@ -750,16 +1021,20 @@ func _cleanup_ability_selection() -> void:
 	ability_source_unit = null
 	ability_id_pending = ""
 	ability_terrain_max_range = 0.0
-	_cleanup_cursor()
+	_cleanup_cursor_only()
 
 func _cleanup_cursor() -> void:
 	if select_cursor_instance and is_instance_valid(select_cursor_instance):
-		select_cursor_instance.queue_free()
+		select_cursor_instance. queue_free()
 		select_cursor_instance = null
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 func _cleanup_cursors() -> void:
 	_cleanup_cursor()
+	
+	if selection_box and is_box_selecting:
+		selection_box.cancel_selection()
+		is_box_selecting = false
 	
 	if build_placeholder and is_instance_valid(build_placeholder):
 		build_placeholder.queue_free()
@@ -772,9 +1047,7 @@ func _cleanup_cursors() -> void:
 	selected_building = null
 	_clear_abilities()
 	
-	is_selecting_terrain = false
-	is_selecting_objective = false
-	is_placing_building = false
+	_cancel_all_selection_modes()
 	_cleanup_ability_selection()
 
 # ==============================
@@ -883,7 +1156,7 @@ func set_battle_mode_layers(enable: bool) -> void:
 		for unit in battle_units:
 			if not is_instance_valid(unit):
 				continue
-			unit.collision_layer = 1 << 8
+			unit. collision_layer = 1 << 8
 			unit.collision_mask = (1 << 0) | (1 << 8)
 			if unit.unit_category == "aquatic":
 				unit.collision_mask |= 1 << 1
@@ -948,7 +1221,7 @@ func _disable_all_controls() -> void:
 	var rts = $RtsController
 	if rts:
 		rts.set_process(false)
-		rts. set_physics_process(false)
+		rts.set_physics_process(false)
 		rts.set_process_input(false)
 	
 	if has_method("_disconnect_ui_buttons"):
@@ -975,9 +1248,7 @@ func _destroy_battle_castle() -> void:
 # 🎮 ACTIVACIÓN/DESACTIVACIÓN
 # ==============================
 func _on_activated() -> void:
-	print("🎮 %s es ahora el jugador activo" % player_name)
-	
-	var game_manager = get_tree(). get_first_node_in_group("game_manager")
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
 	var has_won = _check_if_won(game_manager)
 	
 	if is_defeated:
@@ -988,13 +1259,9 @@ func _on_activated() -> void:
 		_show_victory_screen()
 		return
 	
-	# 🔥 ACTIVAR CÁMARA Y CONTROLES
 	_activate_controls()
-	
-	# 🔥 RESTAURAR ESTADO DE CÁMARA
 	_restore_camera_state()
 	
-	# 🔥 MOSTRAR UI
 	if is_active_player:
 		_show_appropriate_ui()
 	else:
@@ -1002,6 +1269,7 @@ func _on_activated() -> void:
 			$TeamHud.visible = true
 		if $InfoHud:
 			$InfoHud.visible = true
+
 func _check_if_won(game_manager) -> bool:
 	if not game_manager or not game_manager.has_method("_get_player_data_for_controller"):
 		return false
@@ -1018,16 +1286,16 @@ func _check_if_won(game_manager) -> bool:
 				alive_teams.append(other_data.team)
 	
 	return alive_teams.size() == 1 and player_data.team in alive_teams
+
 func _activate_controls() -> void:
 	var rts = $RtsController
 	if rts:
 		rts.visible = true
 		rts.set_process(true)
-		rts. set_physics_process(true)
+		rts.set_physics_process(true)
 		rts.set_process_input(true)
-		rts.set_process_unhandled_input(true)  # 🔥 IMPORTANTE
+		rts.set_process_unhandled_input(true)
 		
-		# 🔥 CONFIGURAR PARÁMETROS DE CÁMARA (para humano y bot)
 		rts.movement_speed = movement_speed
 		rts.rotation_speed = rotation_speed
 		rts.zoom_speed = zoom_speed
@@ -1044,17 +1312,14 @@ func _activate_controls() -> void:
 		rts.min_z = min_z
 		rts.max_z = max_z
 	
-	# 🔥 CONECTAR BOTONES SOLO SI ES HUMANO
 	if is_active_player and has_method("_connect_ui_buttons"):
 		_connect_ui_buttons()
 	
-	# 🔥 ACTIVAR CÁMARA (para humano y bot)
 	if camera:
 		camera.make_current()
-		print("  📹 Cámara activada para: %s" % player_name)
 	
 	if $DirectionalLight3D:
-		$DirectionalLight3D. visible = true
+		$DirectionalLight3D.visible = true
 
 func _show_appropriate_ui() -> void:
 	if is_battle_mode:
@@ -1068,11 +1333,7 @@ func _show_appropriate_ui() -> void:
 		$InfoHud.visible = true
 
 func _on_deactivated() -> void:
-	print("🎮 %s ya no es el jugador activo" % player_name)
-	
-	# 🔥 GUARDAR ESTADO DE CÁMARA ANTES DE DESACTIVAR
 	_save_camera_state()
-	
 	_hide_lose_screen()
 	_hide_victory_screen()
 	
@@ -1090,6 +1351,7 @@ func _on_deactivated() -> void:
 		rts.set_process_unhandled_input(false)
 	
 	_hide_all_ui()
+
 # ==============================
 # 🖼️ PANTALLAS DE VICTORIA/DERROTA
 # ==============================
@@ -1148,15 +1410,25 @@ func _connect_ui_buttons() -> void:
 		moveButton. pressed.disconnect(_on_move_button_pressed)
 	if attackButton.pressed.is_connected(_on_attack_button_pressed):
 		attackButton.pressed.disconnect(_on_attack_button_pressed)
+	if keepPosButton.pressed.is_connected(_on_keep_pos_button_pressed):
+		keepPosButton.pressed.disconnect(_on_keep_pos_button_pressed)
+	if stopButton.pressed.is_connected(_on_stop_button_pressed):
+		stopButton.pressed.disconnect(_on_stop_button_pressed)
 	
 	moveButton.pressed.connect(_on_move_button_pressed)
 	attackButton.pressed.connect(_on_attack_button_pressed)
+	keepPosButton.pressed. connect(_on_keep_pos_button_pressed)
+	stopButton.pressed.connect(_on_stop_button_pressed)
 
 func _disconnect_ui_buttons() -> void:
 	if moveButton.pressed. is_connected(_on_move_button_pressed):
 		moveButton.pressed.disconnect(_on_move_button_pressed)
 	if attackButton.pressed.is_connected(_on_attack_button_pressed):
-		attackButton.pressed. disconnect(_on_attack_button_pressed)
+		attackButton.pressed.disconnect(_on_attack_button_pressed)
+	if keepPosButton.pressed. is_connected(_on_keep_pos_button_pressed):
+		keepPosButton.pressed.disconnect(_on_keep_pos_button_pressed)
+	if stopButton.pressed.is_connected(_on_stop_button_pressed):
+		stopButton.pressed.disconnect(_on_stop_button_pressed)
 
 # ==============================
 # 🔧 UTILIDADES NODE3D
@@ -1191,7 +1463,6 @@ func enable_node_3d_recursive(node: Node) -> void:
 	for child in node.get_children():
 		enable_node_3d_recursive(child)
 
-
 # ==============================
 # 💾 GUARDAR/RESTAURAR ESTADO DE CÁMARA
 # ==============================
@@ -1200,37 +1471,77 @@ func _save_camera_state() -> void:
 	if not rts:
 		return
 	
-	# Guardar posición del RtsController (pivote)
 	saved_camera_position = rts. global_position
 	
-	# Guardar zoom (distancia de la cámara)
 	if camera:
 		var elevation = rts.get_node_or_null("Elevation")
 		if elevation:
-			saved_camera_zoom = camera.position.length()  # Distancia desde el pivote
-			saved_camera_rotation = elevation.rotation. x  # Ángulo de elevación
-	
-	print("  💾 Cámara guardada: pos=%v, zoom=%.1f, rot=%.2f" % [saved_camera_position, saved_camera_zoom, saved_camera_rotation])
+			saved_camera_zoom = camera.position.length()
+			saved_camera_rotation = elevation.rotation. x
 
 func _restore_camera_state() -> void:
 	var rts = $RtsController
 	if not rts:
 		return
 	
-	# Restaurar posición del RtsController
 	if saved_camera_position != Vector3.ZERO:
 		rts.global_position = saved_camera_position
-		print("  📍 Posición restaurada: %v" % saved_camera_position)
 	
-	# Restaurar zoom y rotación
 	if camera:
 		var elevation = rts.get_node_or_null("Elevation")
 		if elevation and saved_camera_zoom > 0:
-			# Restaurar distancia de zoom
 			var direction = camera.position. normalized()
 			camera.position = direction * saved_camera_zoom
-			
-			# Restaurar ángulo de elevación
-			elevation.  rotation. x = saved_camera_rotation
-			
-			print("  🔍 Zoom restaurado: %. 1f, rotación: %.2f" % [saved_camera_zoom, saved_camera_rotation])
+			elevation.rotation.x = saved_camera_rotation
+
+# ==============================
+# 🎯 SELECCIÓN MÚLTIPLE - FUNCIONES
+# ==============================
+func _select_units_in_box(screen_rect: Rect2) -> void:
+	if screen_rect.size.x < 1 or screen_rect.size.y < 1:
+		return
+	
+	_deselect_all_units()
+	
+	var units_to_check = battle_units if is_battle_mode else units
+	
+	for unit in units_to_check:
+		if not is_instance_valid(unit) or not unit.is_alive:
+			continue
+		
+		if unit.player_owner != self:
+			continue
+		
+		var screen_pos = camera.unproject_position(unit.global_position)
+		
+		if screen_rect.has_point(screen_pos):
+			_add_unit_to_selection(unit)
+	
+	print("✅ Unidades seleccionadas: %d (Modo: %s)" % [selected_units. size(), "BATTLE" if is_battle_mode else "BASE"])
+	
+	if selected_units. size() > 1:
+		_clear_selection_ui()
+	elif selected_units.size() == 1:
+		_update_unit_hud(selected_units[0])
+	else:
+		_clear_selection_ui()
+
+func _add_unit_to_selection(unit: Entity) -> void:
+	if unit is Unit and unit not in selected_units:
+		selected_units.append(unit)
+		unit.select()
+
+func _deselect_all_units() -> void:
+	for unit in selected_units:
+		if is_instance_valid(unit):
+			unit.deselect()
+	
+	selected_units.clear()
+	selected_unit = null
+
+func _clear_selection_ui() -> void:
+	if hud_portrait:
+		hud_portrait. texture = null
+	_reset_hud_stats()
+	hud_name.text = ""
+	_clear_abilities()

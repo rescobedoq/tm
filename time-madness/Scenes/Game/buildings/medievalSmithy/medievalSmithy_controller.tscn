@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://cnpg03osell8w"]
 
 [ext_resource type="PackedScene" uid="uid://bg2a77eqkflp4" path="res://Assets/Models/Buildings/medievalSmithy/medievalSmithy.fbx" id="1_3t03n"]
-[ext_resource type="Script" uid="uid://5vjlhwbd7o0" path="res://Scenes/Game/buildings/medievalSmithy/medieval_smithy_controller.gd" id="1_4fbdq"]
+[ext_resource type="Script" uid="uid://5vjlhwbd7o0" path="res://Scenes/Game/Buildings/medievalSmithy/medieval_smithy_controller.gd" id="1_4fbdq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4fbdq"]
 size = Vector3(0.74, 0.79, 1)

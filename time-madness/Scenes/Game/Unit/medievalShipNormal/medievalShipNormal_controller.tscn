@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dui74fqii7tdj"]
+[gd_scene load_steps=6 format=3 uid="uid://dui74fqii7tdj"]
 
 [ext_resource type="PackedScene" uid="uid://bws2gias2gldj" path="res://Scenes/Game/Unit/medievalShipNormal/medievalShipNormal.tscn" id="1_8e5yc"]
 [ext_resource type="Script" uid="uid://cgtxo50kkjtyf" path="res://Scenes/Game/Unit/medievalShipNormal/medieval_ship_normal.gd" id="1_aiu8r"]
-[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Game/Utils/Selection.tscn" id="2_aiu8r"]
+[ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_aiu8r"]
+[ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_7l0s1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7l0s1"]
 radius = 1.3835
@@ -11,13 +12,15 @@ height = 3.782
 [node name="MedievalShipNormalController" type="CharacterBody3D"]
 script = ExtResource("1_aiu8r")
 
-[node name="medievalShipNormal" parent="." instance=ExtResource("1_8e5yc")]
+[node name="model" parent="." instance=ExtResource("1_8e5yc")]
 transform = Transform3D(-5.68248e-07, 0, 13, 0, 13, 0, -13, 0, -5.68248e-07, 0, 9.455, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(3.27, 0, 0, 0, 3.27, 0, 0, 0, 3.27, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.64, 0)
 shape = SubResource("CapsuleShape3D_7l0s1")
 
 [node name="Selection" parent="." instance=ExtResource("2_aiu8r")]
 transform = Transform3D(2.48, 0, 0, 0, 2.48, 0, 0, 0, 2.48, 0, 0, 0)
 visible = false
+
+[node name="Aura" parent="." instance=ExtResource("4_7l0s1")]

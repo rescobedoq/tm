@@ -38,7 +38,7 @@ func _on_body_entered(body: Node3D) -> void:
 		])
 		
 		# 🔥 LLAMADA DIRECTA: Restar vida al jugador
-		area_controller. lose_life()
+		area_controller.lose_life()
 		
 		# 🔥 MATAR LA UNIDAD
 		if unit.has_method("_trigger_death"):

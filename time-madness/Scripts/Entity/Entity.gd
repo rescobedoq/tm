@@ -2,7 +2,7 @@ extends CharacterBody3D
 class_name Entity
 
 # En Unit.gd o Entity.gd
-@export var player_owner: PlayerController
+@export var player_owner: Node
 
 @onready var selection: Node3D = get_node_or_null("Selection")
 

@@ -13,15 +13,18 @@ extends Control
 var profiles_folder: String = "user://profiles/"
 
 func _ready():
-	if not back_button.is_connected("pressed", Callable(self, "_on_back_button_pressed")):
-		back_button.connect("pressed", Callable(self, "_on_back_button_pressed"))
-	if not create_button.is_connected("pressed", Callable(self, "_on_create_button_pressed")):
-		create_button.connect("pressed", Callable(self, "_on_create_button_pressed"))
-	if not delete_button.is_connected("pressed", Callable(self, "_on_delete_button_pressed")):
-		delete_button.connect("pressed", Callable(self, "_on_delete_button_pressed"))
-	if not quit_profile_button.is_connected("pressed", Callable(self, "_on_quit_profile_button_pressed")):
-		quit_profile_button.connect("pressed", Callable(self, "_on_quit_profile_button_pressed"))  # 👈 nueva conexión
-
+	if back_button and not back_button.is_connected("pressed", _on_back_button_pressed):
+		back_button.pressed.connect(_on_back_button_pressed)
+		
+	if create_button and not create_button.is_connected("pressed", _on_create_button_pressed):
+		create_button.pressed.connect(_on_create_button_pressed)
+		
+	if delete_button and not delete_button.is_connected("pressed", _on_delete_button_pressed):
+		delete_button.pressed.connect(_on_delete_button_pressed)
+		
+	if quit_profile_button and not quit_profile_button.is_connected("pressed", _on_quit_profile_button_pressed):
+		quit_profile_button.pressed.connect(_on_quit_profile_button_pressed)
+		
 	if Engine.has_singleton("FadeLayer"):
 		FadeLayer.anim_player.play("fade_in")
 	else:

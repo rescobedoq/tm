@@ -20,6 +20,15 @@ config/icon="res://icon.svg"
 FadeLayer="*res://Scenes/Utils/Transition/FadeLayer.tscn"
 GlobalUser="*res://GlobalUser.gd"
 GameStarter="*res://Scripts/Autoload/GameStarter.gd"
+Teams="*res://Scripts/Autoload/Teams.gd"
+UnitStats="*res://Scripts/Autoload/UnitStats.gd"
+UnitAbilities="*res://Scripts/Autoload/UnitAbilities.gd"
+BuildingAbilities="*res://Scripts/Autoload/BuildingAbilities.gd"
+UnitCosts="*res://Scripts/Autoload/UnitCosts.gd"
+UnitScenes="*res://Scripts/Autoload/UnitScenes.gd"
+BuildingCosts="*res://Scripts/Autoload/BuildingCosts.gd"
+BuildingScenes="*res://Scripts/Autoload/BuildingScenes.gd"
+LLMService="*res://Scripts/Services/LLMService.gd"
 
 [display]
 
@@ -51,5 +60,25 @@ zoom_in={
 zoom_out={
 "deadzone": 0.2,
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":5,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+unit_move={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":90,"key_label":0,"unicode":122,"location":0,"echo":false,"script":null)
+]
+}
+unit_attack={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":88,"key_label":0,"unicode":120,"location":0,"echo":false,"script":null)
+]
+}
+unit_stop={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":67,"key_label":0,"unicode":99,"location":0,"echo":false,"script":null)
+]
+}
+unit_patrol={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":86,"key_label":0,"unicode":86,"location":0,"echo":false,"script":null)
 ]
 }

@@ -12,19 +12,14 @@ func _ready():
 	if not back_button.is_connected("pressed", Callable(self, "_on_back_button_pressed")):
 		back_button.connect("pressed", Callable(self, "_on_back_button_pressed"))
 
-	# Conectar sliders
 	brightness_slider.value_changed.connect(_on_option_changed)
 	mouse_slider.value_changed.connect(_on_option_changed)
-
-	# Conectar OptionButton
 	options_button.item_selected.connect(_on_option_changed)
 
-	# Conectar CheckBoxes del grupo
 	for child in font_check_group.get_children():
 		if child is CheckBox:
 			child.toggled.connect(_on_option_changed)
 
-	# Animación de entrada
 	if Engine.has_singleton("FadeLayer"):
 		FadeLayer.anim_player.play("fade_in")
 	else:
@@ -47,14 +42,6 @@ func print_current_settings() -> void:
 		if child is CheckBox and child.button_pressed:
 			selected_font = child.name
 			break
-
-	print("\n--- CONFIGURACIÓN ACTUAL ---")
-	print("Brillo:", brightness)
-	print("Sensibilidad del mouse:", mouse_sens)
-	print("Opción seleccionada:", selected_option)
-	print("Fuente seleccionada:", selected_font)
-	print("----------------------------")
-
 
 # ===================== Guardado automático =====================
 func _save_user_settings():

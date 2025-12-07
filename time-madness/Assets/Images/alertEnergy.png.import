@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlwa2n07t6ekl"
-path="res://.godot/imported/chageIcon.png-8e88abad432972d045d9405e792c16f7.ctex"
+uid="uid://dmudoaxi5n4qw"
+path="res://.godot/imported/alertEnergy.png-e377be0826db4dbdbea611c7f4b8409a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Images/HUD/icons/chageIcon.png"
-dest_files=["res://.godot/imported/chageIcon.png-8e88abad432972d045d9405e792c16f7.ctex"]
+source_file="res://Assets/Images/alertEnergy.png"
+dest_files=["res://.godot/imported/alertEnergy.png-e377be0826db4dbdbea611c7f4b8409a.ctex"]
 
 [params]
 
