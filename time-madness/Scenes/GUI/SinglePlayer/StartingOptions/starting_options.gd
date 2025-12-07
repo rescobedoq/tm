@@ -11,50 +11,39 @@ extends Control
 @onready var back_button: TextureButton = $backButton
 @onready var start_button: TextureButton = $startButton
 var alert_starting_scene: PackedScene = preload("res://Scenes/GUI/AlertStarting/alertStarting.tscn")
-var alert_starting_instance: Window  
+var alert_starting_instance: Window
 
-# Guardaremos los playerBoxes en una lista para manejarlos fácilmente
 var bot_boxes: Array[playerBox] = []
 
 func _ready() -> void:
-	# Botón de volver
-	if not back_button.is_connected("pressed", Callable(self, "_on_back_button_pressed")):
+	if not back_button. is_connected("pressed", Callable(self, "_on_back_button_pressed")):
 		back_button.connect("pressed", Callable(self, "_on_back_button_pressed"))
 
-	# Botón de start
-	if not start_button. is_connected("pressed", Callable(self, "_on_start_button_pressed")):
+	if not start_button.is_connected("pressed", Callable(self, "_on_start_button_pressed")):
 		start_button.connect("pressed", Callable(self, "_on_start_button_pressed"))
 
-	# Mostrar nombre del usuario
 	var username = GlobalUser.current_user
 	var user_label: Label = user_box.get_node("Label")
 	user_label.text = username
-
-	# Ocultar la dificultad para el jugador real
 	user_box.difficult_button.visible = false
 
-	# Inicializar los demás playerBox
 	bot_boxes = [box2, box3, box4, box5, box6]
 	_initialize_bots()
 	GameStarter.game_starting.connect(_on_game_starting)
-
-
 func _initialize_bots() -> void:
 	var index := 1
 	for box in bot_boxes:
 		var label: Label = box.get_node("Label")
 		label.text = "Inactive"
-		label.mouse_filter = Control.MOUSE_FILTER_STOP  # Necesario para recibir input
+		label.mouse_filter = Control.MOUSE_FILTER_STOP
 
-		# Desactivar OptionButtons
 		_set_box_enabled(box, false)
 
-		# Conectar eventos
 		if not label.is_connected("gui_input", Callable(self, "_on_bot_label_input")):
 			label.gui_input.connect(_on_bot_label_input. bind(box, index))
 
 		if not label.is_connected("mouse_entered", Callable(self, "_on_label_hover_enter")):
-			label.mouse_entered.connect(_on_label_hover_enter. bind(label))
+			label.mouse_entered.connect(_on_label_hover_enter.bind(label))
 
 		if not label.is_connected("mouse_exited", Callable(self, "_on_label_hover_exit")):
 			label.mouse_exited.connect(_on_label_hover_exit.bind(label))
@@ -72,27 +61,24 @@ func _on_bot_label_input(event: InputEvent, box: playerBox, bot_index: int) -> v
 			label.text = "Bot %d" % bot_index
 			_set_box_enabled(box, true)
 
-# --- Hover del label ---
 func _on_label_hover_enter(label: Label) -> void:
-	if label. text == "Inactive":
+	if label.text == "Inactive":
 		label.text = "Activate"
 
 func _on_label_hover_exit(label: Label) -> void:
 	if label.text == "Activate":
-		label.text = "Inactive"
+		label. text = "Inactive"
 
-# --- Habilitar/deshabilitar OptionButtons ---
 func _set_box_enabled(box: playerBox, enabled: bool) -> void:
-	box. race_button.disabled = not enabled
-	box.difficult_button. disabled = not enabled
-	box. team_button.disabled = not enabled
+	box.race_button.disabled = not enabled
+	box.difficult_button.disabled = not enabled
+	box.team_button.disabled = not enabled
 
 	if not enabled:
 		box.race_button.select(-1)
 		box.difficult_button.select(-1)
 		box.team_button.select(-1)
 
-# --- 🔥 ACTUALIZADO: Acción del botón START con PlayerData ---
 func _on_start_button_pressed() -> void:
 	print("--- VALIDANDO JUGADORES ---")
 
@@ -105,18 +91,18 @@ func _on_start_button_pressed() -> void:
 	var all_valid := true
 
 	for box in active_boxes:
-		var label: Label = box. get_node("Label")
+		var label: Label = box.get_node("Label")
 		var name := label.text
 
 		var race_index := box.race_button.get_selected_id()
 		var diff_index := box.difficult_button.get_selected_id()
-		var team_index := box.team_button.get_selected_id()
+		var team_index := box. team_button.get_selected_id()
 
 		var missing := []
 		if race_index == -1:
 			missing.append("race")
 		if diff_index == -1 and box != user_box:
-			missing.append("difficulty")
+			missing. append("difficulty")
 		if team_index == -1:
 			missing.append("team")
 
@@ -137,32 +123,25 @@ func _on_start_button_pressed() -> void:
 		var name := label.text
 
 		var race := box.race_button.get_item_text(box.race_button.get_selected_id())
-		var diff := box.difficult_button.get_item_text(box.difficult_button.get_selected_id()) if not box. difficult_button.disabled else "N/A"
-		var team := box.team_button.get_selected_id()  # 🔥 Guardar el ID del equipo (número)
+		var diff := box.difficult_button.get_item_text(box.difficult_button.get_selected_id()) if not box.difficult_button.disabled else "easy"
+		var team := box. team_button.get_selected_id()
 		var is_bot := box != user_box
 
-		# 🔥 Crear instancia de PlayerData
 		var player_info = PlayerData.new(name, race, diff, team, is_bot)
-		players_data. append(player_info)
+		players_data.append(player_info)
 
 		print("Jugador: %s | Raza: %s | Dificultad: %s | Equipo: %d | Bot: %s" % [name, race, diff, team, is_bot])
 
 	print("✅ Todos los jugadores activos están listos.")
-	
-	# 🔥 Emitir señal a través del GameStarter autoload
 	GameStarter.start_game(players_data)
-	
+
 func _on_game_starting(players: Array) -> void:
-	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameManager/GameManager.tscn")
-	
+	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameScene/GameScene.tscn")
+
+
 func _on_back_button_pressed() -> void:
-	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
-	
-func _process(delta: float) -> void:
-	pass
+	FadeLayer. fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
 
-
-	
 func _show_alert_starting():
 	if alert_starting_instance == null:
 		alert_starting_instance = alert_starting_scene.instantiate()

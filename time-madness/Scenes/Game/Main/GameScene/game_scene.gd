@@ -4,78 +4,39 @@ func _ready():
 	print("\n==============================")
 	print("🚀 GameScene cargada")
 	print("==============================")
-	$Map1. disable_map()
+	if GameStarter.configured_players.size() == 0:
+		print("❌ ERROR: No hay jugadores configurados")
+		print("⚠️ Asegúrate de pasar por el lobby primero")
+		return
+		print("✅ Jugadores recibidos desde el lobby:")
+	for i in range(GameStarter.configured_players.size()):
+		var p = GameStarter.configured_players[i]
+		print("  [%d] %s | Raza: %s | Equipo: %d | Bot: %s" % [i+1, p.player_name, p.race, p.team, p.is_bot])
+	
+	$Map1.disable_map()
+	
 	GameStarter.battle_map_instance = $Map1
-	
-	# Conectar señales importantes del GameStarter (autoload)
-	GameStarter.player_controllers_ready.connect(_on_player_controllers_ready)
-	GameStarter.stage_changed.connect(_on_stage_changed)
-	GameStarter.game_starting. connect(_on_game_starting)
+		
+	_setup_player_controllers()
 
-	# 🔥 Crear configuración: 1 humano + 1 bot
-	# 🔥 Crear configuración: 1 humano + 5 bots
-	var players = [
-		PlayerData.new("Player1", "humans", "easy", 1, false),     # 🎮 HUMANO
-		PlayerData.new("Bot1", "orcs", "normal", 2, true),         # 🤖 BOT
-		PlayerData.new("Bot2", "elves", "hard", 3, true),          # 🤖 BOT
-		PlayerData.new("Bot3", "undead", "easy", 4, true),         # 🤖 BOT
-		PlayerData.new("Bot4", "dwarves", "normal", 5, true),      # 🤖 BOT
-		PlayerData.new("Bot5", "demons", "hard", 6, true)          # 🤖 BOT
-	]
-
-	# 🔥 Lanzar el inicio del juego con 2 jugadores
-	GameStarter.start_game(players)
-
-
-func _on_game_starting(players):
-	print("\n🎮 GameScene: Recibido game_starting")
-	print("  Jugadores configurados: %d" % players.size())
-
-	# Activar el primer stage
-	_update_stage_visibility()
-	GameStarter.start_stage_timer()
-
-
-func _on_player_controllers_ready(controllers):
-	print("\n🎮 GameScene: PlayerControllers listos")
-
-	# 🔥 Añadir los controllers al GameManager (no a GameScene)
+func _setup_player_controllers():
+	"""
+	Toma los PlayerControllers que ya creó GameStarter y los añade al GameManager
+	"""
 	var game_manager = $GameManager
-	for c in controllers:
-		game_manager.add_child(c)
-		print("  ➕ Añadido controller a GameManager: %s" % c.name)
+	var controllers = GameStarter.get_player_controllers()
 	
-	# 🔥 Configurar BaseMap SOLO para jugadores HUMANOS
+	print("\n🎮 Añadiendo %d Jugador al GameManager..." % controllers.size())
+	
+	for controller in controllers:
+		if is_instance_valid(controller) and controller.get_parent() == null:
+			game_manager.add_child(controller)
+			print("  ✅ Añadido: %s" % controller.player_name)
+	
+	# 🔥 Configurar BaseMap para cada jugador
 	var base_map = $BaseMap
-	for c in controllers:
-		# 🔥 Solo configurar BaseMap si NO es bot
-		if c.is_active_player and base_map.has_method("setup_for_player"):
-			base_map.setup_for_player(c)
-			print("  🏠 BaseMap configurado para jugador humano: %s" % c. player_name)
-		elif not c.is_active_player:
-			print("  🤖 Bot '%s' NO necesita BaseMap (solo usa arrays)" % c.player_name)
-
-	print("🎮 Todos los PlayerControllers añadidos a GameManager\n")
-
-
-func _on_stage_changed(new_stage):
-	print("\n🔄 GameScene: Stage cambió a %d" % new_stage)
-	_update_stage_visibility()
-	GameStarter.start_stage_timer()
-
-func _update_stage_visibility():
-	var is_base = GameStarter.is_base_stage
-	var is_battle = GameStarter.is_battle_stage
-
-	# 🔥 Controlar visibilidad de los mapas
-	if is_battle:
-		$Map1.enable_map()
-		$BaseMap.visible = false
-		print("👁️ Map1 HABILITADO (Battle Stage)")
-	else:
-		$Map1.disable_map()
-		$BaseMap.visible = true
-		print("👁️ Map1 DESHABILITADO (Base Stage)")
-
-	print("👁️ BaseMap visible:", is_base)
-	print("👁️ BattleMap visible:", is_battle)
+	for controller in controllers:
+		if controller.is_active_player and base_map.has_method("setup_for_player"):
+			base_map.setup_for_player(controller)
+	
+	print("✅ Todos los PlayerControllers configurados\n")
