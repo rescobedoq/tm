@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://5r1e7bdadrjo"]
+[gd_scene load_steps=4 format=3 uid="uid://5r1e7bdadrjo"]
 
 [ext_resource type="Texture2D" uid="uid://df68funesjilo" path="res://Assets/Images/victoryImage.png" id="1_mwm4q"]
+[ext_resource type="Script" uid="uid://da1juojxvfbno" path="res://Scenes/Game/Main/WinScene/returnButton.gd" id="2_kp4ec"]
 
 [sub_resource type="Theme" id="Theme_kp4ec"]
 
@@ -26,6 +27,7 @@ offset_right = 936.0
 offset_bottom = 769.0
 theme = SubResource("Theme_kp4ec")
 text = "Continuar"
+script = ExtResource("2_kp4ec")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 layout_mode = 0

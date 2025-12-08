@@ -194,7 +194,7 @@ var saved_camera_zoom: float = 50.0
 var saved_camera_rotation: float = 0.0
 
 # ==============================
-# 🖼️ REFERENCIAS UI
+# 🖼️ REFERENCIAS HUD
 # ==============================
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
 @onready var hud_portrait: TextureRect = $UnitHud/Portrait
@@ -538,22 +538,67 @@ func _handle_attack_target_selection(mouse_pos: Vector2) -> void:
 	if result and result.collider is Entity:
 		var target = result.collider as Entity
 		if target.player_owner != self:
-			for unit in selected_units:
-				if is_instance_valid(unit) and unit. is_alive:
-					unit.attack_target(target)
-			print("⚔️ %d unidades atacando a %s" % [selected_units.size(), target.name])
+			var num_units = selected_units.size()
+			
+			# 🔥 Calcular posiciones en círculo alrededor del objetivo
+			var angle_step = (2.0 * PI) / num_units  # Dividir 360° entre las unidades
+			var surround_radius = 15.0  # Radio del círculo (ajustable)
+			
+			for i in range(num_units):
+				var unit = selected_units[i]
+				if not is_instance_valid(unit) or not unit.is_alive:
+					continue
+				
+				# 🔥 Calcular ángulo y posición alrededor del objetivo
+				var angle = angle_step * i
+				var offset = Vector3(
+					cos(angle) * surround_radius,
+					0,
+					sin(angle) * surround_radius
+				)
+				var surround_pos = target. global_position + offset
+				
+				# 🔥 Primero mover a la posición de rodeo
+				unit.move_to(surround_pos)
+				
+				# 🔥 Luego ordenar atacar (la unidad se acercará si está fuera de rango)
+				unit.attack_target(target)
+			
+			print("⚔️ %d unidades rodeando y atacando a %s (radio: %. 1f)" % [num_units, target.name, surround_radius])
 	
 	is_selecting_objective = false
 	_cleanup_cursor_only()
-
 func _handle_terrain_movement_selection(mouse_pos: Vector2) -> void:
 	var target_pos = _get_terrain_position(mouse_pos)
 	
+	if selected_units.size() == 0:
+		return
+	
+	# 🔥 CALCULAR CENTRO DE LA FORMACIÓN ACTUAL
+	var formation_center = Vector3. ZERO
+	var valid_units = []
+	
 	for unit in selected_units:
 		if is_instance_valid(unit) and unit.is_alive:
-			unit.move_to(target_pos)
+			formation_center += unit.global_position
+			valid_units.append(unit)
 	
-	print("📍 Moviendo %d unidades a: %v" % [selected_units.size(), target_pos])
+	if valid_units.size() == 0:
+		return
+	
+	formation_center /= valid_units. size()
+	
+	# 🔥 MOVER CADA UNIDAD MANTENIENDO SU OFFSET RELATIVO
+	for unit in valid_units:
+		# Calcular el offset de esta unidad respecto al centro de la formación
+		var offset = unit.global_position - formation_center
+		
+		# Aplicar el mismo offset al nuevo punto objetivo
+		var unit_target = target_pos + offset
+		
+		unit.move_to(unit_target)
+	
+	print("📍 Moviendo %d unidades manteniendo formación hacia: %v" % [valid_units.size(), target_pos])
 	
 	_cleanup_cursor_only()
 
@@ -1055,10 +1100,17 @@ func _cleanup_cursors() -> void:
 # ==============================
 func _on_battle_mode_started() -> void:
 	is_battle_mode = true
+	# 🔥 LIMPIAR SELECCIONES AL INICIAR BATALLA
+	_deselect_all_units()
+	deselect_current_unit()
 	_cleanup_cursors()
 
 func _on_battle_mode_ended() -> void:
 	is_battle_mode = false
+	current_lives = 6
+	# 🔥 LIMPIAR SELECCIONES AL TERMINAR BATALLA
+	_deselect_all_units()
+	deselect_current_unit()
 	_cleanup_cursors()
 
 func get_base_map() -> Node:
@@ -1084,6 +1136,10 @@ func transfer_attack_units_to_battle_map() -> void:
 	if not battle_map or attack_units.size() == 0:
 		return
 	
+	# 🔥 DESELECCIONAR TODAS LAS UNIDADES ANTES DE TRANSFERIR
+	_deselect_all_units()
+	deselect_current_unit()
+	
 	var ground_area = battle_map.get_node_or_null("Node3D/Player%dArea3D" % (player_index + 1))
 	var water_area = battle_map.get_node_or_null("Node3D/Player%dWArea3D" % (player_index + 1))
 	
@@ -1102,9 +1158,18 @@ func transfer_attack_units_to_battle_map() -> void:
 		if not is_instance_valid(unit) or not unit.is_alive:
 			continue
 		
+		# 🔥 OCULTAR CÍRCULO DE SELECCIÓN MANUALMENTE
+		var selection_node = unit.get_node_or_null("Selection")
+		if selection_node:
+			selection_node.visible = false
+		
+		# 🔥 ASEGURAR QUE LA UNIDAD ESTÉ DESELECCIONADA
+		if unit. has_method("deselect"):
+			unit.deselect()
+		
 		attack_units.erase(unit)
 		defense_units.erase(unit)
-		units.erase(unit)
+		units. erase(unit)
 		
 		if unit not in battle_units:
 			battle_units.append(unit)
@@ -1126,11 +1191,15 @@ func transfer_attack_units_to_battle_map() -> void:
 		unit.visible = true
 		unit.set_physics_process(true)
 		unit.set_process(true)
+		
+		# 🔥 VOLVER A OCULTAR SELECTION DESPUÉS DE ADD_CHILD (por si se reactiva)
+		await get_tree().process_frame
+		if selection_node:
+			selection_node.visible = false
 	
 	await get_tree().process_frame
-	attack_units. clear()
+	attack_units.clear()
 	_update_units_labels()
-
 func _get_random_position_in_area(collision_shape: CollisionShape3D) -> Vector3:
 	var shape = collision_shape.shape
 	var center = collision_shape.global_position

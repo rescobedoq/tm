@@ -106,7 +106,7 @@ func _setup_players() -> void:
 			
 			player_node.get_node("Name").text = player_data.player_name
 			player_node. get_node("Faction").text = player_data.race
-			player_node.get_node("ColorRect"). color = Teams.get_team_color(i)
+			player_node.get_node("ColorRect").color = Teams.get_team_color(player_data.team)
 			
 			var status_node = player_node.get_node("Status")
 			if status_node is Label:
@@ -531,7 +531,6 @@ func _apply_color_to_meshes(node: Node, color: Color) -> void:
 	
 	for child in node.get_children():
 		_apply_color_to_meshes(child, color)
-
 # === VICTORIA ===
 func check_victory_conditions() -> void:
 	print("\n🏆 Verificando condiciones de victoria...")
@@ -563,7 +562,7 @@ func _get_player_data_for_controller(controller) -> PlayerData:
 	var controllers = GameStarter.get_player_controllers()
 	
 	var index = controllers.find(controller)
-	if index >= 0 and index < players_data.size():
+	if index >= 0 and index < players_data. size():
 		return players_data[index]
 	
 	return null
@@ -572,18 +571,40 @@ func _on_team_victory(winning_team: int, winning_players: Array) -> void:
 	print("\n🏆 VICTORIA DEL EQUIPO %d" % winning_team)
 	get_tree().paused = true
 	
+	# 🔥 SOLO MOSTRAR PANTALLAS AL JUGADOR HUMANO (PlayerController)
 	var active_controller = GameStarter.get_active_player_controller()
 	
+	# Verificar que sea PlayerController (no bot)
+	if not active_controller or not is_instance_valid(active_controller):
+		print("⚠️ No hay jugador humano activo")
+		return
+	
+	if not active_controller.is_active_player:
+		print("⚠️ El jugador activo es un bot, no se muestra pantalla")
+		return
+	
+	# Mostrar victoria o derrota según si el jugador humano ganó
 	if active_controller in winning_players:
+		print("🎉 Jugador humano '%s' GANÓ - Mostrando pantalla de victoria" % active_controller.player_name)
 		_show_victory_screen_for_player(active_controller)
 	else:
-		if active_controller and active_controller.has_method("_show_lose_screen"):
+		print("💀 Jugador humano '%s' PERDIÓ - Mostrando pantalla de derrota" % active_controller.player_name)
+		if active_controller.has_method("_show_lose_screen"):
 			active_controller._show_lose_screen()
 
 func _on_game_draw() -> void:
 	print("\n⚖️ EMPATE")
 	get_tree().paused = true
+	
+	# 🔥 SOLO MOSTRAR PANTALLA AL JUGADOR HUMANO
+	var active_controller = GameStarter.get_active_player_controller()
+	
+	if active_controller and is_instance_valid(active_controller) and not active_controller.is_bot:
+		print("⚖️ Mostrando pantalla de empate al jugador humano: %s" % active_controller.player_name)
+		# Aquí puedes mostrar una pantalla especial de empate si la tienes
+		if active_controller.has_method("_show_lose_screen"):
+			active_controller._show_lose_screen()
 
 func _show_victory_screen_for_player(controller) -> void:
-	if controller.has_method("_show_victory_screen") and not controller.is_bot:
+	if controller.has_method("_show_victory_screen"):
 		controller._show_victory_screen()

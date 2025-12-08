@@ -50,6 +50,9 @@ var patrol_target_index: int = 0  # 0 = ir a end_point, 1 = volver a start_point
 var move_target: Vector3 = Vector3.ZERO
 var has_move_target: bool = false
 var is_moving: bool = false
+var original_move_speed: float = 0.0
+var slow_timer: float = 0.0
+var is_slowed: bool = false
 
 # Velocidad de rotación 
 @export var rotation_speed: float = 6.0
@@ -161,11 +164,21 @@ func take_damage(amount: float) -> void:
 	emit_signal("health_changed", current_health, max_health)
 
 	print("💥 %s recibió %.1f de daño (vida: %.1f/%.1f)" % [name, actual_damage, current_health, max_health])
-	
+	_apply_slow_on_hit(0.5, 0.2)
 	# 💀 Verificar si murió
 	if current_health <= 0:
 		current_health = 0
 		_trigger_death()
+func _apply_slow_on_hit(duration: float, factor: float) -> void:
+	if is_slowed:
+		return  # No acumular efectos repetidos
+	
+	is_slowed = true
+	original_move_speed = move_speed
+	move_speed *= factor      # ej: 0.5 = 50% de velocidad
+	slow_timer = duration
+	
+	print("🐢 %s ralentizado a %.2f por %.1f s" % [name, move_speed, duration])
 
 # ------------------------------------------
 # 💀 Activar muerte
@@ -195,6 +208,12 @@ func _trigger_death() -> void:
 
 func _physics_process(delta: float) -> void:
 	# 💀 Si está muriendo, solo contar el timer
+	if is_slowed:
+		slow_timer -= delta
+		if slow_timer <= 0:
+			is_slowed = false
+			move_speed = original_move_speed
+			print("⚡ %s velocidad restaurada" % name)
 	if is_dying:
 		death_timer -= delta
 		if death_timer <= 0:
@@ -564,3 +583,6 @@ func _handle_patrol_behavior(delta: float) -> void:
 	
 	velocity = direction.normalized() * move_speed
 	move_and_slide()
+func deselect() -> void:
+	if selection_circle:
+		selection_circle.visible = false

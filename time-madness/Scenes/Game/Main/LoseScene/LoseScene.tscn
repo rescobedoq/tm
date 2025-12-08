@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://b6exb2g63ow63"]
+[gd_scene load_steps=4 format=3 uid="uid://b6exb2g63ow63"]
 
 [ext_resource type="Texture2D" uid="uid://dy8d2wl0v35bn" path="res://Assets/Images/defeatImage.png" id="1_y41u5"]
+[ext_resource type="Script" uid="uid://da1juojxvfbno" path="res://Scenes/Game/Main/WinScene/returnButton.gd" id="2_ovgi5"]
 
 [sub_resource type="Theme" id="Theme_ovgi5"]
 
@@ -26,6 +27,7 @@ offset_right = 934.0
 offset_bottom = 793.0
 theme = SubResource("Theme_ovgi5")
 text = "Continuar"
+script = ExtResource("2_ovgi5")
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 layout_mode = 0
