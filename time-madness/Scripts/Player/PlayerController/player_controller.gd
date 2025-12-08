@@ -194,7 +194,7 @@ var saved_camera_zoom: float = 50.0
 var saved_camera_rotation: float = 0.0
 
 # ==============================
-# 🖼️ REFERENCIAS UI
+# 🖼️ REFERENCIAS HUD
 # ==============================
 @onready var camera: Camera3D = $RtsController/Elevation/Camera3D
 @onready var hud_portrait: TextureRect = $UnitHud/Portrait
@@ -568,27 +568,37 @@ func _handle_attack_target_selection(mouse_pos: Vector2) -> void:
 	
 	is_selecting_objective = false
 	_cleanup_cursor_only()
-
 func _handle_terrain_movement_selection(mouse_pos: Vector2) -> void:
 	var target_pos = _get_terrain_position(mouse_pos)
 	
-	# 🔥 NUEVO: Calcular área de distribución basada en cantidad de unidades
-	var num_units = selected_units.size()
-	var spread_radius = sqrt(num_units) * 3.0  # Radio aumenta con la raíz cuadrada del número de unidades
+	if selected_units.size() == 0:
+		return
+	
+	# 🔥 CALCULAR CENTRO DE LA FORMACIÓN ACTUAL
+	var formation_center = Vector3. ZERO
+	var valid_units = []
 	
 	for unit in selected_units:
 		if is_instance_valid(unit) and unit.is_alive:
-			# 🔥 Generar posición aleatoria dentro del área
-			var random_offset = Vector3(
-				randf_range(-spread_radius, spread_radius),
-				0,
-				randf_range(-spread_radius, spread_radius)
-			)
-			var unit_target = target_pos + random_offset
-			
-			unit.move_to(unit_target)
+			formation_center += unit.global_position
+			valid_units.append(unit)
 	
-	print("📍 Moviendo %d unidades a área alrededor de: %v (radio: %. 1f)" % [selected_units.size(), target_pos, spread_radius])
+	if valid_units.size() == 0:
+		return
+	
+	formation_center /= valid_units. size()
+	
+	# 🔥 MOVER CADA UNIDAD MANTENIENDO SU OFFSET RELATIVO
+	for unit in valid_units:
+		# Calcular el offset de esta unidad respecto al centro de la formación
+		var offset = unit.global_position - formation_center
+		
+		# Aplicar el mismo offset al nuevo punto objetivo
+		var unit_target = target_pos + offset
+		
+		unit.move_to(unit_target)
+	
+	print("📍 Moviendo %d unidades manteniendo formación hacia: %v" % [valid_units.size(), target_pos])
 	
 	_cleanup_cursor_only()
 
@@ -1090,10 +1100,17 @@ func _cleanup_cursors() -> void:
 # ==============================
 func _on_battle_mode_started() -> void:
 	is_battle_mode = true
+	# 🔥 LIMPIAR SELECCIONES AL INICIAR BATALLA
+	_deselect_all_units()
+	deselect_current_unit()
 	_cleanup_cursors()
 
 func _on_battle_mode_ended() -> void:
 	is_battle_mode = false
+	current_lives = 6
+	# 🔥 LIMPIAR SELECCIONES AL TERMINAR BATALLA
+	_deselect_all_units()
+	deselect_current_unit()
 	_cleanup_cursors()
 
 func get_base_map() -> Node:
@@ -1119,6 +1136,10 @@ func transfer_attack_units_to_battle_map() -> void:
 	if not battle_map or attack_units.size() == 0:
 		return
 	
+	# 🔥 DESELECCIONAR TODAS LAS UNIDADES ANTES DE TRANSFERIR
+	_deselect_all_units()
+	deselect_current_unit()
+	
 	var ground_area = battle_map.get_node_or_null("Node3D/Player%dArea3D" % (player_index + 1))
 	var water_area = battle_map.get_node_or_null("Node3D/Player%dWArea3D" % (player_index + 1))
 	
@@ -1137,9 +1158,18 @@ func transfer_attack_units_to_battle_map() -> void:
 		if not is_instance_valid(unit) or not unit.is_alive:
 			continue
 		
+		# 🔥 OCULTAR CÍRCULO DE SELECCIÓN MANUALMENTE
+		var selection_node = unit.get_node_or_null("Selection")
+		if selection_node:
+			selection_node.visible = false
+		
+		# 🔥 ASEGURAR QUE LA UNIDAD ESTÉ DESELECCIONADA
+		if unit. has_method("deselect"):
+			unit.deselect()
+		
 		attack_units.erase(unit)
 		defense_units.erase(unit)
-		units.erase(unit)
+		units. erase(unit)
 		
 		if unit not in battle_units:
 			battle_units.append(unit)
@@ -1161,11 +1191,15 @@ func transfer_attack_units_to_battle_map() -> void:
 		unit.visible = true
 		unit.set_physics_process(true)
 		unit.set_process(true)
+		
+		# 🔥 VOLVER A OCULTAR SELECTION DESPUÉS DE ADD_CHILD (por si se reactiva)
+		await get_tree().process_frame
+		if selection_node:
+			selection_node.visible = false
 	
 	await get_tree().process_frame
-	attack_units. clear()
+	attack_units.clear()
 	_update_units_labels()
-
 func _get_random_position_in_area(collision_shape: CollisionShape3D) -> Vector3:
 	var shape = collision_shape.shape
 	var center = collision_shape.global_position

@@ -29,7 +29,7 @@ func _ready() -> void:
 	if current_player_label:
 		current_player_label.process_mode = Node. PROCESS_MODE_ALWAYS
 	# Conectar a la señal de controllers listos
-	GameStarter.player_controllers_ready. connect(_on_controllers_ready)
+	GameStarter.player_controllers_ready.connect(_on_controllers_ready)
 	
 	# Si ya hay controllers, inicializar inmediatamente
 	if GameStarter.get_player_controllers().size() > 0:

@@ -164,12 +164,12 @@ func create_unit(unit_type: String) -> bool:
 	
 	# Obtener costo de la unidad
 	var cost = UnitCosts.get_cost(unit_type)
-	if not cost or cost.size() == 0:
+	if not cost or cost. size() == 0:
 		print("🤖 [BotController] Unidad '%s' no tiene costo definido" % unit_type)
 		return false
 	
 	# Verificar recursos suficientes
-	if gold < cost. gold or resources < cost.resources or upkeep + cost.upkeep > maxUpKeep:
+	if gold < cost.gold or resources < cost.resources or upkeep + cost.upkeep > maxUpKeep:
 		print("🤖 [BotController] Recursos insuficientes para '%s'" % unit_type)
 		return false
 	
@@ -185,34 +185,36 @@ func create_unit(unit_type: String) -> bool:
 		return false
 	
 	# Instanciar unidad
-	var new_unit = unit_scene.instantiate()
+	var new_unit = unit_scene. instantiate()
+	
+	# 🔥 DESHABILITAR COMPLETAMENTE EL NODO SELECTION
+	var sel = new_unit.get_node_or_null("Selection")
+	if sel:
+		sel.queue_free()
+		print("🔥 [BotController] Selection DESHABILITADO para: %s" % unit_type)
 	
 	# 🔥 ASIGNAR PLAYER_OWNER ANTES DE AÑADIR AL ÁRBOL
 	if new_unit is Entity:
 		new_unit.player_owner = self
 		print("🤖 [BotController] player_owner asignado a %s" % unit_type)
 	
-	# 🔥 El bot NO añade unidades al mapa, solo al array
-	# (No tiene BaseMap ni BattleMap visual)
-	
 	# Añadir a attack_units directamente
 	if new_unit is Entity:
-		attack_units.append(new_unit)
+		attack_units. append(new_unit)
 		GameStarter.all_battle_units.append(new_unit)
 		units.append(new_unit)
 		
 		# Descontar recursos
 		gold -= cost.gold
-		resources -= cost. resources
+		resources -= cost.resources
 		upkeep += cost.upkeep
 		
 		print("🤖 [BotController] Unidad '%s' creada y añadida a attack_units (Total: %d)" % [unit_type, attack_units.size()])
 		return true
 	else:
-		new_unit.queue_free()
+		new_unit. queue_free()
 		print("❌ [BotController] La unidad instanciada no es Entity")
 		return false
-
 func add_unit(unit: Entity) -> void:
 	if unit == null or unit in units:
 		return
@@ -341,7 +343,7 @@ func transfer_attack_units_to_battle_map() -> void:
 		return
 	
 	var ground_collision = ground_area.get_node_or_null("CollisionShape3D")
-	var water_collision = water_area.get_node_or_null("CollisionShape3D")
+	var water_collision = water_area. get_node_or_null("CollisionShape3D")
 	
 	if not ground_collision or not water_collision:
 		print("🤖 [BotController] No se encontraron CollisionShape3D")
@@ -355,7 +357,7 @@ func transfer_attack_units_to_battle_map() -> void:
 		
 		attack_units.erase(unit)
 		defense_units.erase(unit)
-		units.erase(unit)
+		units. erase(unit)
 		
 		if unit not in battle_units:
 			battle_units.append(unit)
@@ -365,10 +367,10 @@ func transfer_attack_units_to_battle_map() -> void:
 		
 		var old_parent = unit.get_parent()
 		if old_parent:
-			old_parent.remove_child(unit)
+			old_parent. remove_child(unit)
 		
 		battle_map.add_child(unit)
-		unit.collision_layer = 1 << 8
+		unit. collision_layer = 1 << 8
 		unit.collision_mask = (1 << 0) | (1 << 8)
 		if unit.unit_category == "aquatic":
 			unit.collision_mask |= 1 << 1
@@ -376,12 +378,21 @@ func transfer_attack_units_to_battle_map() -> void:
 		unit.global_position = spawn_pos
 		unit.visible = true
 		unit.set_physics_process(true)
-		unit.set_process(true)
+		unit. set_process(true)
 	
+	# 🔥 ESPERAR A QUE TODAS LAS UNIDADES SE AÑADAN
 	await get_tree().process_frame
+	
+	# 🔥 OCULTAR SELECTION DE TODAS LAS UNIDADES DEL BOT
+	for unit in battle_units:
+		if is_instance_valid(unit):
+			var selection_node = unit.get_node_or_null("Selection")
+			if selection_node:
+				selection_node.visible = false
+				print("🔥 [BotController] Selection ocultado para: %s" % unit.name)
+	
 	attack_units.clear()
-	print("🤖 [BotController] %d unidades transferidas al Battle Map" % battle_units.size())
-
+	print("🤖 [BotController] %d unidades transferidas al Battle Map (Selection oculto)" % battle_units.size())
 func _get_random_position_in_area(collision_shape: CollisionShape3D) -> Vector3:
 	var shape = collision_shape.shape
 	var center = collision_shape.global_position

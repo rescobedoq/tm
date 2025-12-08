@@ -26,7 +26,7 @@ signal battle_mode_ended
 
 const LAYER_BATTLE_UNITS = 8
 
-var stage_duration := 100
+var stage_duration := 250
 var stage_time_left := stage_duration
 var _timer := Timer.new()
 var _timer_is_running := false
@@ -182,3 +182,42 @@ func _on_timer_tick():
 		print("⏳ Stage %d terminado automáticamente" % current_stage)
 		
 		next_stage()
+
+
+# En GameStarter.gd (singleton)
+func reset_game_state() -> void:
+	print("🧹 Limpiando estado del juego...")
+	
+	# 🔥 Detener y limpiar el timer
+	stop_stage_timer()
+	stage_time_left = stage_duration
+	_timer_is_running = false
+	
+	# 🔥 Limpiar arrays de unidades y edificios
+	all_battle_units.clear()
+	all_battle_builds.clear()
+	
+	# 🔥 Limpiar referencias
+	battle_map_instance = null
+	
+	# 🔥 Destruir todos los PlayerControllers
+	for controller in player_controllers:
+		if is_instance_valid(controller):
+			controller.queue_free()
+	player_controllers.clear()
+	
+	# 🔥 Limpiar jugadores configurados
+	configured_players.clear()
+	
+	# 🔥 Resetear stages
+	current_stage = 1
+	is_base_stage = true
+	is_battle_stage = false
+	
+	print("✅ Estado del juego limpiado completamente")
+	print("  - Timer detenido")
+	print("  - %d unidades eliminadas" % all_battle_units.size())
+	print("  - %d edificios eliminados" % all_battle_builds.size())
+	print("  - %d controladores destruidos" % player_controllers.size())
+	print("  - Jugadores configurados borrados")
+	print("  - Stage reseteado a 1")

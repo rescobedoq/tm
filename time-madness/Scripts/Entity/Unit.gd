@@ -583,3 +583,6 @@ func _handle_patrol_behavior(delta: float) -> void:
 	
 	velocity = direction.normalized() * move_speed
 	move_and_slide()
+func deselect() -> void:
+	if selection_circle:
+		selection_circle.visible = false
