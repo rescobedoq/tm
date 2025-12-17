@@ -12,6 +12,7 @@ var is_patrolling: bool = false
 var patrol_start_point: Vector3 = Vector3.ZERO
 var patrol_end_point: Vector3 = Vector3.ZERO
 var patrol_target_index: int = 0  # 0 = ir a end_point, 1 = volver a start_point
+@export var attack_sfx: AudioStream
 
 @onready var anim_player = $model/AnimationPlayer 
 @onready var collision_shape = $CollisionShape3D
@@ -97,6 +98,7 @@ func play_attack():
 
 func play_death():
 	if anim_player and anim_death != "":
+		SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/unit/dead.mp3"))
 		anim_player.play(anim_death)
 		var anim = anim_player.get_animation(anim_death)
 		if anim:
@@ -314,7 +316,8 @@ func _perform_attack() -> void:
 	
 	print("⚔️ %s ATACANDO a %s (daño: %.1f)" % [name, attack_target_entity. name, attack_damage])
 	play_attack()
-	
+	SoundManager.play_sfx(attack_sfx)
+
 	# Aplicar daño al objetivo
 	if attack_target_entity. has_method("take_damage"):
 		attack_target_entity. take_damage(attack_damage)

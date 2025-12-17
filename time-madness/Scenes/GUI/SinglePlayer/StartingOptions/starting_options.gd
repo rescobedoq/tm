@@ -139,10 +139,12 @@ func _on_start_button_pressed() -> void:
 	GameStarter.start_game(players_data)
 
 func _on_game_starting(players: Array) -> void:
+	MusicManager.stop_music_fade()
 	FadeLayer.fade_to_scene("res://Scenes/Game/Main/GameScene/GameScene.tscn")
 
 
 func _on_back_button_pressed() -> void:
+	SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/button1.mp3"))
 	FadeLayer. fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
 
 func _show_alert_starting():

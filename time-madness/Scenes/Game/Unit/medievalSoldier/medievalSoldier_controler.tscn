@@ -1,6 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://prn7yngh7jse"]
+[gd_scene load_steps=7 format=3 uid="uid://prn7yngh7jse"]
 
 [ext_resource type="Script" uid="uid://bdllktt5igx23" path="res://Scenes/Game/Unit/medievalSoldier/medieval_soldier.gd" id="1_onu1i"]
+[ext_resource type="AudioStream" uid="uid://d3vgaied1sd7m" path="res://Assets/Sounds/SFX/unit/medieval_soldier_attack.mp3" id="2_p25ci"]
 [ext_resource type="PackedScene" uid="uid://ctj1taql4qcdr" path="res://Scenes/Game/Unit/medievalSoldier/medieval_soldier.tscn" id="2_peahs"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="3_peahs"]
 [ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_eoa73"]
@@ -12,6 +13,7 @@ height = 2.9555054
 [node name="MedievalSoldierControler" type="CharacterBody3D"]
 collision_layer = 2
 script = ExtResource("1_onu1i")
+attack_sfx = ExtResource("2_p25ci")
 
 [node name="model" parent="." instance=ExtResource("2_peahs")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)

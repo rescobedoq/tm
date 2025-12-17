@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cbous0v5jqgwb"]
+[gd_scene load_steps=7 format=3 uid="uid://cbous0v5jqgwb"]
 
 [ext_resource type="PackedScene" uid="uid://cgnndyedpwjdi" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.tscn" id="1_6tpaa"]
 [ext_resource type="Script" uid="uid://0frun0np8qdv" path="res://Scenes/Game/Unit/medievalDragon/medieval_dragon.gd" id="1_hmwml"]
+[ext_resource type="AudioStream" uid="uid://bgdfn5ugqend" path="res://Assets/Sounds/SFX/unit/dragon_attack.mp3" id="2_33kl7"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_hmwml"]
 [ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_kt2ic"]
 
@@ -11,6 +12,7 @@ height = 5.296753
 
 [node name="MedievalDragonController" type="CharacterBody3D"]
 script = ExtResource("1_hmwml")
+attack_sfx = ExtResource("2_33kl7")
 
 [node name="model" parent="." instance=ExtResource("1_6tpaa")]
 transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)

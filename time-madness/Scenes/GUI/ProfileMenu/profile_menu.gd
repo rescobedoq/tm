@@ -92,6 +92,7 @@ func list_profiles():
 
 
 func _on_back_button_pressed():
+	SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/button1.mp3"))
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
 
 func ensure_profiles_folder_exists():
@@ -100,7 +101,7 @@ func ensure_profiles_folder_exists():
 	if dir != null:
 		print("La carpeta de perfiles ya existe.")
 	else:
-		# Crear directamente desde user://
+		# Crear directamente desde usser://
 		var user_dir: DirAccess = DirAccess.open("user://")
 		if user_dir:
 			var err = user_dir.make_dir_recursive("user://profiles")

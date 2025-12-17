@@ -26,6 +26,7 @@ func _ready():
 		print("⚠️ Advertencia: FadeLayer no encontrado (¿autoload configurado?)")
 
 func _on_back_button_pressed():
+	SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/button1.mp3"))
 	FadeLayer.fade_to_scene("res://Scenes/GUI/MainMenu/mainMenu.tscn")
 
 func _on_option_changed(arg = null) -> void:

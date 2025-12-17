@@ -20,7 +20,6 @@ script = ExtResource("1_hp3kw")
 offset_right = 40.0
 offset_bottom = 40.0
 stream = ExtResource("2_fnph8")
-speed_scale = 7.465
 
 [node name="Node" type="Control" parent="."]
 layout_mode = 3

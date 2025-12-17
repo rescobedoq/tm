@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://btb7xqgyxaayo"]
+[gd_scene load_steps=7 format=3 uid="uid://btb7xqgyxaayo"]
 
 [ext_resource type="Script" uid="uid://c2m7tvo6nb6lo" path="res://Scenes/Game/Unit/medievalGolem/medieval_golem.gd" id="1_a6tx3"]
 [ext_resource type="PackedScene" uid="uid://dgurbwkkso1gy" path="res://Scenes/Game/Unit/medievalGolem/medieval_golem.tscn" id="1_ntibq"]
+[ext_resource type="AudioStream" uid="uid://bwbqpe7peulte" path="res://Assets/Sounds/SFX/unit/golem_attach.mp3" id="2_6c18y"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_a6tx3"]
 [ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_slwsl"]
 
@@ -11,6 +12,7 @@ height = 5.296753
 
 [node name="MedievalGolemController" type="CharacterBody3D"]
 script = ExtResource("1_a6tx3")
+attack_sfx = ExtResource("2_6c18y")
 
 [node name="model" parent="." instance=ExtResource("1_ntibq")]
 transform = Transform3D(7, 0, 0, 0, 7, 0, 0, 0, 7, 0, 0, 0)

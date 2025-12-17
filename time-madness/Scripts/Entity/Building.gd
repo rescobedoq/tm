@@ -216,9 +216,12 @@ func _train_unit(unit_scene: PackedScene, cost: Dictionary, unit_name: String) -
 		return
 	
 	if not _check_resources(player, cost):
+		SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/ui8.mp3"))
 		print("⚠️ Recursos insuficientes para entrenar", unit_name)
 		return
 	
+	SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/ui7.mp3"))
+
 	player.gold -= cost.gold
 	player.resources -= cost.resources
 	player.upkeep += cost.upkeep

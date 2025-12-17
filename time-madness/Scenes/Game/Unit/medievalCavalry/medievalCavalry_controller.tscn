@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://behdh2aehcrhe"]
+[gd_scene load_steps=7 format=3 uid="uid://behdh2aehcrhe"]
 
 [ext_resource type="Script" uid="uid://7y8mvw3dlr6l" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.gd" id="1_sueet"]
 [ext_resource type="PackedScene" uid="uid://cu6ldsgrv558d" path="res://Scenes/Game/Unit/medievalCavalry/medieval_cavalry.tscn" id="1_x5dp3"]
+[ext_resource type="AudioStream" uid="uid://itm2h0siyb38" path="res://Assets/Sounds/SFX/unit/cavalry_attack.mp3" id="2_lxxta"]
 [ext_resource type="PackedScene" uid="uid://nhdcvbciokgs" path="res://Scenes/Utils/Selection.tscn" id="2_sueet"]
 [ext_resource type="PackedScene" uid="uid://c03lepfw7gs7x" path="res://Scenes/Utils/AURA/aura.tscn" id="4_fct7o"]
 
@@ -11,6 +12,7 @@ height = 5.296753
 
 [node name="MedievalCavalryController" type="CharacterBody3D"]
 script = ExtResource("1_sueet")
+attack_sfx = ExtResource("2_lxxta")
 
 [node name="model" parent="." instance=ExtResource("1_x5dp3")]
 transform = Transform3D(5000, 0, 0, 0, 5000, 0, 0, 0, 5000, 0, 0, 0)

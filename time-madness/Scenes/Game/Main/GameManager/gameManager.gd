@@ -148,14 +148,16 @@ func _start_stage_preparation() -> void:
 	if current_stage > 1:
 		_show_stage_summary(current_stage - 1)
 	
-	print("⏳ Esperando 1 segundo antes de iniciar...")
-	await get_tree().create_timer(1.0).timeout
-	
+	#SOUND!
+	MusicManager.play_music(preload("res://Assets/Sounds/Music/log_theme.mp3"))
+	await get_tree().create_timer(7.0).timeout
+	MusicManager.stop_music_fade(0.5)
 	battle_log_node.visible = false
 	
 	_start_stage_playing()
 
 func _start_stage_playing() -> void:
+
 	current_game_state = GameState.STAGE_PLAYING
 	battle_log_node.visible = false
 	
@@ -172,6 +174,8 @@ func _start_stage_playing() -> void:
 	print("🎮 ¡Stage en progreso!")
 
 func _show_battle_stage() -> void:
+	MusicManager.play_music(preload("res://Assets/Sounds/Music/battle_theme.mp3"))
+
 	print("⚔️ Stage PAR → BATTLE STAGE")
 
 	GameStarter.battle_mode_started.emit()
@@ -241,6 +245,7 @@ func _show_battle_stage() -> void:
 		print("✅ Battle Map HABILITADO")
 
 func _show_base_stage() -> void:
+	MusicManager.play_music(preload("res://Assets/Sounds/Music/building_theme.mp3"))
 	GameStarter.battle_mode_ended.emit()
 	print("🏠 Stage IMPAR → BASE STAGE")
 	

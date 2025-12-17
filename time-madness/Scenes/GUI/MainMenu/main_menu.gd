@@ -1,6 +1,7 @@
 extends Control
 @onready var selected_name_label: Label = $UserNameSelected
 
+
 const STARTING_OPTIONS = "res://Scenes/GUI/SinglePlayer/StartingOptions/startingOptions.tscn"
 const CREDITS = "res://Scenes/GUI/CreditsMenu/creditsMenu.tscn"
 const OPTIONS = "res://Scenes/GUI/OptionsMenu/optionsMenu.tscn"
@@ -10,6 +11,9 @@ var alert_profile_scene: PackedScene = preload("res://Scenes/GUI/Alerts/alertPro
 var alert_profile_instance: Window  
 
 func _ready():
+	
+	MusicManager.play_music(preload("res://Assets/Sounds/Music/menu_theme.mp3"))
+
 	for boton in get_children():
 		if boton is TextureButton:
 			boton.connect("pressed", Callable(self, "_on_boton_presionado").bind(boton.name))
@@ -22,6 +26,7 @@ func _update_selected_user_ui():
 		selected_name_label.text = "-"
 		
 func _on_boton_presionado(nombre_boton):
+	SoundManager.play_sfx(preload("res://Assets/Sounds/SFX/button1.mp3"))
 	var user_selected = GlobalUser.current_user != ""
 	match nombre_boton:
 		"historyModeButton":
